@@ -11,15 +11,15 @@
       <fieldset>  
         {% if error.incorrect_password %}
         <div class="form-group has-error">
-          <label class="col-lg-4 control-label" for="inputError">Current Password</label>
+          <label class="col-lg-4 control-label" for="inputError">Registration Code</label>
           <div class="col-lg-8">
-            <input type="password" class="form-control" name="current_password">
-            <span class="help-block">Incorrect password</span>
+            <input type="password" class="form-control" name="registration_code">
+            <span class="help-block">Incorrect code</span>
         {% else %}
         <div class="form-group">
-          <label class="col-lg-4 control-label">Current Password</label>
+          <label class="col-lg-4 control-label">Registration Code</label>
           <div class="col-lg-8">
-            <input type="password" class="form-control" name="current_password">
+            <input type="password" class="form-control" name="registration_code">
         {% endif %}
           </div>
         </div>

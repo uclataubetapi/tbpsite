@@ -106,8 +106,8 @@ def register(request):
 
     error = Error()
     if request.method == "POST":
-        current_password = request.POST.get('current_password')
-        if current_password != Settings.objects.get_password():
+        registration_code = request.POST.get('registration_code')
+        if registration_code != Settings.objects.get_registration_code():
             error.incorrect_password = True
 
         username = request.POST.get('username')

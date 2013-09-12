@@ -81,14 +81,14 @@ class SettingsManager(models.Manager):
     def display_tutoring(self):
         return super(SettingsManager, self).get_or_create(id=1)[0].display_tutoring
 
-    def get_password(self):
-        return super(SettingsManager, self).get_or_create(id=1)[0].registration_password
+    def get_registration_code(self):
+        return super(SettingsManager, self).get_or_create(id=1)[0].registration_code
 
 class Settings(models.Model):
     term = models.ForeignKey('Term', blank=True, null=True)
     display_all_terms = models.BooleanField(default=False)
     display_tutoring = models.BooleanField(default=False)
-    registration_password = models.CharField(max_length=10)
+    registration_code = models.CharField(max_length=10, default='')
     objects = SettingsManager()
 
     class Meta:
