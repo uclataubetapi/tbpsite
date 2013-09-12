@@ -84,11 +84,15 @@ class SettingsManager(models.Manager):
     def get_registration_code(self):
         return super(SettingsManager, self).get_or_create(id=1)[0].registration_code
 
+    def get_eligibility_list(self):
+        return super(SettingsManager, self).get_or_create(id=1)[0].eligibility_list
+
 class Settings(models.Model):
     term = models.ForeignKey('Term', blank=True, null=True)
     display_all_terms = models.BooleanField(default=False)
     display_tutoring = models.BooleanField(default=False)
     registration_code = models.CharField(max_length=10, default='')
+    eligibility_list = models.FileField(upload_to='files')
     objects = SettingsManager()
 
     class Meta:
