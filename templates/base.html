@@ -44,10 +44,11 @@
             </ul>
             </li>
             <li class="dropdown">
-            <a href="#" class="dropdown-toggle">Candidates</a>
+            <a href="{% url 'web.views.candidates' %}" class="dropdown-toggle">Candidates</a>
             <ul class="dropdown-menu">
               <li><a href="{% url 'web.views.requirements' %}">Requirements</a></li>
               <li><a href="{% url 'main.views.houses' %}">Houses</a></li>
+              <li><a href="{{ eligibility_list }}">Eligibility List</a></li>
             </ul>
             </li>
             <li class="dropdown">

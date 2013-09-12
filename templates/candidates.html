@@ -3,42 +3,13 @@
 {% block title %}Candidates{% endblock %}
 
 {% block content %}
+
 <h1>Candidates</h1>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Bent Polish</th>
-      <th>Candidate Quiz</th>
-      <th>Candidate Meet and Greet</th>
-      <th>Social Event</th>
-      <th>Signature Book</th>
-      <th>Community Service</th>
-      <th>Initation Fee</th>
-      <th>Tutoring</th>
-      <th>Engineering Futures</th>
-      <th>Resume Submission</th>
-      <th>Professor Interview</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for candidate in candidate_list %}
-    <tr>
-      <td>{{ candidate }}</td>
-      <td>{% if candidate.bent_polish %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.candidate_quiz_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.candidate_meet_and_greet %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.social_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.signature_book_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.community_service_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.initation_fee %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.tutoring_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.engineering_futures %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.resume %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.professor_interview %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+
+<ul>
+  <li><a href="{% url 'web.views.requirements' %}">Requirements</a></li>
+  <li><a href="{% url 'main.views.houses' %}">Houses</a></li>
+  <li><a href="{{ eligibility_list }}">Eligibility List</a></li>
+</ul>
 
 {% endblock %}

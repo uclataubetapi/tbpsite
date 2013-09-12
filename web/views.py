@@ -80,3 +80,6 @@ def feedback(request):
     if request.method == "POST" and 'comment' in request.POST:
         Feedback(comment=request.POST.get('comment')).save()
     return redirect('main.views.tutoring')
+
+def candidates(request):
+    return render(request, 'candidates.html')
