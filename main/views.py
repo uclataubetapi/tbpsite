@@ -307,7 +307,7 @@ def candidates(request):
     if not request.user.is_authenticated() or not request.user.is_staff:
         return redirect_next(request)
 
-    return render(request, 'candidates.html', {'candidate_list': Candidate.current.order_by('profile')})
+    return render(request, 'candidate_requirements.html', {'candidate_list': Candidate.current.order_by('profile')})
 
 def active_members(request):
     if not request.user.is_authenticated() or not request.user.is_staff:
