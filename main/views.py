@@ -10,7 +10,7 @@ from django.shortcuts import redirect
 
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES, DAY_CHOICES, HOUR_CHOICES
 from tbpsite.settings import BASE_DIR
-from tutoring.models import Tutoring, Class
+from tutoring.models import Tutoring, Class, Feedback
 from common import render
 
 DATE_RE = re.compile(r'\d{4}-\d{2}-\d{2}')
@@ -320,6 +320,12 @@ def tutoring_hours(request):
         return redirect_next(request)
 
     return render(request, 'tutoring_hours.html', {'tutoring_list': Tutoring.objects.order_by('profile')})
+
+def tutoring_feedback(request):
+    if not request.user.is_authenticated() or not request.user.is_staff:
+        return redirect_next(request)
+
+    return render(request, 'tutoring_feedback.html', {'tutoring_feedback': Feedback.objects.order_by('-timestamp')})
 
 def houses(request):
     term = Settings.objects.term()
