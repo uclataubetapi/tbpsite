@@ -58,7 +58,7 @@ class MyUserAdmin(UserAdmin):
                     'Bryan Ngo\n'
                     'Webmaster - Tau Beta Pi\n'
                     'UCLA - CA Epsilon\n' % (user.get_username(), password),
-                    'bngo92@gmail.com', [user.email], fail_silently=False)
+                    'webmaster@tbp.seas.ucla.edu', [user.email], fail_silently=False)
 
 class HousePointsAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'term', 'resume', 'professor_interview', 
