@@ -351,6 +351,7 @@ class ActiveMember(models.Model):
 class Officer(models.Model):
     position = models.CharField(max_length=30)
     rank = models.IntegerField()
+    mail_alias = models.CharField(max_length=30)
     profile = models.ManyToManyField('Profile')
 
     def list_profiles( self ):
