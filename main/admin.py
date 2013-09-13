@@ -45,17 +45,11 @@ class MyUserAdmin(UserAdmin):
             user.set_password(password)
             user.save()
             send_mail('TBP Account Password Reset', 
-                    'Welcome to UCLA Tau Beta Pi!\n'
-                    'Our website can be found at http://tbp.seas.ucla.edu\n'
-                    '\n'
                     'Username: %s\n'
                     'Password: %s\n'
                     '\n'
-                    'This account is used for uploading your resume and professor interview.\n'
-                    'You can find your profile by clicking your username at the top right corner after logging in.\n'
                     'Please change your password and update your information so we can keep the resumes we send out up to date.\n'
                     '\n'
-                    'Bryan Ngo\n'
                     'Webmaster - Tau Beta Pi\n'
                     'UCLA - CA Epsilon\n' % (user.get_username(), password),
                     'webmaster@tbp.seas.ucla.edu', [user.email], fail_silently=False)
