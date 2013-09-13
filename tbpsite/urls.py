@@ -1,5 +1,4 @@
 from django.conf.urls import patterns, include, url
-import django
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -7,21 +6,21 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', 'web.views.home', name='home'),
 
-    url(r'^requirements/$', 'web.views.requirements'),
-    url(r'^programs/$', 'web.views.programs'),
-    url(r'^emcc/$', 'web.views.emcc'),
-    url(r'^fe/$', 'web.views.fe'),
+    url(r'^$', 'web.views.home', name='home'),
     url(r'^about/$', 'web.views.about'),
     url(r'^awards/$', 'web.views.awards'),
+    url(r'^candidates/$', 'web.views.candidates'),
+    url(r'^contact/$', 'web.views.officers'),
+    url(r'^emcc/$', 'web.views.emcc'),
+    url(r'^fe/$', 'web.views.fe'),
+    url(r'^programs/$', 'web.views.programs'),
+    url(r'^requirements/$', 'web.views.requirements'),
+    url(r'^tutoring/$', 'web.views.tutoring'),
+
     url(r'^officers/$', 'web.views.officers'),
     url(r'^faculty/$', 'web.views.faculty'),
-    url(r'^tutoring/$', 'web.views.tutoring'),
     url(r'^feedback/$', 'web.views.feedback'),
-    url(r'^contact/$', 'web.views.officers'),
-    url(r'^eligibility_list/$', 'web.views.eligibility_list'),
-    url(r'^candidates/$', 'web.views.candidates'),
 
     url(r'^tutoring_hours/$', 'main.views.tutoring_hours'),
     url(r'^tutoring_feedback/$', 'main.views.tutoring_feedback'),

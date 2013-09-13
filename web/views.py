@@ -1,55 +1,25 @@
-from django.shortcuts import redirect
-from common import render
-from event.models import Event
-from tutoring.models import Feedback
-from main.models import Candidate, Faculty, Officer
+import operator
 import re
 
-def home(request):
-    return render(request, 'home.html',
-            { 'upcomingEvents': sorted( Event.objects.filter(dropdown=True), 
-                key=lambda event: event.start ) } )
+from django.shortcuts import redirect
 
-def requirements(request):
-    return render(request, 'requirements.html')
+from common import MyTemplateView, render
+from event.models import Event
+from main.models import Candidate, Faculty, Officer
+from tutoring.models import Feedback
 
-def tutoring(request):
-    return render(request, 'tutoring.html')
-
-def programs(request):
-    return render(request, 'programs.html')
-
-def emcc(request):
-    return render(request, 'emcc.html')
-
-def fe(request):
-    return render(request, 'fe.html')
-
-def about(request):
-    return render(request, 'about.html')
-
-def awards(request):
-    return render(request, 'awards.html')
-
-def officers(request):
-    positionRe = re.compile( r'Club Liaison (\([^)]*\))' )
-    positions = []
-    liaisons = []
-    for position in Officer.objects.all():
-        match = positionRe.match( position.position )
-        if match:
-            for officer in position.profile.all():
-                liaisons.append(' '.join([str(officer), match.group(1)]))
-        else:
-            positions.append( ( position.position, [ str( officer ) 
-                for officer in position.profile.all() ] ) )
-
-    positions.append( ( 'Faculty Advisor', [ 'Bill Goodin' ] ) )
-    positions.append( ( 'Club Liaison', liaisons ) )
-
-    return render(request, 'officers.html', {
-            'term' : 'Summer - Fall 2013',
-            'positions' : positions } )
+about = MyTemplateView.as_view(template_name='about.html')
+awards = MyTemplateView.as_view(template_name='awards.html')
+candidates = MyTemplateView.as_view(template_name='candidates.html')
+contact = MyTemplateView.as_view(template_name='contact.html')
+emcc = MyTemplateView.as_view(template_name='emcc.html')
+fe = MyTemplateView.as_view(template_name='fe.html')
+home = MyTemplateView.as_view(template_name='home.html', 
+        additional={'upcomingEvents': sorted(Event.objects.filter(dropdown=True), 
+                key=operator.attrgetter('start'))})
+programs = MyTemplateView.as_view(template_name='programs.html')
+requirements = MyTemplateView.as_view(template_name='requirements.html')
+tutoring = MyTemplateView.as_view(template_name='tutoring.html')
 
 def faculty(request):
     faculty = Faculty.objects.all()
@@ -70,16 +40,27 @@ def faculty(request):
             'facultyAdvisor' : 'Ann R. Karagozian'
         })
 
-def contact(request):
-    return render(request, 'contact.html')
-
-def eligibility_list(request):
-    return render(request, 'eligibility_list.html')
-
 def feedback(request):
     if request.method == "POST" and 'comment' in request.POST:
         Feedback(comment=request.POST.get('comment')).save()
     return redirect('main.views.tutoring')
 
-def candidates(request):
-    return render(request, 'candidates.html')
+def officers(request):
+    positionRe = re.compile( r'Club Liaison (\([^)]*\))' )
+    positions = []
+    liaisons = []
+    for position in Officer.objects.all():
+        match = positionRe.match( position.position )
+        if match:
+            for officer in position.profile.all():
+                liaisons.append(' '.join([str(officer), match.group(1)]))
+        else:
+            positions.append( ( position.position, [ str( officer ) 
+                for officer in position.profile.all() ] ) )
+
+    positions.append( ( 'Faculty Advisor', [ 'Bill Goodin' ] ) )
+    positions.append( ( 'Club Liaison', liaisons ) )
+
+    return render(request, 'officers.html', {
+            'term' : 'Summer - Fall 2013',
+            'positions' : positions } )
