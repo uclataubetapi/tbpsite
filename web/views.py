@@ -3,7 +3,7 @@ import re
 
 from django.shortcuts import redirect
 
-from common import MyTemplateView, render
+from common import MyTemplateView
 from event.models import Event
 from main.models import Candidate, Faculty, Officer
 from tutoring.models import Feedback
@@ -21,7 +21,7 @@ programs = MyTemplateView.as_view(template_name='programs.html')
 requirements = MyTemplateView.as_view(template_name='requirements.html')
 tutoring = MyTemplateView.as_view(template_name='tutoring.html')
 
-def faculty(request):
+def get_faculty_by_dept():
     faculty = Faculty.objects.all()
     facultyByDept = {}
     for f in faculty:
@@ -34,18 +34,9 @@ def faculty(request):
             ('Jason Corl', 'CA Q', "'06 (District 16 Director)", ''),
             ('Scott Eckersall', 'CA I', "'96 (District 16 Director)", '')
             ]
-    facultyByDept = [(dept, facultyByDept[dept]) for dept in sorted(facultyByDept)]
-    return render(request, 'faculty.html', {
-            'faculty' : facultyByDept,
-            'facultyAdvisor' : 'Ann R. Karagozian'
-        })
+    return [(dept, facultyByDept[dept]) for dept in sorted(facultyByDept)]
 
-def feedback(request):
-    if request.method == "POST" and 'comment' in request.POST:
-        Feedback(comment=request.POST.get('comment')).save()
-    return redirect('main.views.tutoring')
-
-def officers(request):
+def get_officers():
     positionRe = re.compile( r'Club Liaison (\([^)]*\))' )
     positions = []
     liaisons = []
@@ -60,7 +51,15 @@ def officers(request):
 
     positions.append( ( 'Faculty Advisor', [ 'Bill Goodin' ] ) )
     positions.append( ( 'Club Liaison', liaisons ) )
+    return positions
 
-    return render(request, 'officers.html', {
-            'term' : 'Summer - Fall 2013',
-            'positions' : positions } )
+faculty = MyTemplateView.as_view(template_name='faculty.html', 
+        additional={'faculty' : get_faculty_by_dept, 'facultyAdvisor': 'Ann R. Karagozian'})
+officers = MyTemplateView.as_view(template_name='officers.html', 
+        additional={'term': 'Summer - Fall 2013', 'positions': get_officers})
+
+def feedback(request):
+    if request.method == "POST" and 'comment' in request.POST:
+        Feedback(comment=request.POST.get('comment')).save()
+    return redirect('main.views.tutoring')
+
