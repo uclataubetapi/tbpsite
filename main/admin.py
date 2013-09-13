@@ -130,7 +130,7 @@ class SettingsAdmin(admin.ModelAdmin):
     list_editable = ('term', 'display_all_terms', 'display_tutoring', 'registration_code')
 
 class OfficerAdmin( admin.ModelAdmin ):
-    list_display = ( 'position', 'rank', 'list_profiles' )
+    list_display = ( 'position', 'rank', 'mail_alias', 'list_profiles' )
     filter_horizontal = ( 'profile', )
 
 admin.site.unregister(User)
