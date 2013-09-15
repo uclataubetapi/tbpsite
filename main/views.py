@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES, DAY_CHOICES, HOUR_CHOICES
 from tbpsite.settings import BASE_DIR
@@ -14,6 +15,18 @@ from tutoring.models import Tutoring, Class, Feedback
 from common import render
 
 DATE_RE = re.compile(r'\d{4}-\d{2}-\d{2}')
+
+def render_profile_page(request, template, template_args=None, **kwargs):
+    if not template_args:
+        template_args = {}
+
+    tabs = [ ( reverse('main.views.profile_view'), 'Profile' ),
+             ( reverse('main.views.edit'), 'Edit Profile' ),
+             ( reverse('main.views.add'), 'Modify Classes' ) ]
+
+    template_args[ 'profile_tabs' ] = tabs
+
+    return render(request, template, template_args, **kwargs)
 
 class Error:
     def __init__(self):
@@ -98,7 +111,7 @@ def profile_view(request):
     else:
         details = ((active.term, 'Completed' if active.completed else 'In Progress') for active in ActiveMember.objects.filter(profile=profile))
 
-    return render(request, 'profile.html', {'user': user, 'profile': profile, 'details': details})
+    return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 'details': details})
 
 def register(request):
     if request.user.is_authenticated():
@@ -235,7 +248,7 @@ def edit(request, from_redirect=''):
 
     classes = profile.classes.all()
 
-    return render(request, 'edit.html', {'from_redirect': from_redirect, 'user': user, 'profile': profile, 'term': term, 'majors': majors, 'quarters': quarters, 'error': error,
+    return render_profile_page(request, 'edit.html', {'from_redirect': from_redirect, 'user': user, 'profile': profile, 'term': term, 'majors': majors, 'quarters': quarters, 'error': error,
         'day_1': day_1, 'hour_1': hour_1, 'day_2': day_2, 'hour_2': hour_2, 'day_3': day_3, 'hour_3': hour_3})
 
 def add(request):
@@ -261,7 +274,7 @@ def add(request):
                     except Class.DoesNotExist:
                         pass
     
-    return render(request, 'add.html', {'departments': departments, 'classes': profile.classes.all()})
+    return render_profile_page(request, 'add.html', {'departments': departments, 'classes': profile.classes.all()})
 
 def resume_pdf(request):
     if not request.user.is_authenticated():
