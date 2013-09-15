@@ -1,14 +1,9 @@
-{% extends "base.html" %}
+{% extends "profile_base.html" %}
 
 {% block title %}Profile{% endblock %}
 
-{% block content %}
+{% block tabcontent %}
 
-<ul class="nav nav-tabs">
-  <li class="active"><a href="#">Profile</a></li>
-  <li><a href="{% url 'main.views.edit' %}">Edit</a></li>
-  <li><a href="{% url 'main.views.add' %}">Modify Classes</a></li>
-</ul>
 <div class="row">
   <div class="col-lg-6">
     <form class="form-horizontal">
