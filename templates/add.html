@@ -1,14 +1,9 @@
-{% extends "base.html" %}
+{% extends "profile_base.html" %}
 
-{% block title %}Edit Profile{% endblock %}
+{% block title %}Modify Classes{% endblock %}
 
-{% block content %}
+{% block tabcontent %}
 
-<ul class="nav nav-tabs">
-  <li><a href="{% url 'main.views.profile_view' %}">Profile</a></li>
-  <li><a href="{% url 'main.views.edit' %}">Edit</a></li>
-  <li class="active"><a href="#">Modify Classes</a></li>
-</ul>
 <div class="row">
   <div class="col-lg-6">
     <form class="form-inline" method="post" enctype="multipart/form-data">
