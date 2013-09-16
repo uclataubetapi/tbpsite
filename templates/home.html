@@ -8,8 +8,8 @@
   }
 </style>
 <div class="row">
-  <div class="col-lg-8">
-    <div id="carousel" class="carousel slide visible-lg">
+  <div class="col-xs-12 col-md-8">
+    <div id="carousel" class="carousel">
       <!-- Indicators -->
       <ol class="carousel-indicators">
         <li data-target="#carousel" data-slide-to="0" class="active"></li>
@@ -54,7 +54,22 @@
       </a>
     </div>
   </div>
-  <div class="col-lg-4">
+  <div class="col-md-4 visible-md visible-lg">
+    <h2>UCLA Tau Beta Pi</h2>
+    <h4>Announcements</h4>
+    <a href="{% url 'tutoring.views.schedule' %}" class="btn btn-large btn-primary">The Tutoring Schedule is Up!</a>
+    <h4>Upcoming Events</h4> 
+    {% for event in upcomingEvents %}
+    <dl><a href="/events/{{ event.url }}">{{ event.name }}</a>
+      <dd>{{ event.location }}</dd>
+      <dd>{{ event.get_date }}</dd>
+      <dd>{{ event.get_time }}</dd>
+    </dl>
+    {% endfor %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 visible-xs visible-sm">
     <h2>UCLA Tau Beta Pi</h2>
     <h4>Announcements</h4>
     <a href="{% url 'tutoring.views.schedule' %}" class="btn btn-large btn-primary">The Tutoring Schedule is Up!</a>
