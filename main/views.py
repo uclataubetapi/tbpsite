@@ -170,7 +170,7 @@ def edit(request, from_redirect=''):
             if 'professor_interview' in request.FILES:
                 professor_interview = request.FILES['professor_interview']
                 if validate_file(professor_interview, pdf, error):
-                    profile.professor_interview = write_file(professor_interview, '{}/professor_interview/{}'.format(BASE_DIR, user.id))
+                    profile.professor_interview = write_file(professor_interview, '{}/professor_interviews/{}'.format(BASE_DIR, user.id))
                 else:
                     error.file_type.append('Professor Interview')
 
