@@ -410,6 +410,7 @@ class UserAccountForm(UserForm):
     confirm_password = forms.CharField(widget=forms.widgets.PasswordInput, required=False, label="Confirm Password")
 
     class Meta:
+        model = User
         fields = ['current_password', 'username', 'new_password', 'confirm_password']
 
     def check_password(self, password):
@@ -423,6 +424,7 @@ class RegisterForm(UserForm):
     confirm_password = forms.CharField(widget=forms.widgets.PasswordInput, label="Confirm Password")
 
     class Meta:
+        model = User
         fields = ['current_password', 'username', 'new_password', 'confirm_password']
 
     def check_password(self, password):
