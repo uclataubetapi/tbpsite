@@ -10,7 +10,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
-from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, UserAccountForm, UserPersonalForm, ProfileForm, DAY_CHOICES, HOUR_CHOICES
+from main.admin import generate_candidate
+from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, DAY_CHOICES, HOUR_CHOICES
 from tbpsite.settings import BASE_DIR
 from tutoring.models import Tutoring, Class, Feedback
 from common import render
@@ -101,54 +102,49 @@ def profile_view(request):
         return redirect(edit, from_redirect='redirect')
 
     if profile.position == profile.CANDIDATE:
-        details = ((name, 'Completed' if requirement else 'Not Completed') for name, requirement in Candidate.objects.filter(profile=profile)[0].requirements())
+        try:
+            candidate = Candidate.objects.get(profile=profile)
+        except Candidate.DoesNotExist:
+            candidate = generate_candidate(profile, Settings.objects.term())
+        details = ((name, 'Completed' if requirement else 'Not Completed') 
+                for name, requirement in candidate.requirements())
     else:
         details = ((active.term, 'Completed' if active.completed else 'In Progress') for active in ActiveMember.objects.filter(profile=profile))
 
     return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 'details': details})
 
 def register(request):
-    if request.user.is_authenticated():
-        return redirect_next(request)
-
-    error = Error()
     if request.method == "POST":
-        registration_code = request.POST.get('registration_code')
-        if registration_code != Settings.objects.get_registration_code():
-            error.incorrect_password = True
-
-        username = request.POST.get('username')
-        error.username_taken = User.objects.filter(username=username).count()
-
-        new_password = request.POST.get('new_password')
-        confirm_password = request.POST.get('confirm_password')
-        if new_password != confirm_password:
-            error.non_matching_password = True
-
-        if not error.error():
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            username, new_password = map(form.cleaned_data.get, ('username', 'new_password'))
             User.objects.create_user(username, password=new_password)
             user = auth.authenticate(username=username, password=new_password)
             auth.login(request, user)
             return redirect(edit, from_redirect='redirect')
-    
-    return render(request, 'register.html', {'error': error})
+    else:
+        form = RegisterForm()
+    return render(request, 'register.html', {'form': form})
 
 def edit(request, from_redirect=''):
     if not request.user.is_authenticated():
         return redirect_next(request)
 
     user = request.user
-    profile = Profile.objects.get(user=user)
+    profile, created = Profile.objects.get_or_create(user=user)
     error = Error()
 
     if request.method != "POST":
         user_account_form = UserAccountForm(instance=user)
         user_personal_form = UserPersonalForm(instance=user)
         profile_dict = model_to_dict(profile)
-        profile_dict.update({
+        try:
+            profile_dict.update({
                 'graduation_quarter': profile.graduation_term.quarter,
                 'graduation_year': profile.graduation_term.year
                 })
+        except AttributeError:
+            pass
         profile_form = ProfileForm(instance=profile, initial=profile_dict)
     else:
         user_account_form = UserAccountForm(request.POST, instance=user)

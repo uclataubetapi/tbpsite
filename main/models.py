@@ -375,7 +375,33 @@ class Faculty(models.Model):
     def __unicode__(self):
         return self.name
 
-class UserAccountForm(ModelForm):
+class UserForm(ModelForm):
+
+    def check_password(self, password):
+        raise NotImplementedError
+
+    def clean(self):
+        cleaned_data = super(UserForm, self).clean()
+
+        current_password, username, new_password, confirm_password = map(cleaned_data.get, 
+                ('current_password', 'username', 'new_password', 'confirm_password'))
+
+        if (any([username != self.instance.get_username(), new_password, confirm_password]) 
+                and not current_password):
+            self._errors['current_password'] = self.error_class(["Current password required."])
+
+        if current_password and not self.check_password(current_password):
+            self._errors['current_password'] = self.error_class(["Incorrect password."])
+
+        if username != self.instance.get_username() and User.objects.filter(username=username).count():
+            self._errors['username'] = self.error_class(["Username has already been taken."])
+
+        if new_password != confirm_password:
+            self._errors['confirm_password'] = self.error_class(["Passwords do not match."])
+
+        return cleaned_data
+
+class UserAccountForm(UserForm):
     current_password = forms.CharField(widget=forms.widgets.PasswordInput, 
             help_text="Required if changing username or password.", required=False, label="Current Password")
     username = forms.CharField(required=False)
@@ -386,26 +412,22 @@ class UserAccountForm(ModelForm):
         model = User
         fields = ['current_password', 'username', 'new_password', 'confirm_password']
 
-    def clean(self):
-        cleaned_data = super(UserAccountForm, self).clean()
+    def check_password(self, password):
+        return self.instance.check_password(password)
 
-        current_password, username, new_password, confirm_password = map(cleaned_data.get, 
-                ('current_password', 'username', 'new_password', 'confirm_password'))
+class RegisterForm(UserForm):
+    current_password = forms.CharField(widget=forms.widgets.PasswordInput, 
+            help_text="Required if changing username or password.", label="Registration Code")
+    username = forms.CharField()
+    new_password = forms.CharField(widget=forms.widgets.PasswordInput, label="New Password")
+    confirm_password = forms.CharField(widget=forms.widgets.PasswordInput, label="Confirm Password")
 
-        if (any([username != self.instance.get_username(), new_password, confirm_password]) 
-                and not current_password):
-            self._errors['current_password'] = self.error_class(["Current password required."])
+    class Meta:
+        model = User
+        fields = ['current_password', 'username', 'new_password', 'confirm_password']
 
-        if current_password and not self.instance.check_password(current_password):
-            self._errors['current_password'] = self.error_class(["Incorrect password."])
-
-        if username != self.instance.get_username() and User.objects.filter(username=username).count():
-            self._errors['username'] = self.error_class(["Username has already been taken."])
-
-        if new_password != confirm_password:
-            self._errors['confirm_password'] = self.error_class(["Passwords do not match."])
-
-        return cleaned_data
+    def check_password(self, password):
+        return password == Settings.objects.get_registration_code()
 
 class UserPersonalForm(ModelForm):
     # TODO: change to email field
