@@ -3,6 +3,8 @@ import re
 
 from django.forms.models import model_to_dict
 from django.contrib import auth
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.servers.basehttp import FileWrapper
@@ -11,7 +13,8 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
 from main.admin import generate_candidate
-from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, DAY_CHOICES, HOUR_CHOICES
+from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings,\
+        LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, DAY_CHOICES, HOUR_CHOICES
 from tbpsite.settings import BASE_DIR
 from tutoring.models import Tutoring, Class, Feedback
 from common import render
@@ -40,20 +43,6 @@ class Error:
     def error(self):
         return any(self.errors())
 
-def get_next(request):
-    """ Return the next parameter from get.
-    If it does not exist or it is the empty string,
-    return the path to the root.
-    """
-
-    next = request.GET.get('next', '/')
-    if not next:
-        next = '/'
-    return next
-
-def redirect_next(request, query=''):
-    return redirect('{}{}'.format(get_next(request), query))
-
 def validate_file(f, mime_types, error):
     ret = True
 
@@ -74,28 +63,21 @@ def write_file(upload, save_path):
     return datetime.datetime.today()
 
 def login(request):
-    username = request.POST.get('username', False)
-    password = request.POST.get('password', False)
-    error = True
-
-    if username and password:
-        user = auth.authenticate(username=username, password=password)
-        if user is not None:
-            auth.login(request, user)
-            error = False
-
-    if error:
-        return redirect_next(request, '?error=True')
-    return redirect_next(request)
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            auth.login(request, form.cleaned_data['user'])
+            return redirect(request.GET.get('next', 'home'))
+    else:
+        form = LoginForm()
+    return render(request, "login.html", {'form': form})
 
 def logout(request):
     auth.logout(request)
-    return redirect_next(request)
+    return redirect(request.GET.get('next', 'home'))
 
+@login_required(login_url=login)
 def profile_view(request):
-    if not request.user.is_authenticated():
-        return redirect_next(request)
-
     user = request.user
     profile, created = Profile.objects.get_or_create(user=user)
     if not all([user.email, user.first_name, user.last_name, profile.graduation_term and profile.graduation_term.year]):
@@ -126,10 +108,8 @@ def register(request):
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
 
+@login_required(login_url=login)
 def edit(request, from_redirect=''):
-    if not request.user.is_authenticated():
-        return redirect_next(request)
-
     user = request.user
     profile, created = Profile.objects.get_or_create(user=user)
     error = Error()
@@ -138,6 +118,7 @@ def edit(request, from_redirect=''):
         user_account_form = UserAccountForm(instance=user)
         user_personal_form = UserPersonalForm(instance=user)
         profile_dict = model_to_dict(profile)
+
         try:
             profile_dict.update({
                 'graduation_quarter': profile.graduation_term.quarter,
@@ -145,6 +126,7 @@ def edit(request, from_redirect=''):
                 })
         except AttributeError:
             pass
+
         profile_form = ProfileForm(instance=profile, initial=profile_dict)
     else:
         user_account_form = UserAccountForm(request.POST, instance=user)
@@ -216,10 +198,8 @@ def edit(request, from_redirect=''):
         'from_redirect': from_redirect, 'user': user, 'profile': profile, 'error': error,
         'day_1': day_1, 'hour_1': hour_1, 'day_2': day_2, 'hour_2': hour_2, 'day_3': day_3, 'hour_3': hour_3})
 
+@login_required(login_url=login)
 def add(request):
-    if not request.user.is_authenticated():
-        return redirect_next(request)
-
     departments = (department for department, _ in Class.DEPT_CHOICES)
     profile, created = Profile.objects.get_or_create(user=request.user)
 
@@ -241,10 +221,8 @@ def add(request):
     
     return render_profile_page(request, 'add.html', {'departments': departments, 'classes': profile.classes.all()})
 
+@login_required(login_url=login)
 def resume_pdf(request):
-    if not request.user.is_authenticated():
-        return redirect_next(request)
-
     user = request.user
     try:
         f = open(BASE_DIR + '/resumes_pdf/' + str(user.id))
@@ -254,10 +232,8 @@ def resume_pdf(request):
     except IOError:
         return redirect_next(request)
 
+@login_required(login_url=login)
 def resume_word(request):
-    if not request.user.is_authenticated():
-        return redirect_next(request)
-
     user = request.user
     try:
         f = open(BASE_DIR + '/resumes_word/' + str(user.id))
@@ -267,10 +243,8 @@ def resume_word(request):
     except IOError:
         return redirect_next(request)
 
+@login_required(login_url=login)
 def interview(request):
-    if not request.user.is_authenticated():
-        return redirect_next(request)
-
     user = request.user
     response = None
     try:
@@ -281,28 +255,20 @@ def interview(request):
     except IOError:
         return redirect_next(request)
 
+@staff_member_required
 def candidates(request):
-    if not request.user.is_authenticated() or not request.user.is_staff:
-        return redirect_next(request)
-
     return render(request, 'candidate_requirements.html', {'candidate_list': Candidate.current.order_by('profile')})
 
+@staff_member_required
 def active_members(request):
-    if not request.user.is_authenticated() or not request.user.is_staff:
-        return redirect_next(request)
-
     return render(request, 'active_members.html', {'member_list': ActiveMember.current.order_by('profile')})
 
+@staff_member_required
 def tutoring_hours(request):
-    if not request.user.is_authenticated() or not request.user.is_staff:
-        return redirect_next(request)
-
     return render(request, 'tutoring_hours.html', {'tutoring_list': Tutoring.objects.order_by('profile')})
 
+@staff_member_required
 def tutoring_feedback(request):
-    if not request.user.is_authenticated() or not request.user.is_staff:
-        return redirect_next(request)
-
     return render(request, 'tutoring_feedback.html', {'tutoring_feedback': Feedback.objects.order_by('-timestamp')})
 
 def houses(request):
@@ -310,18 +276,20 @@ def houses(request):
     house_points = [HousePoints.objects.get_or_create(house=house, term=term)[0] for house in House.objects.all()]
     return render(request, 'houses.html', {'houses': house_points})
 
+@staff_member_required
 def downloads(request):
-    if not request.user.is_authenticated():
-        return redirect_next(request)
-
     return render(request, 'downloads.html')
 
+@staff_member_required
 def spreadsheet(request):
-    if not request.user.is_authenticated():
-        return redirect_next(request)
-
     data = '\n'.join(['First Name,Middle Name,Last Name,Email,Nickname,Gender,Birthday,Phone Number,Major,Initiation Term,Graduation Term'] + 
             [profile.dump() for profile in Profile.objects.all() if profile.user.id != 1])
     response = HttpResponse(data, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=spreadsheet.csv'
     return response
+
+@staff_member_required
+def preferences(request):
+    term = Settings.objects.term()
+    tutors = (tutoring.profile for tutoring in Tutoring.objects.filter(term=term))
+    return render(request, 'preferences.html', {'tutors': tutors})

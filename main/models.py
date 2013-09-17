@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
@@ -409,7 +410,6 @@ class UserAccountForm(UserForm):
     confirm_password = forms.CharField(widget=forms.widgets.PasswordInput, required=False, label="Confirm Password")
 
     class Meta:
-        model = User
         fields = ['current_password', 'username', 'new_password', 'confirm_password']
 
     def check_password(self, password):
@@ -423,7 +423,6 @@ class RegisterForm(UserForm):
     confirm_password = forms.CharField(widget=forms.widgets.PasswordInput, label="Confirm Password")
 
     class Meta:
-        model = User
         fields = ['current_password', 'username', 'new_password', 'confirm_password']
 
     def check_password(self, password):
@@ -449,3 +448,16 @@ class ProfileForm(ModelForm):
         widgets = {
                 'gender': forms.widgets.RadioSelect
                 }
+
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.widgets.PasswordInput)
+
+    def clean(self):
+        cleaned_data = super(LoginForm, self).clean()
+        user = authenticate(username=cleaned_data.get('username'), password=cleaned_data.get('password'))
+        if user is None:
+            self._errors['password'] = self.error_class(["Incorrect password."])
+        else:
+            cleaned_data['user'] = user
+        return cleaned_data

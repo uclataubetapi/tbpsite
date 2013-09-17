@@ -1,7 +1,6 @@
 import re
 
 from main.models import Settings
-from main.views import redirect_next
 from tutoring.models import Tutoring, Class 
 from common import render
 
@@ -30,11 +29,3 @@ def schedule(request):
             'collapse{}'.format(number)))
             
     return render(request, 'schedule.html', {'term': term, 'classes': classes, 'tutors': tutors})
-
-def preferences(request):
-    if not request.user.is_authenticated():
-        return redirect_next(request)
-
-    term = Settings.objects.term()
-    tutors = (tutoring.profile for tutoring in Tutoring.objects.filter(term=term))
-    return render(request, 'preferences.html', {'tutors': tutors})
