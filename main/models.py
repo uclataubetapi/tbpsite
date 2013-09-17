@@ -1,5 +1,7 @@
+from django import forms
 from django.contrib.auth.models import User
 from django.db import models
+from django.forms import ModelForm
 
 CANDIDATE_COMMUNITY_SERVICE = 1
 CANDIDATE_SOCIAL = 2
@@ -53,14 +55,18 @@ HOUR_CHOICES = (
         ('4', '2pm-4pm'),
         ('5', '3pm-5pm'),
         )
+GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+        )
+QUARTER_CHOICES = (
+        ('0', 'Winter'),
+        ('1', 'Spring'),
+        ('2', 'Summer'),
+        ('3', 'Fall'),
+        )
 
 class Term(models.Model):
-    QUARTER_CHOICES = (
-            ('0', 'Winter'),
-            ('1', 'Spring'),
-            ('2', 'Summer'),
-            ('3', 'Fall'),
-            )
     quarter = models.CharField(max_length=1, choices=QUARTER_CHOICES)
     year = models.IntegerField()
 
@@ -174,15 +180,11 @@ class HousePoints(models.Model):
 
 class Profile(models.Model):
     user = models.ForeignKey(User, unique=True)
-    middle_name = models.CharField(max_length=30, blank=True)
-    nickname = models.CharField(max_length=30, blank=True)
-    GENDER_CHOICES = (
-            ('M', 'Male'),
-            ('F', 'Female'),
-            )
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    birthday = models.DateField(blank=True, null=True)
-    phone_number = models.CharField(max_length=25)
+    middle_name = models.CharField(max_length=30, blank=True, verbose_name="Middle Name")
+    nickname = models.CharField(max_length=30, blank=True, verbose_name="Nickname (optional)")
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='M')
+    birthday = models.DateField()
+    phone_number = models.CharField(max_length=25, verbose_name="Phone Number")
 
     CANDIDATE = '0'
     MEMBER = '1'
@@ -372,3 +374,56 @@ class Faculty(models.Model):
 
     def __unicode__(self):
         return self.name
+
+class UserAccountForm(ModelForm):
+    current_password = forms.CharField(widget=forms.widgets.PasswordInput, 
+            help_text="Required if changing username or password.", required=False, label="Current Password")
+    username = forms.CharField(required=False)
+    new_password = forms.CharField(widget=forms.widgets.PasswordInput, required=False, label="New Password")
+    confirm_password = forms.CharField(widget=forms.widgets.PasswordInput, required=False, label="Confirm Password")
+
+    class Meta:
+        model = User
+        fields = ['current_password', 'username', 'new_password', 'confirm_password']
+
+    def clean(self):
+        cleaned_data = super(UserAccountForm, self).clean()
+
+        current_password, username, new_password, confirm_password = map(cleaned_data.get, 
+                ('current_password', 'username', 'new_password', 'confirm_password'))
+
+        if (any([username != self.instance.get_username(), new_password, confirm_password]) 
+                and not current_password):
+            self._errors['current_password'] = self.error_class(["Current password required."])
+
+        if current_password and not self.instance.check_password(current_password):
+            self._errors['current_password'] = self.error_class(["Incorrect password."])
+
+        if username != self.instance.get_username() and User.objects.filter(username=username).count():
+            self._errors['username'] = self.error_class(["Username has already been taken."])
+
+        if new_password != confirm_password:
+            self._errors['confirm_password'] = self.error_class(["Passwords do not match."])
+
+        return cleaned_data
+
+class UserPersonalForm(ModelForm):
+    # TODO: change to email field
+    email = forms.CharField(required=True)
+    first_name = forms.CharField(required=True, label="First Name")
+    last_name = forms.CharField(required=True, label="Last Name")
+
+    class Meta:
+        model = User
+        fields = ['email', 'first_name', 'last_name']
+
+class ProfileForm(ModelForm):
+    graduation_quarter = forms.ChoiceField(choices=QUARTER_CHOICES, label="Graduation Quarter")
+    graduation_year = forms.IntegerField(label="Graduation Year")
+
+    class Meta:
+        model = Profile
+        fields = ['middle_name', 'nickname', 'gender', 'birthday', 'phone_number', 'major', 'graduation_quarter', 'graduation_year']
+        widgets = {
+                'gender': forms.widgets.RadioSelect
+                }
