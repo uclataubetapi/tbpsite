@@ -24,8 +24,8 @@ class TutoringAdmin(admin.ModelAdmin):
 
     def import_tutoring_times(modeladmin, request, queryset):
         for tutoring in queryset:
-            tutoring.day_1 = tutoring.day_2 = tutoring.profile.day_1
-            tutoring.hour_1 = tutoring.profile.hour_1
+            tutoring.day_1 = tutoring.day_2 = tutoring.best_day
+            tutoring.hour_1 = tutoring.best_hour
             tutoring.hour_2 = str(int(tutoring.hour_1) + 1)
             tutoring.save()
 

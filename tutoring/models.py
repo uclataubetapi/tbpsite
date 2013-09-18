@@ -54,6 +54,14 @@ class Tutoring(models.Model):
             ('5', '3pm'),
             ('6', '4pm'),
             )
+
+    best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
+    best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
+    second_best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
+    second_best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='2')
+    third_best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
+    third_best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='4')
+
     day_1 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
     hour_1 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
     day_2 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')

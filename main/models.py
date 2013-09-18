@@ -1,4 +1,5 @@
 from django import forms
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.db import models
@@ -66,6 +67,11 @@ QUARTER_CHOICES = (
         ('2', 'Summer'),
         ('3', 'Fall'),
         )
+
+fs = FileSystemStorage(location='/media')
+
+def professor_interview_path(instance, filename=''):
+    return 'professor_interviews/%s.pdf' % str(instance).replace(' ', '_')
 
 class Term(models.Model):
     quarter = models.CharField(max_length=1, choices=QUARTER_CHOICES)
@@ -184,7 +190,7 @@ class Profile(models.Model):
     middle_name = models.CharField(max_length=30, blank=True, verbose_name="Middle Name")
     nickname = models.CharField(max_length=30, blank=True, verbose_name="Nickname (optional)")
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='M')
-    birthday = models.DateField()
+    birthday = models.DateField(null=True)
     phone_number = models.CharField(max_length=25, verbose_name="Phone Number")
 
     CANDIDATE = '0'
@@ -200,15 +206,8 @@ class Profile(models.Model):
     graduation_term = models.ForeignKey('Term', related_name='profile_graduation_term', blank=True, null=True)
     resume_pdf = models.DateTimeField(blank=True, null=True)
     resume_word = models.DateTimeField(blank=True, null=True)
-    professor_interview = models.DateTimeField(blank=True, null=True)
 
     classes = models.ManyToManyField('tutoring.Class', blank=True, null=True)
-    day_1 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
-    hour_1 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
-    day_2 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
-    hour_2 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='2')
-    day_3 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
-    hour_3 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='4')
 
     class Meta:
         ordering = ('position', 'user__last_name', 'user__first_name')
@@ -240,6 +239,7 @@ class Candidate(models.Model):
     community_service = models.IntegerField(default=0)
     initiation_fee = models.BooleanField(default=False)
     engineering_futures = models.BooleanField(default=False)
+    professor_interview = models.FileField(upload_to=professor_interview_path, storage=fs)
     other = models.IntegerField(default=0)
 
     current = TermManager()
@@ -290,9 +290,6 @@ class Candidate(models.Model):
     def resume(self):
         return self.profile.resume()
 
-    def professor_interview(self):
-        return self.profile.professor_interview is not None
-
     def requirements(self):
         return (
                 ('Tutoring', self.tutoring.complete()),
@@ -304,7 +301,7 @@ class Candidate(models.Model):
                 ('Engineering Futures', self.engineering_futures),
                 ('Social', self.social_complete()),
                 ('Resume', self.resume()),
-                ('Professor Interview', self.professor_interview())
+                ('Professor Interview', self.professor_interview)
                 )
 
     def complete(self):
@@ -463,3 +460,9 @@ class LoginForm(forms.Form):
         else:
             cleaned_data['user'] = user
         return cleaned_data
+
+class CandidateForm(ModelForm):
+
+    class Meta:
+        model = Candidate
+        fields = ['professor_interview']
