@@ -49,58 +49,6 @@
         </div>
       </fieldset>
       <fieldset>
-        <legend>Tutoring Preferences</legend>
-        <div class="form-group">
-          <label class="col-lg-4 control-label">Best Day</label>
-          <div class="col-lg-4">
-            <select class="form-control" name="day_1">
-              {% for day in day_1 %}
-              <option{{ day.0 }}>{{ day.1 }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="col-lg-4">
-            <select class="form-control" name="hour_1">
-              {% for hour in hour_1 %}
-              <option{{ hour.0 }}>{{ hour.1 }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-4 control-label">Second Best Day</label>
-          <div class="col-lg-4">
-            <select class="form-control" name="day_2">
-              {% for day in day_2 %}
-              <option{{ day.0 }}>{{ day.1 }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="col-lg-4">
-            <select class="form-control" name="hour_2">
-              {% for hour in hour_2 %}
-              <option{{ hour.0 }}>{{ hour.1 }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-4 control-label">Third Best Day</label>
-          <div class="col-lg-4">
-            <select class="form-control" name="day_3">
-              {% for day in day_3 %}
-              <option{{ day.0 }}>{{ day.1 }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="col-lg-4">
-            <select class="form-control" name="hour_3">
-              {% for hour in hour_3 %}
-              <option{{ hour.0 }}>{{ hour.1 }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">Submit</button>
         </div>

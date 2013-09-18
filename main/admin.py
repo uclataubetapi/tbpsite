@@ -61,7 +61,7 @@ class HousePointsAdmin(admin.ModelAdmin):
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'position', 'house', 'major', 
-            'initiation_term', 'graduation_term', 'resume_pdf', 'resume_word', 'professor_interview')
+            'initiation_term', 'graduation_term', 'resume_pdf', 'resume_word')
     list_filter = ('position',)
     search_fields = ('user__first_name', 'user__last_name', 'user__email')
     actions = ('create_candidate', 'create_active_member', 'promote_candidate')

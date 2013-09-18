@@ -141,14 +141,6 @@ def edit(request, from_redirect=''):
 
             resume_pdf = None
             resume_word = None
-            professor_interview = None
-
-            profile.day_1 = request.POST.get('day_1')
-            profile.hour_1 = request.POST.get('hour_1')
-            profile.day_2 = request.POST.get('day_2')
-            profile.hour_2 = request.POST.get('hour_2')
-            profile.day_3 = request.POST.get('day_3')
-            profile.hour_3 = request.POST.get('hour_3')
 
             pdf = ('application/pdf', 'application/force-download')
             word = ('application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
@@ -167,13 +159,6 @@ def edit(request, from_redirect=''):
                 else:
                     error.file_type.append('Resume (word)')
 
-            if 'professor_interview' in request.FILES:
-                professor_interview = request.FILES['professor_interview']
-                if validate_file(professor_interview, pdf, error):
-                    profile.professor_interview = write_file(professor_interview, '{}/professor_interviews/{}'.format(BASE_DIR, user.id))
-                else:
-                    error.file_type.append('Professor Interview')
-
             if not error.error():
                 if user_account_form.cleaned_data['new_password']:
                     user.set_password(user_account_form.cleaned_data['new_password'])
@@ -184,19 +169,11 @@ def edit(request, from_redirect=''):
                 profile_form.save()
                 return redirect(profile_view)
 
-    day_1 = [(' value={}{}'.format(value, ' selected="selected"' if value == profile.day_1 else ''), day) for value, day in DAY_CHOICES]
-    hour_1 = [(' value={}{}'.format(value, ' selected="selected"' if value == profile.hour_1 else ''), hour) for value, hour in HOUR_CHOICES]
-    day_2 = [(' value={}{}'.format(value, ' selected="selected"' if value == profile.day_2 else ''), day) for value, day in DAY_CHOICES]
-    hour_2 = [(' value={}{}'.format(value, ' selected="selected"' if value == profile.hour_2 else ''), hour) for value, hour in HOUR_CHOICES]
-    day_3 = [(' value={}{}'.format(value, ' selected="selected"' if value == profile.day_3 else ''), day) for value, day in DAY_CHOICES]
-    hour_3 = [(' value={}{}'.format(value, ' selected="selected"' if value == profile.hour_3 else ''), hour) for value, hour in HOUR_CHOICES]
-
     classes = profile.classes.all()
 
     return render_profile_page(request, 'edit.html', {
         'user_account_form': user_account_form, 'user_personal_form': user_personal_form, 'profile_form': profile_form, 
-        'from_redirect': from_redirect, 'user': user, 'profile': profile, 'error': error,
-        'day_1': day_1, 'hour_1': hour_1, 'day_2': day_2, 'hour_2': hour_2, 'day_3': day_3, 'hour_3': hour_3})
+        'from_redirect': from_redirect, 'user': user, 'profile': profile})
 
 @login_required(login_url=login)
 def add(request):
