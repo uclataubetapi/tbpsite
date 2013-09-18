@@ -25,6 +25,7 @@ urlpatterns += patterns('main.views',
     url(r'^tutoring_feedback/$', 'tutoring_feedback'),
     url(r'^houses/$', 'houses'),
 
+    url(r'^profile_requirements/$', 'requirements'),
     url(r'^candidate_requirements/$', 'candidates'),
     url(r'^active_members/$', 'active_members'),
     url(r'^preferences/$', 'preferences'),

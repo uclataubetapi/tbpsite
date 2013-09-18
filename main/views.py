@@ -14,9 +14,9 @@ from django.core.urlresolvers import reverse
 
 from main.admin import generate_candidate
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings,\
-        LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, DAY_CHOICES, HOUR_CHOICES
+        LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, DAY_CHOICES, HOUR_CHOICES
 from tbpsite.settings import BASE_DIR
-from tutoring.models import Tutoring, Class, Feedback
+from tutoring.models import Tutoring, Class, Feedback, TutoringPreferencesForm
 from common import render
 
 def render_profile_page(request, template, template_args=None, **kwargs):
@@ -25,7 +25,8 @@ def render_profile_page(request, template, template_args=None, **kwargs):
 
     tabs = [ ( reverse('main.views.profile_view'), 'Profile' ),
              ( reverse('main.views.edit'), 'Edit Profile' ),
-             ( reverse('main.views.add'), 'Modify Classes' ) ]
+             ( reverse('main.views.add'), 'Modify Classes' ),
+             ( reverse('main.views.requirements'), Profile.objects.get(user=request.user).get_position_display() ) ]
 
     template_args[ 'profile_tabs' ] = tabs
 
@@ -83,7 +84,7 @@ def profile_view(request):
     if not all([user.email, user.first_name, user.last_name, profile.graduation_term and profile.graduation_term.year]):
         return redirect(edit, from_redirect='redirect')
 
-    if profile.position == profile.CANDIDATE:
+    if profile.position == Profile.CANDIDATE:
         try:
             candidate = Candidate.objects.get(profile=profile)
         except Candidate.DoesNotExist:
@@ -232,9 +233,70 @@ def interview(request):
     except IOError:
         return redirect_next(request)
 
+@login_required(login_url=login)
+def requirements(request):
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    term = Settings.objects.term
+
+    if profile.position == Profile.CANDIDATE:
+        candidate = Candidate.objects.get(profile=profile)
+        tutoring = candidate.tutoring
+
+        if request.method == "POST":
+            candidate_form = CandidateForm(request.POST, request.FILES, instance=candidate)
+            if tutoring is None:
+                tutoring_preferences_form = TutoringPreferencesForm(request.POST)
+
+            if candidate_form.is_valid and (tutoring is not None or tutoring_preferences_form.is_valid()):
+                candidate.tutoring = Tutoring.with_weeks(profile, term)
+                candidate_form.save()
+
+                tutoring_preferences_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
+                tutoring_preferences_form.save()
+
+        else:
+            candidate_form = CandidateForm(instance=candidate)
+            if tutoring is None:
+                tutoring_preferences_form = TutoringPreferencesForm()
+
+        if tutoring is not None:
+            tutoring_preferences_form = None
+
+        return render_profile_page(request, 'candidate_requirements.html', 
+                {'term': term, 'candidate_form': candidate_form, 
+                    'tutoring_preferences_form': tutoring_preferences_form})
+                
+    else:
+        if request.method == "POST":
+            member_form = MemberForm(request.POST)
+            tutoring_preferences_form = TutoringPreferencesForm(request.POST)
+
+            valid_forms = [form.is_valid() for form in (candidate_form, tutoring_preferences_form)]
+            if all(valid_forms):
+                member = ActiveMember.objects.create(profile=profile, term=term)
+                member_form = MemberForm(request.POST, instance=member)
+                member_form.save()
+
+                if candidate_form.cleaned_data['requirement_choice'] == ActiveMember.TUTORING:
+                    tutoring = Tutoring.with_weeks(profile=profile, term=term)
+                    tutoring_preferences_form = TutoringPreferencesForm(request.POST)
+                    tutoring_preferences_form.save()
+
+                member_form = None
+                tutoring_preferences_form = None
+
+        else:
+            member_form = MemberForm()
+            tutoring_preferences_form = TutoringPreferencesForm()
+
+        return render_profile_page(request, 'member_requirements.html', 
+                {'term': term, 'requirement': member.get_requirement_choice_display(), 
+                    'member_form': member_form, 'tutoring_preferences_form': tutoring_preferences_form})
+
 @staff_member_required
 def candidates(request):
-    return render(request, 'candidate_requirements.html', {'candidate_list': Candidate.current.order_by('profile')})
+    return render(request, 'all_candidate_requirements.html', {'candidate_list': Candidate.current.order_by('profile')})
 
 @staff_member_required
 def active_members(request):

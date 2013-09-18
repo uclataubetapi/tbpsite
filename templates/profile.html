@@ -69,6 +69,16 @@
             <p class="form-control-static">{{ profile.graduation_term }}</p>
           </div>
         </div>
+        <div class="form-group">
+          <label class="col-lg-4 control-label">Classes</label>
+          <div class="col-lg-8">
+            <ul class="list-unstyled">
+              {% for class in profile.classes.all %}
+              <li>{{ class }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
       </fieldset>
       <fieldset>
         <legend>Documents</legend>
@@ -90,47 +100,6 @@
             {% else %}
             <p class="form-control-static">Last upload: {{ profile.resume_pdf }}</p>
             {% endif %}
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-4 control-label" for="professor_interview">Professor Interview</label>
-          <div class="col-lg-8">
-            {% if profile.professor_interview %}
-            <a href="{% url 'main.views.interview' %}"><p class="form-control-static">Last upload: {{ profile.professor_interview }}</p></a>
-            {% else %}
-            <p class="form-control-static">Last upload: {{ profile.professor_interview }}</p>
-            {% endif %}
-          </div>
-        </div>
-      </fieldset>
-      <fieldset>
-        <legend>Tutoring Preferences</legend>
-        <div class="form-group">
-          <label class="col-lg-4 control-label">Best Day</label>
-          <div class="col-lg-8">
-            <p class="form-control-static">{{ profile.get_day_1_display }} {{ profile.get_hour_1_display }}</p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-4 control-label">Second Best Day</label>
-          <div class="col-lg-8">
-            <p class="form-control-static">{{ profile.get_day_2_display }} {{ profile.get_hour_2_display }}</p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-4 control-label">Third Best Day</label>
-          <div class="col-lg-8">
-            <p class="form-control-static">{{ profile.get_day_3_display }} {{ profile.get_hour_3_display }}</p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-4 control-label">Classes</label>
-          <div class="col-lg-8">
-            <ul class="list-unstyled">
-              {% for class in profile.classes.all %}
-              <li>{{ class }}</li>
-              {% endfor %}
-            </ul>
           </div>
         </div>
       </fieldset>

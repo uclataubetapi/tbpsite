@@ -231,7 +231,7 @@ class Candidate(models.Model):
     term = models.ForeignKey('Term')
     completed = models.BooleanField(default=False)
 
-    tutoring = models.ForeignKey('tutoring.Tutoring')
+    tutoring = models.ForeignKey('tutoring.Tutoring', null=True)
     bent_polish = models.BooleanField(default=False)
     candidate_quiz = models.BooleanField(default=False)
     candidate_meet_and_greet = models.BooleanField(default=False)
@@ -239,7 +239,7 @@ class Candidate(models.Model):
     community_service = models.IntegerField(default=0)
     initiation_fee = models.BooleanField(default=False)
     engineering_futures = models.BooleanField(default=False)
-    professor_interview = models.FileField(upload_to=professor_interview_path, storage=fs)
+    professor_interview = models.FileField(upload_to=professor_interview_path, storage=fs, verbose_name='Professor Interview')
     other = models.IntegerField(default=0)
 
     current = TermManager()
@@ -316,9 +316,9 @@ class ActiveMember(models.Model):
     TUTORING = '1'
     COMMITTEE = '2'
     REQUIREMENT_CHOICES = (
-            ('0', 'EMCC'),
-            ('1', 'Tutoring'),
-            ('2', 'Committee'),
+            (EMCC, 'EMCC'),
+            (TUTORING, 'Tutoring'),
+            (COMMITTEE, 'Committee'),
             )
     requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
     requirement_complete = models.BooleanField(default=False)
@@ -466,3 +466,9 @@ class CandidateForm(ModelForm):
     class Meta:
         model = Candidate
         fields = ['professor_interview']
+
+class MemberForm(ModelForm):
+
+    class Meta:
+        model = ActiveMember
+        fields = ['requirement_choice']
