@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ModelForm
 from main.models import TermManager
 
 TUTORING_HOURS_PER_WEEK = 2
@@ -55,12 +56,12 @@ class Tutoring(models.Model):
             ('6', '4pm'),
             )
 
-    best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
-    best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
-    second_best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
-    second_best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='2')
-    third_best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
-    third_best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='4')
+    best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Best Day")
+    best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0', verbose_name="Best Hour")
+    second_best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Second Best Day")
+    second_best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='2', verbose_name="Second Best Hour")
+    third_best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Third Best Day")
+    third_best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='4', verbose_name="Third Best Hour")
 
     day_1 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
     hour_1 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
@@ -102,6 +103,12 @@ class Tutoring(models.Model):
 
     def get_classes(self):
         return ', '.join([c.__unicode__() for c in self.classes().all() if c.display])
+
+    @classmethod
+    def with_weeks(cls, profile, term):
+        tutoring_weeks = {'week_{}'.format(d): getattr(models, 'Week{}'.format(d)).objects.get_or_create(profile=profile, term=term)[0]
+                for d in range(3, 10)}
+        return Tutoring.objects.create(profile=profile, term=term, **tutoring_weeks)
 
 class Week(models.Model):
     profile = models.ForeignKey('main.Profile')
@@ -170,3 +177,9 @@ class Week8(Week):
 class Week9(Week):
     class Meta(Week.Meta):
         verbose_name_plural = "Week 9"
+
+class TutoringPreferencesForm(ModelForm):
+
+    class Meta:
+        model = Tutoring
+        fields = ['best_day', 'best_hour', 'second_best_day', 'second_best_hour', 'third_best_day', 'third_best_hour']

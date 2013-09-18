@@ -6,7 +6,11 @@
   <div class="col-lg-8">
     {% if field.errors %}<span class="help-block">{{ field.errors }}</span>{% endif %}
     {% if field.field.widget.input_type %}
+    {% if field.field.widget.input_type == 'file' %}
+    <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" {% if field.value %}value="{{ field.value }}" {% endif %}name="{{ field.html_name }}"{% if not field.value and field.field.required %} required{% endif %}>
+    {% else %}
     <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}" {% if field.value %}value="{{ field.value }}" {% endif %}name="{{ field.html_name }}"{% if not field.value and field.field.required %} required{% endif %}>
+    {% endif %}
     {% else %}
     {% if field.field.widget|classname:"RadioSelect" %}
     {% for choice in field.field.choices %}

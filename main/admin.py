@@ -14,19 +14,15 @@ def generate_profile(user):
     return profile
 
 def generate_candidate(profile, term):
-    tutoring = generate_tutoring(profile, term)
-    candidate, created = Candidate.objects.get_or_create(profile=profile, term=term, tutoring=tutoring)
+    candidate, created = Candidate.objects.get_or_create(profile=profile, term=term)
     return candidate
 
 def generate_active_member(profile, term):
-    tutoring = generate_tutoring(profile, term)
-    active_member, created = ActiveMember.objects.get_or_create(profile=profile, term=term, tutoring=tutoring)
+    active_member, created = ActiveMember.objects.get_or_create(profile=profile, term=term)
+    return active_member
 
 def generate_tutoring(profile, term): 
-    tutoring_weeks = {'week_{}'.format(d): getattr(models, 'Week{}'.format(d)).objects.get_or_create(profile=profile, term=term)[0]
-            for d in range(3, 10)}
-    tutoring, created = Tutoring.objects.get_or_create(profile=profile, term=term, **tutoring_weeks)
-    return tutoring
+    return Tutoring.with_weeks(profile, term)
 
 def promote_candidate(profile):
     profile.position = Profile.MEMBER
