@@ -173,6 +173,7 @@ def edit(request, from_redirect=''):
 
                 user_account_form.save()
                 user_personal_form.save()
+                profile.middle_name = user_personal_form['middle_name']
                 profile.graduation_term = term
                 profile_form.save()
                 return redirect(profile_view)
