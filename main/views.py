@@ -6,15 +6,13 @@ from django.contrib import auth
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings,\
-        LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm,\
-        DAY_CHOICES, HOUR_CHOICES
+        LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm
 from tbpsite.settings import BASE_DIR
 from tutoring.models import Tutoring, Class, Feedback, TutoringPreferencesForm
 from common import render
@@ -105,11 +103,10 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             username, new_password = map(form.cleaned_data.get, ('username', 'new_password'))
-            User.objects.create_user(username, password=new_password)
-            user = auth.authenticate(username=username, password=new_password)
-            auth.login(request, user)
+            user = User.objects.create_user(username, password=new_password)
+            auth.login(request, auth.authenticate(username=username, password=new_password))
             profile = Profile.objects.create(user=user)
-            Candidate.objects.create(profile=profile, term = Settings.objects.term)
+            Candidate.objects.create(profile=profile, term=Settings.objects.term())
             return redirect(edit, from_redirect='redirect')
     else:
         form = RegisterForm()
@@ -123,18 +120,18 @@ def edit(request, from_redirect=''):
 
     if request.method != "POST":
         user_account_form = UserAccountForm(instance=user)
-        user_personal_form = UserPersonalForm(instance=user)
-        profile_dict = model_to_dict(profile)
 
-        try:
+        personal_dict = model_to_dict(user)
+        personal_dict['middle_name'] = profile.middle_name
+        user_personal_form = UserPersonalForm(instance=user, initial=personal_dict)
+
+        profile_dict = model_to_dict(profile)
+        if profile.graduation_term is not None:
             profile_dict.update({
                 'graduation_quarter': profile.graduation_term.quarter,
                 'graduation_year': profile.graduation_term.year
                 })
-        except AttributeError:
-            pass
-
-        profile_form = ProfileForm(instance=profile, initial=profile_dict)
+        profile_form = ProfileForm(initial=profile_dict)
 
     else:
         user_account_form = UserAccountForm(request.POST, instance=user)
@@ -173,7 +170,7 @@ def edit(request, from_redirect=''):
 
                 user_account_form.save()
                 user_personal_form.save()
-                profile.middle_name = user_personal_form['middle_name']
+                profile.middle_name = user_personal_form.cleaned_data['middle_name']
                 profile.graduation_term = term
                 profile_form.save()
                 return redirect(profile_view)
