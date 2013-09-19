@@ -12,7 +12,6 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
-from main.admin import generate_candidate
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings,\
         LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm,\
         DAY_CHOICES, HOUR_CHOICES
@@ -253,46 +252,38 @@ def requirements(request):
         tutoring = candidate.tutoring
 
         if request.method == "POST":
-            candidate_form = CandidateForm(request.POST, request.FILES, instance=candidate)
             if tutoring is None:
-                tutoring_preferences_form = TutoringPreferencesForm(request.POST)
+                tutoring_preferences_form = TutoringPreferencesForm(request.POST, instance=tutoring)
+            else:
+                candidate_form = CandidateForm(request.POST, request.FILES, instance=candidate)
 
-            if candidate_form.is_valid and (tutoring is not None or tutoring_preferences_form.is_valid()):
+            if form.is_valid():
                 if tutoring is None:
                     candidate.tutoring = Tutoring.with_weeks(profile, term)
-                    tutoring_preferences_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
-                    tutoring_preferences_form.save()
-
-                candidate_form.save()
-                tutoring_preferences_form = None
+                form.save()
 
         else:
-            candidate_form = CandidateForm(instance=candidate)
             if tutoring is None:
-                tutoring_preferences_form = TutoringPreferencesForm()
+                form = TutoringPreferencesForm()
             else:
-                tutoring_preferences_form = None
+                form = CandidateForm()
 
-        return render_profile_page(request, 'candidate_requirements.html', 
-                {'term': term, 'candidate_form': candidate_form, 
-                    'tutoring_preferences_form': tutoring_preferences_form})
+        return render_profile_page(request, 'candidate_requirements.html', {'term': term, 'form': form})
                 
     else:
         if request.method == "POST":
-            member_form = MemberForm(request.POST)
+            member = ActiveMember(profile=profile, term=term)
+            member_form = MemberForm(request.POST, instance=member)
             tutoring_preferences_form = TutoringPreferencesForm(request.POST)
 
             valid_forms = [form.is_valid() for form in (member_form, tutoring_preferences_form)]
             if all(valid_forms):
-                member = ActiveMember.objects.create(profile=profile, term=term)
-                member_form = MemberForm(request.POST, instance=member)
-                member_form.save()
-
                 if member_form.cleaned_data['requirement_choice'] == ActiveMember.TUTORING:
-                    tutoring = Tutoring.with_weeks(profile=profile, term=term)
+                    member.tutoring = Tutoring.with_weeks(profile=profile, term=term)
                     tutoring_preferences_form = TutoringPreferencesForm(request.POST)
                     tutoring_preferences_form.save()
 
+                member_form.save()
                 member_form = None
                 tutoring_preferences_form = None
 
