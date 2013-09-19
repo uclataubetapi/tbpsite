@@ -239,7 +239,7 @@ class Candidate(models.Model):
     community_service = models.IntegerField(default=0)
     initiation_fee = models.BooleanField(default=False)
     engineering_futures = models.BooleanField(default=False)
-    professor_interview = models.FileField(upload_to=professor_interview_path, storage=fs, verbose_name='Professor Interview')
+    professor_interview = models.FileField(upload_to=professor_interview_path, storage=fs, blank=True, verbose_name='Professor Interview (pdf)')
     other = models.IntegerField(default=0)
 
     current = TermManager()
