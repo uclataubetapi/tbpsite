@@ -435,11 +435,12 @@ class UserPersonalForm(ModelForm):
     # TODO: change to email field
     email = forms.CharField(required=True)
     first_name = forms.CharField(required=True, label="First Name")
+    middle_name = forms.CharField(required=True, label="Middle Name")
     last_name = forms.CharField(required=True, label="Last Name")
 
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name']
+        fields = ['email', 'first_name', 'middle_name', 'last_name']
 
 class ProfileForm(ModelForm):
     graduation_quarter = forms.ChoiceField(choices=QUARTER_CHOICES, label="Graduation Quarter")
@@ -447,7 +448,7 @@ class ProfileForm(ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['middle_name', 'nickname', 'gender', 'birthday', 'phone_number', 'major', 'graduation_quarter', 'graduation_year']
+        fields = ['nickname', 'gender', 'birthday', 'phone_number', 'major', 'graduation_quarter', 'graduation_year']
         widgets = {
                 'gender': forms.widgets.RadioSelect
                 }

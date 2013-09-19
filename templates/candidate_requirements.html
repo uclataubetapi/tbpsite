@@ -8,10 +8,7 @@
       {% csrf_token %}
       <fieldset>
         <legend>Candidate {{ term }}</legend>
-        {% if tutoring_preferences_form %}
-        {% include "form_snippet.html" with form=tutoring_preferences_form %}
-        {% endif %}
-        {% include "form_snippet.html" with form=candidate_form %}
+        {% include "form_snippet.html" %}
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">Submit</button>
         </div>
