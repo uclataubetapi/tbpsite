@@ -82,7 +82,7 @@ class Term(models.Model):
         unique_together = ('quarter', 'year')
 
     def __unicode__(self):
-        return '{} {}'.format(self.get_quarter_display(), year)
+        return '{} {}'.format(self.get_quarter_display(), self.year)
 
 class SettingsManager(models.Manager):
     def settings(self):
