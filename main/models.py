@@ -258,10 +258,10 @@ class Candidate(models.Model):
         return self.signature_book != '0'
 
     def tutoring_complete(self):
-        return self.tutoring.complete()
+        return self.tutoring.complete() if self.tutoring else False
 
     def tutoring_points(self):
-        return self.tutoring.points()
+        return self.tutoring.points() if self.tutoring else False
 
     def social_count(self):
         from event.models import Event

@@ -17,8 +17,10 @@ class ClassAdmin(admin.ModelAdmin):
     list_editable = ('display',)
 
 class TutoringAdmin(admin.ModelAdmin):
-    fields = ('day_1', 'hour_1', 'day_2', 'hour_2')
-    list_display = ('__unicode__', 'term', 'day_1', 'hour_1', 'day_2', 'hour_2')
+    fields = ('day_1', 'hour_1', 'day_2', 'hour_2', 'best_day', 'best_hour', 
+            'second_best_day', 'second_best_hour', 'third_best_day', 'third_best_hour')
+    list_display = ('__unicode__', 'day_1', 'hour_1', 'day_2', 'hour_2', 'best_day', 'best_hour', 
+            'second_best_day', 'second_best_hour', 'third_best_day', 'third_best_hour')
     list_editable = ('day_1', 'hour_1', 'day_2', 'hour_2')
     actions = ('import_tutoring_times',)
 
