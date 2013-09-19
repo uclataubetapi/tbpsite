@@ -99,7 +99,7 @@ def profile_view(request):
         details = ((active.term, 'Completed' if active.completed else 'In Progress') 
                 for active in ActiveMember.objects.filter(profile=profile))
 
-    return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 'details': details})
+    return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 'requirements': requirements, 'details': details})
 
 def register(request):
     if request.method == "POST":
