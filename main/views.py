@@ -248,21 +248,23 @@ def requirements(request):
 
     if profile.position == Profile.CANDIDATE:
         candidate = profile.candidate
-        tutoring = candidate.tutoring
 
         if request.method == "POST":
-            if tutoring is None:
-                tutoring_preferences_form = TutoringPreferencesForm(request.POST, instance=tutoring)
-            else:
-                candidate_form = CandidateForm(request.POST, request.FILES, instance=candidate)
+            if candidate.tutoring is None:
+                candidate.tutoring = Tutoring.with_weeks(profile=profile, term=term)
+                form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
+                if form.is_valid():
+                    form.save()
+                    candidate.save()
+                    form = CandidateForm()
 
-            if form.is_valid():
-                if tutoring is None:
-                    candidate.tutoring = Tutoring.with_weeks(profile, term)
-                form.save()
+            else:
+                form = CandidateForm(request.POST, request.FILES, instance=candidate)
+                if form.is_valid():
+                    form.save()
 
         else:
-            if tutoring is None:
+            if candidate.tutoring is None:
                 form = TutoringPreferencesForm()
             else:
                 form = CandidateForm()

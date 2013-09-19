@@ -73,10 +73,10 @@ QUARTER_CHOICES = (
 fs = FileSystemStorage(location='/media')
 
 def professor_interview_path(instance, filename):
-    return 'professor_interviews/{}.{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
+    return 'professor_interviews/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
 
 def community_service_proof_path(instance, filename):
-    return 'community_service_proof/{}.{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
+    return 'community_service_proof/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
 
 class Term(models.Model):
     quarter = models.CharField(max_length=1, choices=QUARTER_CHOICES)
@@ -195,6 +195,7 @@ class HousePoints(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
+
     middle_name = models.CharField(max_length=30, blank=True, verbose_name="Middle Name")
     nickname = models.CharField(max_length=30, blank=True, verbose_name="Nickname (optional)")
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='M')
@@ -236,10 +237,10 @@ class Profile(models.Model):
 
 class Candidate(models.Model):
     profile = models.OneToOneField('Profile')
-    term = models.ForeignKey('Term')
-    completed = models.BooleanField(default=False)
 
     tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
+    term = models.ForeignKey('Term')
+    completed = models.BooleanField(default=False)
     bent_polish = models.BooleanField(default=False)
     candidate_quiz = models.BooleanField(default=False)
     candidate_meet_and_greet = models.BooleanField(default=False)
@@ -317,6 +318,7 @@ class Candidate(models.Model):
 class ActiveMember(models.Model):
     profile = models.ForeignKey('Profile')
     term = models.ForeignKey('Term')
+
     completed = models.BooleanField(default=False)
 
     EMCC = '0'
@@ -360,10 +362,11 @@ class ActiveMember(models.Model):
         return all(requirement for name, requirement in self.requirements())
 
 class Officer(models.Model):
+    profile = models.ManyToManyField('Profile')
+    
     position = models.CharField(max_length=30)
     rank = models.IntegerField()
     mail_alias = models.CharField(max_length=30)
-    profile = models.ManyToManyField('Profile')
 
     def list_profiles( self ):
         return ', '.join( [ str( a ) for a in self.profile.all() ] )

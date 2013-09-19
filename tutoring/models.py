@@ -1,6 +1,7 @@
 from django.db import models
 from django.forms import ModelForm
-from main.models import TermManager
+
+from main.models import Settings, TermManager
 
 TUTORING_HOURS_PER_WEEK = 2
 
@@ -77,13 +78,13 @@ class Tutoring(models.Model):
     day_2 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
     hour_2 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
 
-    week_3 = models.ForeignKey('Week3')
-    week_4 = models.ForeignKey('Week4')
-    week_5 = models.ForeignKey('Week5')
-    week_6 = models.ForeignKey('Week6')
-    week_7 = models.ForeignKey('Week7')
-    week_8 = models.ForeignKey('Week8')
-    week_9 = models.ForeignKey('Week9')
+    week_3 = models.OneToOneField('Week3')
+    week_4 = models.OneToOneField('Week4')
+    week_5 = models.OneToOneField('Week5')
+    week_6 = models.OneToOneField('Week6')
+    week_7 = models.OneToOneField('Week7')
+    week_8 = models.OneToOneField('Week8')
+    week_9 = models.OneToOneField('Week9')
 
     objects = TermManager()
 
@@ -115,50 +116,54 @@ class Tutoring(models.Model):
 
     @classmethod
     def with_weeks(cls, profile, term):
-        tutoring_weeks = {'week_{}'.format(d): globals()['Week{}'.format(d)].objects.create(profile=profile, term=term)
-                for d in range(3, 10)}
-        return Tutoring.objects.create(profile=profile, term=term, **tutoring_weeks)
+        tutoring_weeks = {'week_{}'.format(d): globals()['Week{}'.format(d)].objects.create() for d in range(3, 10)}
+        return cls.objects.create(profile=profile, term=term, **tutoring_weeks)
+
+class WeekManager(models.Manager):
+    def get_query_set(self):
+        if not Settings.objects.display_all_terms():
+            term = Settings.objects.term()
+            if term:
+                return super(WeekManager, self).get_query_set().filter(tutoring__term=term)
+        return super(WeekManager, self).get_query_set()
 
 class Week(models.Model):
-    profile = models.ForeignKey('main.Profile')
-    term = models.ForeignKey('main.Term')
-
     hours = models.IntegerField(default=0)
     tutees = models.IntegerField(default=0)
 
-    objects = TermManager()
+    objects = WeekManager()
 
     class Meta:
         abstract = True
-        unique_together = ('profile', 'term')
         ordering = ('tutoring__day_1', 'tutoring__hour_1',
-                'tutoring__day_2', 'tutoring__hour_2', 'profile')
+                'tutoring__day_2', 'tutoring__hour_2', 'tutoring__profile')
 
     def __unicode__(self):
-        return self.profile.__unicode__()
+        return self.profile().__unicode__()
 
     def complete(self):
         return self.hours >= TUTORING_HOURS_PER_WEEK
 
     def points(self):
-        return (0 if not self.complete() 
-                else self.hours - TUTORING_HOURS_PER_WEEK)
+        return (0 if not self.complete() else self.hours - TUTORING_HOURS_PER_WEEK)
 
     def day_1(self):
-        return Tutoring.objects.get(
-                profile=self.profile, term=self.term).get_day_1_display()
+        return self.tutoring.get_day_1_display()
 
     def day_2(self):
-        return Tutoring.objects.get(
-                profile=self.profile, term=self.term).get_day_2_display()
+        return self.tutoring.get_day_2_display()
 
     def hour_1(self):
-        return Tutoring.objects.get(
-                profile=self.profile, term=self.term).get_hour_1_display()
+        return self.tutoring.get_hour_1_display()
 
     def hour_2(self):
-        return Tutoring.objects.get(
-                profile=self.profile, term=self.term).get_hour_2_display()
+        return self.tutoring.get_hour_2_display()
+
+    def profile(self):
+        return self.tutoring.profile
+
+    def term(self):
+        return self.tutoring.term
 
 class Week3(Week):
     class Meta(Week.Meta):
