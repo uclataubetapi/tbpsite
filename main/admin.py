@@ -1,39 +1,15 @@
-from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 
 from main.models import *
-from tutoring import models
-from tutoring.models import Tutoring
-
-def generate_profile(user):
-    profile, created = Profile.objects.get_or_create(user=user)
-    return profile
-
-def generate_candidate(profile, term):
-    candidate, created = Candidate.objects.get_or_create(profile=profile, term=term)
-    return candidate
-
-def generate_active_member(profile, term):
-    active_member, created = ActiveMember.objects.get_or_create(profile=profile, term=term)
-    return active_member
-
-def generate_tutoring(profile, term): 
-    return Tutoring.with_weeks(profile, term)
-
-def promote_candidate(profile):
-    profile.position = Profile.MEMBER
-    profile.save()
 
 class MyUserAdmin(UserAdmin):
     actions = ('create_profile', 'reset_password')
 
     def create_profile(self, request, queryset):
-        for user in queryset:
-            generate_profile(user)
+        queryset.update(profile=Profile(user=user))
 
     def reset_password(self, request, queryset):
         for user in queryset:
@@ -70,30 +46,30 @@ class ProfileAdmin(admin.ModelAdmin):
         # check for errors, all or nothing
         for profile in queryset:
             if profile.position == '1':
-                self.message_user(request, '{} is already a member'.format(profile.__unicode__()))
+                self.message_user(request, '{} is already a member'.format(profile))
                 return
 
-            try:
-                candidate = Candidate.objects.get(profile=profile)
-                self.message_user(request, '{} is already a candidate'.format(profile.__unicode__()))
+            if profile.candidate is not None:
+                self.message_user(request, '{} is already a candidate'.format(profile))
                 return
-            except ObjectDoesNotExist:
-                pass
 
-        for profile in queryset:
-            generate_candidate(profile, term)
+        queryset.update(candidate=Candidate(profile=profile, term=Settings.objects.term))
 
     def create_active_member(modeladmin, request, queryset):
         term = Settings.objects.get_term()
         if term is None:
             self.message_user(request, 'Current term not set')
+            return
 
         for profile in queryset:
-            generate_active_member(profile, term)
+            if ActiveMember.objects.filter(profile=profile, term=Settings.objects.term).count():
+                self.message_user(request, '{} is already an active member for the term'.format(profile))
+                return
+
+        queryset.update(candidate=Candidate(profile=profile, term=Settings.objects.term))
 
     def promote_candidate(modeladmin, request, queryset):
-        for profile in queryset:
-            promote_candidate(profile)
+        queryset.update(position=Profile.MEMBER)
 
 class CandidateAdmin(admin.ModelAdmin):
     list_display = (
