@@ -249,19 +249,20 @@ def requirements(request):
                 tutoring_preferences_form = TutoringPreferencesForm(request.POST)
 
             if candidate_form.is_valid and (tutoring is not None or tutoring_preferences_form.is_valid()):
-                candidate.tutoring = Tutoring.with_weeks(profile, term)
-                candidate_form.save()
+                if tutoring is None:
+                    candidate.tutoring = Tutoring.with_weeks(profile, term)
+                    tutoring_preferences_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
+                    tutoring_preferences_form.save()
 
-                tutoring_preferences_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
-                tutoring_preferences_form.save()
+                candidate_form.save()
+                tutoring_preferences_form = None
 
         else:
             candidate_form = CandidateForm(instance=candidate)
             if tutoring is None:
                 tutoring_preferences_form = TutoringPreferencesForm()
-
-        if tutoring is not None:
-            tutoring_preferences_form = None
+            else:
+                tutoring_preferences_form = None
 
         return render_profile_page(request, 'candidate_requirements.html', 
                 {'term': term, 'candidate_form': candidate_form, 
