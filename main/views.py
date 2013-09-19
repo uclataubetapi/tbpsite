@@ -14,7 +14,8 @@ from django.core.urlresolvers import reverse
 
 from main.admin import generate_candidate
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings,\
-        LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, DAY_CHOICES, HOUR_CHOICES
+        LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm,\
+        DAY_CHOICES, HOUR_CHOICES
 from tbpsite.settings import BASE_DIR
 from tutoring.models import Tutoring, Class, Feedback, TutoringPreferencesForm
 from common import render
