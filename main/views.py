@@ -289,11 +289,12 @@ def requirements(request):
                 tutoring_preferences_form = None
 
         else:
+            member = None
             member_form = MemberForm()
             tutoring_preferences_form = TutoringPreferencesForm()
 
         return render_profile_page(request, 'member_requirements.html', 
-                {'term': term, 'requirement': member.get_requirement_choice_display(), 
+                {'term': term, 'requirement': member.get_requirement_choice_display() if member else '', 
                     'member_form': member_form, 'tutoring_preferences_form': tutoring_preferences_form})
 
 @staff_member_required
