@@ -42,6 +42,9 @@ urlpatterns += patterns('main.views',
     url(r'^resume_pdf/$', 'resume_pdf'),
     url(r'^resume_word/$', 'resume_word'),
     url(r'^interview/$', 'interview'),
+    url(r'^interview/(?P<id>\d+)$', 'interview'),
+    url(r'^proof/$', 'proof'),
+    url(r'^proof/(?P<id>\d+)$', 'proof'),
 )
 
 urlpatterns += patterns('event.views',

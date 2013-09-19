@@ -1,4 +1,5 @@
 import datetime
+import os
 import re
 
 from django.forms.models import model_to_dict
@@ -7,9 +8,11 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.servers.basehttp import FileWrapper
-from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.http import HttpResponse, Http404
+from django.shortcuts import redirect, get_object_or_404
 from django.core.urlresolvers import reverse
+from django.views.generic.base import View
+from django.utils.decorators import method_decorator
 
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings,\
         LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm
@@ -230,18 +233,6 @@ def resume_word(request):
         return redirect_next(request)
 
 @login_required(login_url=login)
-def interview(request):
-    user = request.user
-    response = None
-    try:
-        f = open(BASE_DIR + '/interviews/' + str(user.id))
-        response = HttpResponse(FileWrapper(f), content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=interview.pdf'
-        return response
-    except IOError:
-        return redirect_next(request)
-
-@login_required(login_url=login)
 def requirements(request):
     profile = request.user.profile
     term = Settings.objects.term()
@@ -334,3 +325,44 @@ def spreadsheet(request):
     response = HttpResponse(data, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=spreadsheet.csv'
     return response
+
+class FileView(View):
+
+    field = ''
+
+    @method_decorator(login_required(login_url=login))
+    def get(self, request, *args, **kwargs):
+
+        obj = self.get_object(request, kwargs.get('id'))
+        if not obj:
+            raise Http404
+
+        try:
+            f = open(os.path.join(obj.storage.base_location, obj.url))
+        except IOError:
+            raise Http404
+
+        response = HttpResponse(FileWrapper(f), content_type='application/pdf')
+        response['Content-Disposition'] = 'filename={}.pdf'.format(self.field)
+        return response
+
+    def get_object(self, request, id):
+        raise NotImplementedError
+
+class ProfileFileView(FileView):
+
+    def get_object(self, request, id):
+        return getattr(request.user.profile, self.field)
+
+class CandidateFileView(FileView):
+
+    def get_object(self, request, id):
+        if not id:
+            return getattr(get_object_or_404(Candidate, profile=request.user.profile), self.field)
+        else:
+            if not request.user.is_staff:
+                raise Http404
+            return getattr(get_object_or_404(Candidate, id=id), self.field)
+
+interview = CandidateFileView.as_view(field='professor_interview')
+proof = CandidateFileView.as_view(field='community_service_proof')
