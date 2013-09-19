@@ -106,7 +106,7 @@ class Tutoring(models.Model):
 
     @classmethod
     def with_weeks(cls, profile, term):
-        tutoring_weeks = {'week_{}'.format(d): getattr(models, 'Week{}'.format(d)).objects.get_or_create(profile=profile, term=term)[0]
+        tutoring_weeks = {'week_{}'.format(d): globals()['Week{}'.format(d)].objects.create(profile=profile, term=term)
                 for d in range(3, 10)}
         return Tutoring.objects.create(profile=profile, term=term, **tutoring_weeks)
 

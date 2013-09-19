@@ -237,7 +237,7 @@ def interview(request):
 def requirements(request):
     user = request.user
     profile = Profile.objects.get(user=user)
-    term = Settings.objects.term
+    term = Settings.objects.term()
 
     if profile.position == Profile.CANDIDATE:
         candidate = Candidate.objects.get(profile=profile)
