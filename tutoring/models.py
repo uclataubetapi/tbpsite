@@ -121,6 +121,7 @@ class Week(models.Model):
 
     class Meta:
         abstract = True
+        unique_together = ('profile', 'term')
         ordering = ('tutoring__day_1', 'tutoring__hour_1',
                 'tutoring__day_2', 'tutoring__hour_2', 'profile')
 
