@@ -292,7 +292,7 @@ class Candidate(models.Model):
 
     def requirements(self):
         return (
-                ('Tutoring', self.tutoring.complete()),
+                ('Tutoring', self.tutoring_complete()),
                 ('Bent Polish', self.bent_polish),
                 ('Candidate Quiz', self.candidate_quiz),
                 ('Signature Book', self.signature_book),
@@ -337,9 +337,7 @@ class ActiveMember(models.Model):
     def requirement(self):
         if self.requirement_choice in (ActiveMember.EMCC, ActiveMember.COMMITTEE):
             return self.requirement_complete
-        if self.tutoring is None:
-            self.tutoring, created = Tutoring.objects.get_or_create(profile=self.profile, term=self.term)
-        return self.tutoring.complete()
+        return self.tutoring.complete() if self.tutoring else False
 
     def social_complete(self):
         from event.models import Event
