@@ -4,6 +4,15 @@ from main.models import TermManager
 
 TUTORING_HOURS_PER_WEEK = 2
 
+TWO_HOUR_CHOICES = (
+        ('0', '10am-12pm'),
+        ('1', '11am-1pm'),
+        ('2', '12pm-2pm'),
+        ('3', '1pm-3pm'),
+        ('4', '2pm-4pm'),
+        ('5', '3pm-5pm'),
+        )
+
 class Feedback(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     comment = models.TextField()
@@ -57,11 +66,11 @@ class Tutoring(models.Model):
             )
 
     best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Best Day")
-    best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0', verbose_name="Best Hour")
+    best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='0', verbose_name="Best Hour")
     second_best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Second Best Day")
-    second_best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='2', verbose_name="Second Best Hour")
+    second_best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='2', verbose_name="Second Best Hour")
     third_best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Third Best Day")
-    third_best_hour = models.CharField(max_length=1, choices=HOUR_CHOICES, default='4', verbose_name="Third Best Hour")
+    third_best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='4', verbose_name="Third Best Hour")
 
     day_1 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
     hour_1 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
