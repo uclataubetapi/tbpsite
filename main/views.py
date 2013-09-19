@@ -26,7 +26,7 @@ def render_profile_page(request, template, template_args=None, **kwargs):
     tabs = [ ( reverse('main.views.profile_view'), 'Profile' ),
              ( reverse('main.views.edit'), 'Edit Profile' ),
              ( reverse('main.views.add'), 'Modify Classes' ),
-             ( reverse('main.views.requirements'), Profile.objects.get(user=request.user).get_position_display() ) ]
+             ( reverse('main.views.requirements'), request.user.profile.get_position_display() ) ]
 
     template_args[ 'profile_tabs' ] = tabs
 
@@ -108,7 +108,8 @@ def register(request):
             User.objects.create_user(username, password=new_password)
             user = auth.authenticate(username=username, password=new_password)
             auth.login(request, user)
-            Profile.objects.create(user=user)
+            profile = Profile.objects.create(user=user)
+            Candidate.objects.create(profile=profile, term = Settings.objects.term)
             return redirect(edit, from_redirect='redirect')
     else:
         form = RegisterForm()
