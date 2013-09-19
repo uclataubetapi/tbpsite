@@ -274,13 +274,13 @@ def requirements(request):
             member_form = MemberForm(request.POST)
             tutoring_preferences_form = TutoringPreferencesForm(request.POST)
 
-            valid_forms = [form.is_valid() for form in (candidate_form, tutoring_preferences_form)]
+            valid_forms = [form.is_valid() for form in (member_form, tutoring_preferences_form)]
             if all(valid_forms):
                 member = ActiveMember.objects.create(profile=profile, term=term)
                 member_form = MemberForm(request.POST, instance=member)
                 member_form.save()
 
-                if candidate_form.cleaned_data['requirement_choice'] == ActiveMember.TUTORING:
+                if member_form.cleaned_data['requirement_choice'] == ActiveMember.TUTORING:
                     tutoring = Tutoring.with_weeks(profile=profile, term=term)
                     tutoring_preferences_form = TutoringPreferencesForm(request.POST)
                     tutoring_preferences_form.save()
@@ -289,9 +289,14 @@ def requirements(request):
                 tutoring_preferences_form = None
 
         else:
-            member = None
-            member_form = MemberForm()
-            tutoring_preferences_form = TutoringPreferencesForm()
+            try:
+                member = ActiveMember.objects.get(profile=profile, term=term)
+                member_form = None
+                tutoring_preferences_form = None
+            except ActiveMember.DoesNotExist:
+                member = None
+                member_form = MemberForm()
+                tutoring_preferences_form = TutoringPreferencesForm()
 
         return render_profile_page(request, 'member_requirements.html', 
                 {'term': term, 'requirement': member.get_requirement_choice_display() if member else '', 
