@@ -9,12 +9,14 @@
     <form class="form-inline" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <legend>Add Classes</legend>
+      <p class="help-block">Please email <a href="mailto:webmaster@tbp.seas.ucla.edu">webmaster@tbp.seas.ucla.edu</a> if there are any classes that you can tutor and the department isn't listed.</p>
       <select name="dept">
         {% for dept in departments %}
         <option value="{{ dept }}">{{ dept }}</option>
         {% endfor %}
       </select>
       <input type="text" name="cnum" required>
+      <p class="help-block">Tip: You can add multiple classes at once (e.g: 31,32,33).</p>
       <button type="submit" class="btn btn-default">Add</button>
     </form>
     <form class="form" method="post" enctype="multipart/form-data">
