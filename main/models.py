@@ -82,23 +82,26 @@ class Term(models.Model):
         unique_together = ('quarter', 'year')
 
     def __unicode__(self):
-        return self.get_quarter_display() + ' ' + str(self.year)
+        return '{} {}'.format(self.get_quarter_display(), self.year)
 
 class SettingsManager(models.Manager):
+    def settings(self):
+        return super(SettingsManager, self).get_or_create(id=1)[0]
+
     def term(self):
-        return super(SettingsManager, self).get_or_create(id=1)[0].term
+        return self.settings().term
 
     def display_all_terms(self):
-        return super(SettingsManager, self).get_or_create(id=1)[0].display_all_terms
+        return self.settings().display_all_terms
 
     def display_tutoring(self):
-        return super(SettingsManager, self).get_or_create(id=1)[0].display_tutoring
+        return self.settings().display_tutoring
 
     def get_registration_code(self):
-        return super(SettingsManager, self).get_or_create(id=1)[0].registration_code
+        return self.settings().registration_code
 
     def get_eligibility_list(self):
-        return super(SettingsManager, self).get_or_create(id=1)[0].eligibility_list
+        return self.settings().eligibility_list
 
 class Settings(models.Model):
     term = models.ForeignKey('Term', blank=True, null=True)
@@ -119,7 +122,7 @@ class TermManager(models.Manager):
         if not Settings.objects.display_all_terms():
             term = Settings.objects.term()
             if term:
-                return super(TermManager, self).get_query_set().filter(term=Settings.objects.term())
+                return super(TermManager, self).get_query_set().filter(term=term)
         return super(TermManager, self).get_query_set()
 
 class House(models.Model):
@@ -186,7 +189,7 @@ class HousePoints(models.Model):
             self.social(), self.tutoring(), self.community_service(), self.other_points()])
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, unique=True)
+    user = models.OneToOneField(User)
     middle_name = models.CharField(max_length=30, blank=True, verbose_name="Middle Name")
     nickname = models.CharField(max_length=30, blank=True, verbose_name="Nickname (optional)")
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='M')
@@ -215,8 +218,8 @@ class Profile(models.Model):
     def __unicode__(self):
         if self.nickname:
             return '{} {}'.format(self.nickname, self.user.last_name)
-        ret = self.user.get_full_name()
-        return ret if ret else self.user.get_username()
+        name = self.user.get_full_name()
+        return name if name else self.user.get_username()
 
     def resume(self):
         return self.resume_pdf or self.resume_word
@@ -227,11 +230,11 @@ class Profile(models.Model):
             self.initiation_term.__unicode__() if self.initiation_term else '', self.graduation_term.__unicode__() if self.graduation_term else ''])
 
 class Candidate(models.Model):
-    profile = models.ForeignKey('Profile', unique=True)
+    profile = models.OneToOneField('Profile')
     term = models.ForeignKey('Term')
     completed = models.BooleanField(default=False)
 
-    tutoring = models.ForeignKey('tutoring.Tutoring', null=True)
+    tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
     bent_polish = models.BooleanField(default=False)
     candidate_quiz = models.BooleanField(default=False)
     candidate_meet_and_greet = models.BooleanField(default=False)
@@ -239,7 +242,8 @@ class Candidate(models.Model):
     community_service = models.IntegerField(default=0)
     initiation_fee = models.BooleanField(default=False)
     engineering_futures = models.BooleanField(default=False)
-    professor_interview = models.FileField(upload_to=professor_interview_path, storage=fs, blank=True, verbose_name='Professor Interview (pdf)')
+    professor_interview = models.FileField(upload_to=professor_interview_path, storage=fs, 
+            blank=True, null=True, default=None, verbose_name='Professor Interview (pdf)')
     other = models.IntegerField(default=0)
 
     current = TermManager()
@@ -271,21 +275,17 @@ class Candidate(models.Model):
         return (self.social_count() >= CANDIDATE_SOCIAL)
 
     def social_points(self):
-        return (0 if not social_complete() else
-                5 * (self.social_count() - CANDIDATE_SOCIAL))
+        return (0 if not social_complete() else 5 * (self.social_count() - CANDIDATE_SOCIAL))
 
     def community_service_complete(self):
         return self.community_service >= CANDIDATE_COMMUNITY_SERVICE
 
     def community_service_points(self):
-        return (0 if not self.community_service_points() else
-                5 * (self.community_service - CANDIDATE_COMMUNITY_SERVICE))
+        return (0 if not self.community_service_points() else 5 * (self.community_service - CANDIDATE_COMMUNITY_SERVICE))
 
     def points(self):
-        return sum([PLACE_POINTS[self.signature_book], 
-            PLACE_POINTS[self.candidate_quiz], 
-                self.social_points(), self.tutoring_points(), 
-                self.community_service_points(), self.other])
+        return sum([PLACE_POINTS[self.signature_book], PLACE_POINTS[self.candidate_quiz], 
+            self.social_points(), self.tutoring_points(), self.community_service_points(), self.other])
 
     def resume(self):
         return self.profile.resume()
@@ -322,7 +322,7 @@ class ActiveMember(models.Model):
             )
     requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
     requirement_complete = models.BooleanField(default=False)
-    tutoring = models.ForeignKey('tutoring.Tutoring', blank=True, null=True)
+    tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
 
     current = TermManager()
     objects = models.Manager()
@@ -343,8 +343,14 @@ class ActiveMember(models.Model):
         from event.models import Event
         return Event.objects.filter(attendees=self, term=self.term).count() >= ACTIVE_MEMBER_SOCIAL
 
+    def requirements(self):
+        return (
+                (self.get_requirement_choice_display(), self.requirement()),
+                ('Social', self.social_complete()),
+                )
+
     def complete(self):
-        return self.requirement() and self.social_complete()
+        return all(requirement for name, requirement in self.requirements())
 
 class Officer(models.Model):
     position = models.CharField(max_length=30)

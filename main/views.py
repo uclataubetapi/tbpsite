@@ -81,19 +81,23 @@ def logout(request):
 @login_required(login_url=login)
 def profile_view(request):
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=user)
+    profile = user.profile
     if not all([user.email, user.first_name, user.last_name, profile.graduation_term and profile.graduation_term.year]):
         return redirect(edit, from_redirect='redirect')
 
     if profile.position == Profile.CANDIDATE:
-        try:
-            candidate = Candidate.objects.get(profile=profile)
-        except Candidate.DoesNotExist:
-            candidate = generate_candidate(profile, Settings.objects.term())
-        details = ((name, 'Completed' if requirement else 'Not Completed') 
+        candidate = profile.candidate
+        requirements = ((name, 'Completed' if requirement else 'Not Completed') 
                 for name, requirement in candidate.requirements())
+        details = None
     else:
-        details = ((active.term, 'Completed' if active.completed else 'In Progress') for active in ActiveMember.objects.filter(profile=profile))
+        try:
+            requirements = ((name, 'Completed' if requirement else 'Not Completed') 
+                    for name, requirement in ActiveMember.objects.get(profile=profile, term=Settings.objects.term))
+        except ActiveMember.DoesNotExist:
+            requirements = None
+        details = ((active.term, 'Completed' if active.completed else 'In Progress') 
+                for active in ActiveMember.objects.filter(profile=profile))
 
     return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 'details': details})
 
@@ -105,6 +109,7 @@ def register(request):
             User.objects.create_user(username, password=new_password)
             user = auth.authenticate(username=username, password=new_password)
             auth.login(request, user)
+            Profile.objects.create(user=user)
             return redirect(edit, from_redirect='redirect')
     else:
         form = RegisterForm()
@@ -113,7 +118,7 @@ def register(request):
 @login_required(login_url=login)
 def edit(request, from_redirect=''):
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=user)
+    profile = user.profile
     error = Error()
 
     if request.method != "POST":
@@ -130,6 +135,7 @@ def edit(request, from_redirect=''):
             pass
 
         profile_form = ProfileForm(instance=profile, initial=profile_dict)
+
     else:
         user_account_form = UserAccountForm(request.POST, instance=user)
         user_personal_form = UserPersonalForm(request.POST, instance=user)
@@ -180,18 +186,21 @@ def edit(request, from_redirect=''):
 @login_required(login_url=login)
 def add(request):
     departments = (department for department, _ in Class.DEPT_CHOICES)
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile = request.user.profile
 
     if request.method == "POST":
         dept = request.POST.get('dept')
         cnums = request.POST.get('cnum')
+
         if cnums:
             for cnum in cnums.split(','):
                 profile.classes.add(Class.objects.get_or_create(department=dept, course_number=cnum.strip())[0])
+
         else:
             for cls in request.POST:
                 if request.POST[cls] == 'on':
                     dept, cnum = cls.split()
+
                     try:
                         cls = Class.objects.get(department=dept, course_number=cnum)
                         profile.classes.remove(cls)
@@ -236,12 +245,11 @@ def interview(request):
 
 @login_required(login_url=login)
 def requirements(request):
-    user = request.user
-    profile = Profile.objects.get(user=user)
+    profile = request.user.profile
     term = Settings.objects.term()
 
     if profile.position == Profile.CANDIDATE:
-        candidate = Candidate.objects.get(profile=profile)
+        candidate = profile.candidate
         tutoring = candidate.tutoring
 
         if request.method == "POST":
@@ -334,9 +342,3 @@ def spreadsheet(request):
     response = HttpResponse(data, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=spreadsheet.csv'
     return response
-
-@staff_member_required
-def preferences(request):
-    term = Settings.objects.term()
-    tutors = (tutoring.profile for tutoring in Tutoring.objects.filter(term=term))
-    return render(request, 'preferences.html', {'tutors': tutors})
