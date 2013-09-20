@@ -1,3 +1,5 @@
+import os
+
 from django import forms
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate
@@ -70,8 +72,11 @@ QUARTER_CHOICES = (
 
 fs = FileSystemStorage(location='/media')
 
-def professor_interview_path(instance, filename=''):
-    return 'professor_interviews/%s.pdf' % str(instance).replace(' ', '_')
+def professor_interview_path(instance, filename):
+    return 'professor_interviews/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
+
+def community_service_proof_path(instance, filename):
+    return 'community_service_proof/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
 
 class Term(models.Model):
     quarter = models.CharField(max_length=1, choices=QUARTER_CHOICES)
@@ -190,6 +195,7 @@ class HousePoints(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
+
     middle_name = models.CharField(max_length=30, blank=True, verbose_name="Middle Name")
     nickname = models.CharField(max_length=30, blank=True, verbose_name="Nickname (optional)")
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='M')
@@ -231,19 +237,21 @@ class Profile(models.Model):
 
 class Candidate(models.Model):
     profile = models.OneToOneField('Profile')
-    term = models.ForeignKey('Term')
-    completed = models.BooleanField(default=False)
 
     tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
+    term = models.ForeignKey('Term')
+    completed = models.BooleanField(default=False)
     bent_polish = models.BooleanField(default=False)
     candidate_quiz = models.BooleanField(default=False)
     candidate_meet_and_greet = models.BooleanField(default=False)
     signature_book = models.BooleanField(default=False)
+    community_service_proof = models.FileField(upload_to=community_service_proof_path, storage=fs, 
+            blank=True, null=True, default=None, verbose_name="Community Service Proof")
     community_service = models.IntegerField(default=0)
     initiation_fee = models.BooleanField(default=False)
     engineering_futures = models.BooleanField(default=False)
     professor_interview = models.FileField(upload_to=professor_interview_path, storage=fs, 
-            blank=True, null=True, default=None, verbose_name='Professor Interview (pdf)')
+            blank=True, null=True, default=None, verbose_name="Professor Interview")
     other = models.IntegerField(default=0)
 
     current = TermManager()
@@ -310,6 +318,7 @@ class Candidate(models.Model):
 class ActiveMember(models.Model):
     profile = models.ForeignKey('Profile')
     term = models.ForeignKey('Term')
+
     completed = models.BooleanField(default=False)
 
     EMCC = '0'
@@ -353,10 +362,11 @@ class ActiveMember(models.Model):
         return all(requirement for name, requirement in self.requirements())
 
 class Officer(models.Model):
+    profile = models.ManyToManyField('Profile')
+    
     position = models.CharField(max_length=30)
     rank = models.IntegerField()
     mail_alias = models.CharField(max_length=30)
-    profile = models.ManyToManyField('Profile')
 
     def list_profiles( self ):
         return ', '.join( [ str( a ) for a in self.profile.all() ] )
@@ -470,7 +480,7 @@ class CandidateForm(ModelForm):
 
     class Meta:
         model = Candidate
-        fields = ['professor_interview']
+        fields = ['professor_interview', 'community_service_proof']
 
 class MemberForm(ModelForm):
 

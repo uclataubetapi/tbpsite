@@ -27,6 +27,7 @@ urlpatterns += patterns('main.views',
 
     url(r'^profile_requirements/$', 'requirements'),
     url(r'^candidate_requirements/$', 'candidates'),
+    url(r'^pending_community_service/$', 'pending_community_service'),
     url(r'^active_members/$', 'active_members'),
     url(r'^downloads/$', 'downloads'),
     url(r'^spreadsheet/$', 'spreadsheet'),
@@ -42,6 +43,9 @@ urlpatterns += patterns('main.views',
     url(r'^resume_pdf/$', 'resume_pdf'),
     url(r'^resume_word/$', 'resume_word'),
     url(r'^interview/$', 'interview'),
+    url(r'^interview/(?P<id>\d+)$', 'interview'),
+    url(r'^proof/$', 'proof'),
+    url(r'^proof/(?P<id>\d+)$', 'proof'),
 )
 
 urlpatterns += patterns('event.views',

@@ -108,11 +108,19 @@
 </div>
 <div class="col-lg-6">
   <h4>{{ profile.get_position_display }}</h4>
-  {% if profile.position == "0"%}
+  {% if requirements %}
   <p>Requirements:</p>
-  {% else %}
-  <p>Distinguished Active Terms:</p>
+  <table class="table">
+    {% for requirement in requirements %}
+    <tr>
+      <td>{{ requirement.0 }}</td>
+      <td>{{ requirement.1 }}</td>
+    </tr>
+    {% endfor %}
+  </table>
   {% endif %}
+  {% if profile.position == "1"%}
+  <p>Distinguished Active Terms:</p>
   <table class="table">
     {% for detail in details %}
     <tr>
@@ -121,6 +129,7 @@
     </tr>
     {% endfor %}
   </table>
+  {% endif %}
 </div>
 
 {% endblock %}

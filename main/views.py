@@ -1,4 +1,5 @@
 import datetime
+import os
 import re
 
 from django.forms.models import model_to_dict
@@ -6,15 +7,15 @@ from django.contrib import auth
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.servers.basehttp import FileWrapper
-from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.http import HttpResponse, Http404
+from django.shortcuts import redirect, get_object_or_404
 from django.core.urlresolvers import reverse
+from django.views.generic.base import View
+from django.utils.decorators import method_decorator
 
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings,\
-        LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm,\
-        DAY_CHOICES, HOUR_CHOICES
+        LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm
 from tbpsite.settings import BASE_DIR
 from tutoring.models import Tutoring, Class, Feedback, TutoringPreferencesForm
 from common import render
@@ -77,6 +78,25 @@ def logout(request):
     auth.logout(request)
     return redirect(request.GET.get('next', 'home'))
 
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            username, new_password = map(form.cleaned_data.get, ('username', 'new_password'))
+            user = User.objects.create_user(username, password=new_password)
+            auth.login(request, auth.authenticate(username=username, password=new_password))
+            profile = Profile.objects.create(user=user)
+            Candidate.objects.create(profile=profile, term=Settings.objects.term())
+            return redirect(edit, from_redirect='redirect')
+    else:
+        form = RegisterForm()
+    return render(request, 'register.html', {'form': form})
+
+def houses(request):
+    term = Settings.objects.term()
+    house_points = [HousePoints.objects.get_or_create(house=house, term=term)[0] for house in House.objects.all()]
+    return render(request, 'houses.html', {'houses': house_points})
+
 @login_required(login_url=login)
 def profile_view(request):
     user = request.user
@@ -98,22 +118,7 @@ def profile_view(request):
         details = ((active.term, 'Completed' if active.completed else 'In Progress') 
                 for active in ActiveMember.objects.filter(profile=profile))
 
-    return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 'details': details})
-
-def register(request):
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            username, new_password = map(form.cleaned_data.get, ('username', 'new_password'))
-            User.objects.create_user(username, password=new_password)
-            user = auth.authenticate(username=username, password=new_password)
-            auth.login(request, user)
-            profile = Profile.objects.create(user=user)
-            Candidate.objects.create(profile=profile, term = Settings.objects.term)
-            return redirect(edit, from_redirect='redirect')
-    else:
-        form = RegisterForm()
-    return render(request, 'register.html', {'form': form})
+    return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 'requirements': requirements, 'details': details})
 
 @login_required(login_url=login)
 def edit(request, from_redirect=''):
@@ -123,18 +128,18 @@ def edit(request, from_redirect=''):
 
     if request.method != "POST":
         user_account_form = UserAccountForm(instance=user)
-        user_personal_form = UserPersonalForm(instance=user)
-        profile_dict = model_to_dict(profile)
 
-        try:
+        personal_dict = model_to_dict(user)
+        personal_dict['middle_name'] = profile.middle_name
+        user_personal_form = UserPersonalForm(instance=user, initial=personal_dict)
+
+        profile_dict = model_to_dict(profile)
+        if profile.graduation_term is not None:
             profile_dict.update({
                 'graduation_quarter': profile.graduation_term.quarter,
                 'graduation_year': profile.graduation_term.year
                 })
-        except AttributeError:
-            pass
-
-        profile_form = ProfileForm(instance=profile, initial=profile_dict)
+        profile_form = ProfileForm(initial=profile_dict)
 
     else:
         user_account_form = UserAccountForm(request.POST, instance=user)
@@ -173,7 +178,7 @@ def edit(request, from_redirect=''):
 
                 user_account_form.save()
                 user_personal_form.save()
-                profile.middle_name = user_personal_form['middle_name']
+                profile.middle_name = user_personal_form.cleaned_data['middle_name']
                 profile.graduation_term = term
                 profile_form.save()
                 return redirect(profile_view)
@@ -233,39 +238,29 @@ def resume_word(request):
         return redirect_next(request)
 
 @login_required(login_url=login)
-def interview(request):
-    user = request.user
-    response = None
-    try:
-        f = open(BASE_DIR + '/interviews/' + str(user.id))
-        response = HttpResponse(FileWrapper(f), content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=interview.pdf'
-        return response
-    except IOError:
-        return redirect_next(request)
-
-@login_required(login_url=login)
 def requirements(request):
     profile = request.user.profile
     term = Settings.objects.term()
 
     if profile.position == Profile.CANDIDATE:
         candidate = profile.candidate
-        tutoring = candidate.tutoring
 
         if request.method == "POST":
-            if tutoring is None:
-                tutoring_preferences_form = TutoringPreferencesForm(request.POST, instance=tutoring)
-            else:
-                candidate_form = CandidateForm(request.POST, request.FILES, instance=candidate)
+            if candidate.tutoring is None:
+                candidate.tutoring = Tutoring.with_weeks(profile=profile, term=term)
+                form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
+                if form.is_valid():
+                    form.save()
+                    candidate.save()
+                    form = CandidateForm()
 
-            if form.is_valid():
-                if tutoring is None:
-                    candidate.tutoring = Tutoring.with_weeks(profile, term)
-                form.save()
+            else:
+                form = CandidateForm(request.POST, request.FILES, instance=candidate)
+                if form.is_valid():
+                    form.save()
 
         else:
-            if tutoring is None:
+            if candidate.tutoring is None:
                 form = TutoringPreferencesForm()
             else:
                 form = CandidateForm()
@@ -312,17 +307,22 @@ def active_members(request):
     return render(request, 'active_members.html', {'member_list': ActiveMember.current.order_by('profile')})
 
 @staff_member_required
+def pending_community_service(request):
+    if request.method == "POST":
+        for id in request.POST:
+            if request.POST[id] == 'on':
+                Candidate.objects.filter(id=id).update(community_service=1)
+    return render(request, 'pending_community_service.html', 
+            {'candidates': [candidate for candidate in Candidate.objects.filter(term=Settings.objects.term, community_service=0).order_by('profile')
+                if not candidate.community_service_complete() and candidate.community_service_proof]})
+
+@staff_member_required
 def tutoring_hours(request):
     return render(request, 'tutoring_hours.html', {'tutoring_list': Tutoring.objects.order_by('profile')})
 
 @staff_member_required
 def tutoring_feedback(request):
     return render(request, 'tutoring_feedback.html', {'tutoring_feedback': Feedback.objects.order_by('-timestamp')})
-
-def houses(request):
-    term = Settings.objects.term()
-    house_points = [HousePoints.objects.get_or_create(house=house, term=term)[0] for house in House.objects.all()]
-    return render(request, 'houses.html', {'houses': house_points})
 
 @staff_member_required
 def downloads(request):
@@ -335,3 +335,44 @@ def spreadsheet(request):
     response = HttpResponse(data, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=spreadsheet.csv'
     return response
+
+class FileView(View):
+
+    field = ''
+
+    @method_decorator(login_required(login_url=login))
+    def get(self, request, *args, **kwargs):
+
+        obj = self.get_object(request, kwargs.get('id'))
+        if not obj:
+            raise Http404
+
+        try:
+            f = open(os.path.join(obj.storage.base_location, obj.url))
+        except IOError:
+            raise Http404
+
+        response = HttpResponse(FileWrapper(f), content_type='application/pdf')
+        response['Content-Disposition'] = 'filename={}.pdf'.format(self.field)
+        return response
+
+    def get_object(self, request, id):
+        raise NotImplementedError
+
+class ProfileFileView(FileView):
+
+    def get_object(self, request, id):
+        return getattr(request.user.profile, self.field)
+
+class CandidateFileView(FileView):
+
+    def get_object(self, request, id):
+        if not id:
+            return getattr(get_object_or_404(Candidate, profile=request.user.profile), self.field)
+        else:
+            if not request.user.is_staff:
+                raise Http404
+            return getattr(get_object_or_404(Candidate, id=id), self.field)
+
+interview = CandidateFileView.as_view(field='professor_interview')
+proof = CandidateFileView.as_view(field='community_service_proof')

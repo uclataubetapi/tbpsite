@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 style>Pending Community Service</h1>
+<div class="row">
+  <div class="col-lg-6">
+    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <fieldset>
+        {% for candidate in candidates %}
+        <div class="form-group">
+          <label>
+            <input type="checkbox" name="{{ candidate.id }}"><a href="{% url 'main.views.proof' candidate.id %}">{{ candidate }}</a>
+          </label>
+        </div>
+        {% endfor %}
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
