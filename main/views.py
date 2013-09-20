@@ -98,6 +98,17 @@ def houses(request):
     return render(request, 'houses.html', {'houses': house_points})
 
 @login_required(login_url=login)
+def account(request):
+    if request.method == "POST":
+        form = UserAccountForm(request.POST, instance=request.user)
+        if form.is_valid():
+            if form.cleaned_data['new_password']:
+                request.user.set_password(form.cleaned_data['new_password'])
+            form.save()
+    form = UserAccountForm(instance=request.user)
+    return render(request, 'account.html', {'form': form})
+
+@login_required(login_url=login)
 def profile_view(request):
     user = request.user
     profile = user.profile
@@ -112,7 +123,7 @@ def profile_view(request):
     else:
         try:
             requirements = ((name, 'Completed' if requirement else 'Not Completed') 
-                    for name, requirement in ActiveMember.objects.get(profile=profile, term=Settings.objects.term))
+                    for name, requirement in ActiveMember.objects.get(profile=profile, term=Settings.objects.term).requirements())
         except ActiveMember.DoesNotExist:
             requirements = None
         details = ((active.term, 'Completed' if active.completed else 'In Progress') 
@@ -127,8 +138,6 @@ def edit(request, from_redirect=''):
     error = Error()
 
     if request.method != "POST":
-        user_account_form = UserAccountForm(instance=user)
-
         personal_dict = model_to_dict(user)
         personal_dict['middle_name'] = profile.middle_name
         user_personal_form = UserPersonalForm(instance=user, initial=personal_dict)
@@ -142,11 +151,10 @@ def edit(request, from_redirect=''):
         profile_form = ProfileForm(initial=profile_dict)
 
     else:
-        user_account_form = UserAccountForm(request.POST, instance=user)
         user_personal_form = UserPersonalForm(request.POST, instance=user)
         profile_form = ProfileForm(request.POST, instance=profile)
 
-        valid_forms = [form.is_valid() for form in (user_account_form, user_personal_form, profile_form)]
+        valid_forms = [form.is_valid() for form in (user_personal_form, profile_form)]
 
         if all(valid_forms):
             term, created = Term.objects.get_or_create(quarter=profile_form.cleaned_data['graduation_quarter'], 
@@ -173,10 +181,6 @@ def edit(request, from_redirect=''):
                     error.file_type.append('Resume (word)')
 
             if not error.error():
-                if user_account_form.cleaned_data['new_password']:
-                    user.set_password(user_account_form.cleaned_data['new_password'])
-
-                user_account_form.save()
                 user_personal_form.save()
                 profile.middle_name = user_personal_form.cleaned_data['middle_name']
                 profile.graduation_term = term
@@ -186,7 +190,7 @@ def edit(request, from_redirect=''):
     classes = profile.classes.all()
 
     return render_profile_page(request, 'edit.html', {
-        'user_account_form': user_account_form, 'user_personal_form': user_personal_form, 'profile_form': profile_form, 
+        'user_personal_form': user_personal_form, 'profile_form': profile_form, 
         'from_redirect': from_redirect, 'user': user, 'profile': profile})
 
 @login_required(login_url=login)
