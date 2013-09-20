@@ -78,6 +78,25 @@ def logout(request):
     auth.logout(request)
     return redirect(request.GET.get('next', 'home'))
 
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            username, new_password = map(form.cleaned_data.get, ('username', 'new_password'))
+            user = User.objects.create_user(username, password=new_password)
+            auth.login(request, auth.authenticate(username=username, password=new_password))
+            profile = Profile.objects.create(user=user)
+            Candidate.objects.create(profile=profile, term=Settings.objects.term())
+            return redirect(edit, from_redirect='redirect')
+    else:
+        form = RegisterForm()
+    return render(request, 'register.html', {'form': form})
+
+def houses(request):
+    term = Settings.objects.term()
+    house_points = [HousePoints.objects.get_or_create(house=house, term=term)[0] for house in House.objects.all()]
+    return render(request, 'houses.html', {'houses': house_points})
+
 @login_required(login_url=login)
 def profile_view(request):
     user = request.user
@@ -100,20 +119,6 @@ def profile_view(request):
                 for active in ActiveMember.objects.filter(profile=profile))
 
     return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 'requirements': requirements, 'details': details})
-
-def register(request):
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            username, new_password = map(form.cleaned_data.get, ('username', 'new_password'))
-            user = User.objects.create_user(username, password=new_password)
-            auth.login(request, auth.authenticate(username=username, password=new_password))
-            profile = Profile.objects.create(user=user)
-            Candidate.objects.create(profile=profile, term=Settings.objects.term())
-            return redirect(edit, from_redirect='redirect')
-    else:
-        form = RegisterForm()
-    return render(request, 'register.html', {'form': form})
 
 @login_required(login_url=login)
 def edit(request, from_redirect=''):
@@ -302,17 +307,22 @@ def active_members(request):
     return render(request, 'active_members.html', {'member_list': ActiveMember.current.order_by('profile')})
 
 @staff_member_required
+def pending_community_service(request):
+    if request.method == "POST":
+        for id in request.POST:
+            if request.POST[id] == 'on':
+                Candidate.objects.filter(id=id).update(community_service=1)
+    return render(request, 'pending_community_service.html', 
+            {'candidates': [candidate for candidate in Candidate.objects.filter(term=Settings.objects.term, community_service=0).order_by('profile')
+                if not candidate.community_service_complete() and candidate.community_service_proof]})
+
+@staff_member_required
 def tutoring_hours(request):
     return render(request, 'tutoring_hours.html', {'tutoring_list': Tutoring.objects.order_by('profile')})
 
 @staff_member_required
 def tutoring_feedback(request):
     return render(request, 'tutoring_feedback.html', {'tutoring_feedback': Feedback.objects.order_by('-timestamp')})
-
-def houses(request):
-    term = Settings.objects.term()
-    house_points = [HousePoints.objects.get_or_create(house=house, term=term)[0] for house in House.objects.all()]
-    return render(request, 'houses.html', {'houses': house_points})
 
 @staff_member_required
 def downloads(request):

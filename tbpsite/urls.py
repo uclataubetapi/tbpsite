@@ -27,6 +27,7 @@ urlpatterns += patterns('main.views',
 
     url(r'^profile_requirements/$', 'requirements'),
     url(r'^candidate_requirements/$', 'candidates'),
+    url(r'^pending_community_service/$', 'pending_community_service'),
     url(r'^active_members/$', 'active_members'),
     url(r'^downloads/$', 'downloads'),
     url(r'^spreadsheet/$', 'spreadsheet'),
