@@ -39,6 +39,7 @@ urlpatterns += patterns('main.views',
     url(r'^edit/$', 'edit'),
     url(r'^add/$', 'add'),
     url(r'^register/$', 'register'),
+    url(r'^account/$', 'account'),
 
     url(r'^resume_pdf/$', 'resume_pdf'),
     url(r'^resume_word/$', 'resume_word'),

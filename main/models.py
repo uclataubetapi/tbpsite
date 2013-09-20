@@ -408,8 +408,7 @@ class UserForm(ModelForm):
         return cleaned_data
 
 class UserAccountForm(UserForm):
-    current_password = forms.CharField(widget=forms.widgets.PasswordInput, 
-            help_text="Required if changing username or password.", required=False, label="Current Password")
+    current_password = forms.CharField(widget=forms.widgets.PasswordInput, required=True, label="Current Password")
     username = forms.CharField(required=False)
     new_password = forms.CharField(widget=forms.widgets.PasswordInput, required=False, label="New Password")
     confirm_password = forms.CharField(widget=forms.widgets.PasswordInput, required=False, label="Confirm Password")
@@ -422,8 +421,7 @@ class UserAccountForm(UserForm):
         return self.instance.check_password(password)
 
 class RegisterForm(UserForm):
-    current_password = forms.CharField(widget=forms.widgets.PasswordInput, 
-            help_text="Required if changing username or password.", label="Registration Code")
+    current_password = forms.CharField(widget=forms.widgets.PasswordInput, label="Registration Code")
     username = forms.CharField()
     new_password = forms.CharField(widget=forms.widgets.PasswordInput, label="New Password")
     confirm_password = forms.CharField(widget=forms.widgets.PasswordInput, label="Confirm Password")
