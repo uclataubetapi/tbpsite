@@ -129,7 +129,21 @@ def profile_view(request):
         details = ((active.term, 'Completed' if active.completed else 'In Progress') 
                 for active in ActiveMember.objects.filter(profile=profile))
 
-    return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 'requirements': requirements, 'details': details})
+    fields = (
+            ('Email', user.email),
+            ('First Name', user.first_name),
+            ('Middle Name', profile.middle_name),
+            ('Last Name', user.last_name),
+            ('Nickname', profile.nickname),
+            ('Gender', profile.get_gender_display()),
+            ('Birthday', profile.birthday),
+            ('Phone Number', profile.phone_number),
+            ('Major', profile.get_major_display()),
+            ('Graduation Term', profile.graduation_term),
+            )
+
+    return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 
+        'fields': fields, 'requirements': requirements, 'details': details})
 
 @login_required(login_url=login)
 def edit(request, from_redirect=''):
