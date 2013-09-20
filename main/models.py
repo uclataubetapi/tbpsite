@@ -263,12 +263,6 @@ class Candidate(models.Model):
     def __unicode__(self):
         return self.profile.__unicode__()
 
-    def candidate_quiz_complete(self):
-        return self.candidate_quiz != '0'
-
-    def signature_book_complete(self):
-        return self.signature_book != '0'
-
     def tutoring_complete(self):
         return self.tutoring.complete() if self.tutoring else False
 
