@@ -1,6 +1,7 @@
 import datetime
 import os
 import re
+import time
 
 from django.forms.models import model_to_dict
 from django.contrib import auth
@@ -32,37 +33,6 @@ def render_profile_page(request, template, template_args=None, **kwargs):
     template_args[ 'profile_tabs' ] = tabs
 
     return render(request, template, template_args, **kwargs)
-
-class Error:
-    def __init__(self):
-        self.file_too_big = False
-        self.wrong_file_type = False
-        self.file_type = []
-
-    def errors(self):
-        return [self.file_too_big, self.wrong_file_type]
-
-    def error(self):
-        return any(self.errors())
-
-def validate_file(f, mime_types, error):
-    ret = True
-
-    if f.multiple_chunks(): # 2.5 MB
-        error.file_too_big = True
-        ret = False
-
-    if f.content_type not in mime_types:
-        error.wrong_file_type = True
-        ret = False
-
-    return ret
-
-def write_file(upload, save_path):
-    with open(save_path, 'wb+') as f:
-        for chunk in upload.chunks():
-            f.write(chunk)
-    return datetime.datetime.today()
 
 def login(request):
     if request.method == "POST":
@@ -142,14 +112,15 @@ def profile_view(request):
             ('Graduation Term', profile.graduation_term),
             )
 
-    return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 
-        'fields': fields, 'requirements': requirements, 'details': details})
+    return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 'fields': fields, 
+        'resume_pdf': time.ctime(os.path.getmtime(profile.resume_pdf.path)) if profile.resume_pdf else None,
+        'resume_word': time.ctime(os.path.getmtime(profile.resume_word.path)) if profile.resume_word else None,
+        'requirements': requirements, 'details': details})
 
 @login_required(login_url=login)
 def edit(request, from_redirect=''):
     user = request.user
     profile = user.profile
-    error = Error()
 
     if request.method != "POST":
         personal_dict = model_to_dict(user)
@@ -166,7 +137,7 @@ def edit(request, from_redirect=''):
 
     else:
         user_personal_form = UserPersonalForm(request.POST, instance=user)
-        profile_form = ProfileForm(request.POST, instance=profile)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
 
         valid_forms = [form.is_valid() for form in (user_personal_form, profile_form)]
 
@@ -174,32 +145,11 @@ def edit(request, from_redirect=''):
             term, created = Term.objects.get_or_create(quarter=profile_form.cleaned_data['graduation_quarter'], 
                     year=profile_form.cleaned_data['graduation_year'])
 
-            resume_pdf = None
-            resume_word = None
-
-            pdf = ('application/pdf', 'application/force-download')
-            word = ('application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-
-            if 'resume_pdf' in request.FILES:
-                resume_pdf = request.FILES['resume_pdf']
-                if validate_file(resume_pdf, pdf, error):
-                    profile.resume_pdf = write_file(resume_pdf, '{}/resumes_pdf/{}'.format(BASE_DIR, user.id))
-                else:
-                    error.file_type.append('Resume (pdf)')
-
-            if 'resume_word' in request.FILES:
-                resume_word = request.FILES['resume_word']
-                if validate_file(resume_word, word, error):
-                    profile.resume_word = write_file(resume_word, '{}/resumes_word/{}'.format(BASE_DIR, user.id))
-                else:
-                    error.file_type.append('Resume (word)')
-
-            if not error.error():
-                user_personal_form.save()
-                profile.middle_name = user_personal_form.cleaned_data['middle_name']
-                profile.graduation_term = term
-                profile_form.save()
-                return redirect(profile_view)
+            user_personal_form.save()
+            profile.middle_name = user_personal_form.cleaned_data['middle_name']
+            profile.graduation_term = term
+            profile_form.save()
+            return redirect(profile_view)
 
     classes = profile.classes.all()
 
@@ -392,5 +342,7 @@ class CandidateFileView(FileView):
                 raise Http404
             return getattr(get_object_or_404(Candidate, id=id), self.field)
 
+resume_pdf = ProfileFileView.as_view(field='resume_pdf')
+resume_word = ProfileFileView.as_view(field='resume_word')
 interview = CandidateFileView.as_view(field='professor_interview')
 proof = CandidateFileView.as_view(field='community_service_proof')
