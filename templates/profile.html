@@ -8,7 +8,7 @@
   <div class="col-lg-6">
     <form class="form-horizontal">
       <fieldset>
-        <legend>Personal Information</legend>
+        <legend>Profile</legend>
         {% for field in fields %}
         <div class="form-group">
           <label class="col-lg-4 control-label">{{ field.0 }}</label>
@@ -18,6 +18,26 @@
         </div>
         {% endfor %}
         <div class="form-group">
+          <label class="col-lg-4 control-label" for="resume_pdf">Resume (pdf)</label>
+          <div class="col-lg-8">
+            {% if resume_pdf %}
+            <a href="{% url 'main.views.resume_pdf' %}"><p class="form-control-static">{{ resume_pdf }}</p></a>
+            {% else %}
+            <p class="form-control-static">None</p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-4 control-label" for="resume_word">Resume (word)</label>
+          <div class="col-lg-8">
+            {% if resume_word %}
+            <a href="{% url 'main.views.resume_word' %}"><p class="form-control-static">{{ resume_word }}</p></a>
+            {% else %}
+            <p class="form-control-static">None</p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="form-group">
           <label class="col-lg-4 control-label">Classes</label>
           <div class="col-lg-8">
             <ul class="list-unstyled">
@@ -25,29 +45,6 @@
               <li>{{ class }}</li>
               {% endfor %}
             </ul>
-          </div>
-        </div>
-      </fieldset>
-      <fieldset>
-        <legend>Documents</legend>
-        <div class="form-group">
-          <label class="col-lg-4 control-label" for="resume_word">Resume (word)</label>
-          <div class="col-lg-8">
-            {% if profile.resume_word %}
-            <a href="{% url 'main.views.resume_word' %}"><p class="form-control-static">Last upload: {{ profile.resume_word }}</p></a>
-            {% else %}
-            <p class="form-control-static">Last upload: {{ profile.resume_word }}</p>
-            {% endif %}
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-4 control-label" for="resume_pdf">Resume (pdf)</label>
-          <div class="col-lg-8">
-            {% if profile.resume_pdf %}
-            <a href="{% url 'main.views.resume_pdf' %}"><p class="form-control-static">Last upload: {{ profile.resume_pdf }}</p></a>
-            {% else %}
-            <p class="form-control-static">Last upload: {{ profile.resume_pdf }}</p>
-            {% endif %}
           </div>
         </div>
       </fieldset>

@@ -72,6 +72,12 @@ QUARTER_CHOICES = (
 
 fs = FileSystemStorage(location='/media')
 
+def resume_pdf_path(instance, filename):
+    return 'resumes_pdf/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
+
+def resume_word_path(instance, filename):
+    return 'resumes_word/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
+
 def professor_interview_path(instance, filename):
     return 'professor_interviews/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
 
@@ -213,8 +219,10 @@ class Profile(models.Model):
     major = models.CharField(max_length=1, choices=MAJOR_CHOICES, default='0')
     initiation_term = models.ForeignKey('Term', related_name='profile_initiation_term', default=Settings.objects.term)
     graduation_term = models.ForeignKey('Term', related_name='profile_graduation_term', blank=True, null=True)
-    resume_pdf = models.DateTimeField(blank=True, null=True)
-    resume_word = models.DateTimeField(blank=True, null=True)
+    resume_pdf = models.FileField(upload_to=resume_pdf_path, storage=fs, 
+            blank=True, null=True, default=None, verbose_name="Resume (PDF)")
+    resume_word = models.FileField(upload_to=resume_word_path, storage=fs, 
+            blank=True, null=True, default=None, verbose_name="Resume (word)")
 
     classes = models.ManyToManyField('tutoring.Class', blank=True, null=True)
 
@@ -450,7 +458,8 @@ class ProfileForm(ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['nickname', 'gender', 'birthday', 'phone_number', 'major', 'graduation_quarter', 'graduation_year']
+        fields = ['nickname', 'gender', 'birthday', 'phone_number', 'major', 
+                'graduation_quarter', 'graduation_year', 'resume_pdf', 'resume_word']
         widgets = {
                 'gender': forms.widgets.RadioSelect
                 }
