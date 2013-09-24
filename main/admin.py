@@ -79,8 +79,8 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 class CandidateAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'term', 'bent_polish', 'candidate_quiz', 'candidate_meet_and_greet',
-                     'signature_book', 'community_service', 'initiation_fee', 'engineering_futures')
+    list_display = ('__unicode__', 'term', 'shirt_size', 'bent_polish', 'candidate_quiz', 'candidate_meet_and_greet',
+                    'signature_book', 'community_service', 'initiation_fee', 'engineering_futures')
     list_editable = ('bent_polish', 'candidate_quiz', 'candidate_meet_and_greet',
                      'signature_book', 'community_service', 'initiation_fee', 'engineering_futures')
     actions = ('create_candidate', 'create_active_member', 'promote_candidate')

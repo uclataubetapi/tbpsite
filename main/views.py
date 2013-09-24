@@ -14,7 +14,7 @@ from django.views.generic.base import View
 from django.utils.decorators import method_decorator
 
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings,\
-    LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm
+    LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm
 from tbpsite.settings import BASE_DIR
 from tutoring.models import Tutoring, Class, Feedback, TutoringPreferencesForm
 from common import render
@@ -202,23 +202,29 @@ def requirements(request):
             if candidate.tutoring is None:
                 candidate.tutoring = Tutoring.with_weeks(profile=profile, term=term)
                 form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
+                shirt_form = ShirtForm(request.POST, instance=candidate)
                 if form.is_valid():
                     form.save()
-                    candidate.save()
+                    shirt_form.save()
                     form = CandidateForm()
 
             else:
                 form = CandidateForm(request.POST, request.FILES, instance=candidate)
                 if form.is_valid():
                     form.save()
+                shirt_form = None
 
         else:
             if candidate.tutoring is None:
                 form = TutoringPreferencesForm()
+                shirt_form = ShirtForm()
             else:
                 form = CandidateForm()
+                shirt_form = None
 
-        return render_profile_page(request, 'candidate_requirements.html', {'term': term, 'form': form})
+        return render_profile_page(request, 'candidate_requirements.html', {
+            'term': term, 'form': form, 'shirt_form': shirt_form
+        })
                 
     else:
         if request.method == "POST":
