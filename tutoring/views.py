@@ -7,6 +7,7 @@ from common import render
 number = re.compile(r'\d+')
 numbers = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen']
 
+
 def schedule(request):
     term = Settings.objects.term()
     tutoring = Tutoring.objects.filter(term=term)
@@ -23,9 +24,13 @@ def schedule(request):
     classes = []
     for department, number in zip(Class.DEPT_CHOICES, numbers):
         department, _ = department
-        classes.append((department, [(c.course_number, c.department+c.course_number) 
-            for c in sorted(Class.objects.filter(department=department, display=True), 
-                key=lambda c: tuple(int(s) if s.isdigit() else s for s in re.search(r'(\d+)([ABCD]?L?)?', c.course_number).groups()))], 
-            'collapse{}'.format(number)))
+        classes.append(
+            (department, [
+                (cls.course_number, cls.department+cls.course_number)
+                for cls in sorted(Class.objects.filter(department=department, display=True),
+                                  key=lambda c: tuple(int(s) if s.isdigit() else s
+                                                      for s in re.search(r'(\d+)([ABCD]?L?)?',
+                                                                         c.course_number).groups()))
+            ], 'collapse{}'.format(number)))
             
     return render(request, 'schedule.html', {'term': term, 'classes': classes, 'tutors': tutors})

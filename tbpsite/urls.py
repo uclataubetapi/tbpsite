@@ -53,7 +53,7 @@ urlpatterns += patterns('event.views',
     url(r'^events/$', 'events'),
     url(r'^events/(?P<url>\w+)/$', 'event'),
     url(r'^cb_race/$', 'event_redirect', {'event_url': 'cb_race'}),
-    url(r'^scholarship/$','event_redirect', {'event_url': 'scholarship'}),
+    url(r'^scholarship/$', 'event_redirect', {'event_url': 'scholarship'}),
 )
 
 urlpatterns += patterns('',

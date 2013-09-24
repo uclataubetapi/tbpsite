@@ -1,8 +1,10 @@
-from event.models import Event
 from datetime import datetime
-from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import redirect, Http404
+
+from django.shortcuts import redirect, get_object_or_404
+
 from common import render
+from event.models import Event
+
 
 def events(request): 
     today = datetime.today()
@@ -10,13 +12,11 @@ def events(request):
             {'upcoming_events': Event.objects.filter(end__gt=today),
                 'past_events': Event.objects.filter(end__lte=today)})
 
+
 def event(request, url):
-    try:
-        event = Event.objects.get(url=url)
-    except ObjectDoesNotExist:
-        raise Http404
-    return render(request, 'event_template.html', 
-            {'event': Event.objects.get(url=url)})
+    get_object_or_404(Event, url=url)
+    return render(request, 'event_template.html', {'event': Event.objects.get(url=url)})
+
 
 def event_redirect(request, event_url):
     return redirect('/events/' + event_url)

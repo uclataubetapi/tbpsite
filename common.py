@@ -4,6 +4,7 @@ from django.views.generic.base import TemplateView
 from event.models import Event
 from main.models import Settings
 
+
 class MyTemplateView(TemplateView):
 
     additional = {}
@@ -15,10 +16,11 @@ class MyTemplateView(TemplateView):
         context.update(self.additional)
         return self.render_to_response(context)
 
+
 def render(request, template_name, additional=None):
-    dictionary = {'user': request.user, 'next': request.path, 
-            'events': Event.objects.filter(dropdown=True),
-            'eligibility_list': Settings.objects.get_eligibility_list().url}
+    dictionary = {'user': request.user, 'next': request.path,
+                  'events': Event.objects.filter(dropdown=True),
+                  'eligibility_list': Settings.objects.get_eligibility_list().url}
     if additional is not None:
         dictionary.update(additional)
     return django_render(request, template_name, dictionary)
