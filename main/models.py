@@ -418,9 +418,8 @@ class UserForm(ModelForm):
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
 
-        current_password, username, new_password, confirm_password = map(cleaned_data.get,
-                                                                         ('current_password', 'username',
-                                                                          'new_password', 'confirm_password'))
+        current_password, username, new_password, confirm_password = map(
+            cleaned_data.get, ('current_password', 'username', 'new_password', 'confirm_password'))
 
         if any([username != self.instance.get_username(), new_password, confirm_password]) and not current_password:
             self._errors['current_password'] = self.error_class(["Current password required."])

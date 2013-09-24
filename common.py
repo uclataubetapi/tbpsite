@@ -10,16 +10,14 @@ class MyTemplateView(TemplateView):
     additional = {}
 
     def get(self, request, *args, **kwargs):
-        context = {'user': self.request.user, 'next': self.request.path, 
-                'events': Event.objects.filter(dropdown=True),
-                'eligibility_list': Settings.objects.get_eligibility_list().url}
+        context = {'user': self.request.user, 'next': self.request.path,  'events': Event.objects.filter(dropdown=True),
+                   'eligibility_list': Settings.objects.get_eligibility_list().url}
         context.update(self.additional)
         return self.render_to_response(context)
 
 
 def render(request, template_name, additional=None):
-    dictionary = {'user': request.user, 'next': request.path,
-                  'events': Event.objects.filter(dropdown=True),
+    dictionary = {'user': request.user, 'next': request.path, 'events': Event.objects.filter(dropdown=True),
                   'eligibility_list': Settings.objects.get_eligibility_list().url}
     if additional is not None:
         dictionary.update(additional)
