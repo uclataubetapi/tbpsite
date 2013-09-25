@@ -263,6 +263,14 @@ class Profile(models.Model):
 class Candidate(models.Model):
     profile = models.OneToOneField('Profile')
 
+    SHIRT_SIZES = (
+        ('S', 'S'),
+        ('M', 'M'),
+        ('L', 'L'),
+        ('XL', 'XL'),
+    )
+    shirt_size = models.CharField(max_length=2, default='M', choices=SHIRT_SIZES, verbose_name="T-Shirt Size")
+
     tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
     term = models.ForeignKey('Term')
     completed = models.BooleanField(default=False)
@@ -515,3 +523,10 @@ class MemberForm(ModelForm):
     class Meta:
         model = ActiveMember
         fields = ['requirement_choice']
+
+
+class ShirtForm(ModelForm):
+
+    class Meta:
+        model = Candidate
+        fields = ['shirt_size']
