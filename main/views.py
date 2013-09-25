@@ -1,6 +1,4 @@
-import datetime
 import os
-import re
 import time
 
 from django.forms.models import model_to_dict
@@ -16,23 +14,25 @@ from django.views.generic.base import View
 from django.utils.decorators import method_decorator
 
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings,\
-        LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm
+    LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm
 from tbpsite.settings import BASE_DIR
 from tutoring.models import Tutoring, Class, Feedback, TutoringPreferencesForm
 from common import render
 
-def render_profile_page(request, template, template_args=None, **kwargs):
+
+def render_profile_page(request, template, template_args=None):
     if not template_args:
         template_args = {}
 
-    tabs = [ ( reverse('main.views.profile_view'), 'Profile' ),
-             ( reverse('main.views.edit'), 'Edit Profile' ),
-             ( reverse('main.views.add'), 'Modify Classes' ),
-             ( reverse('main.views.requirements'), request.user.profile.get_position_display() ) ]
+    tabs = [(reverse('main.views.profile_view'), 'Profile'),
+            (reverse('main.views.edit'), 'Edit Profile'),
+            (reverse('main.views.add'), 'Modify Classes'),
+            (reverse('main.views.requirements'), request.user.profile.get_position_display())]
 
-    template_args[ 'profile_tabs' ] = tabs
+    template_args['profile_tabs'] = tabs
 
-    return render(request, template, template_args, **kwargs)
+    return render(request, template, additional=template_args)
+
 
 def login(request):
     if request.method == "POST":
@@ -44,9 +44,11 @@ def login(request):
         form = LoginForm()
     return render(request, "login.html", {'form': form})
 
+
 def logout(request):
     auth.logout(request)
     return redirect(request.GET.get('next', 'home'))
+
 
 def register(request):
     if request.method == "POST":
@@ -62,10 +64,12 @@ def register(request):
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
 
+
 def houses(request):
     term = Settings.objects.term()
     house_points = [HousePoints.objects.get_or_create(house=house, term=term)[0] for house in House.objects.all()]
     return render(request, 'houses.html', {'houses': house_points})
+
 
 @login_required(login_url=login)
 def account(request):
@@ -78,6 +82,7 @@ def account(request):
     form = UserAccountForm(instance=request.user)
     return render(request, 'account.html', {'form': form})
 
+
 @login_required(login_url=login)
 def profile_view(request):
     user = request.user
@@ -87,35 +92,39 @@ def profile_view(request):
 
     if profile.position == Profile.CANDIDATE:
         candidate = profile.candidate
-        requirements = ((name, 'Completed' if requirement else 'Not Completed') 
-                for name, requirement in candidate.requirements())
+        requirements = ((name, 'Completed' if requirement else 'Not Completed')
+                        for name, requirement in candidate.requirements())
         details = None
     else:
         try:
-            requirements = ((name, 'Completed' if requirement else 'Not Completed') 
-                    for name, requirement in ActiveMember.objects.get(profile=profile, term=Settings.objects.term).requirements())
+            requirements = ((name, 'Completed' if requirement else 'Not Completed') for name, requirement in
+                            ActiveMember.objects.get(profile=profile, term=Settings.objects.term).requirements())
         except ActiveMember.DoesNotExist:
             requirements = None
         details = ((active.term, 'Completed' if active.completed else 'In Progress') 
-                for active in ActiveMember.objects.filter(profile=profile))
+                   for active in ActiveMember.objects.filter(profile=profile))
 
     fields = (
-            ('Email', user.email),
-            ('First Name', user.first_name),
-            ('Middle Name', profile.middle_name),
-            ('Last Name', user.last_name),
-            ('Nickname', profile.nickname),
-            ('Gender', profile.get_gender_display()),
-            ('Birthday', profile.birthday),
-            ('Phone Number', profile.phone_number),
-            ('Major', profile.get_major_display()),
-            ('Graduation Term', profile.graduation_term),
-            )
+        ('Email', user.email),
+        ('First Name', user.first_name),
+        ('Middle Name', profile.middle_name),
+        ('Last Name', user.last_name),
+        ('Nickname', profile.nickname),
+        ('Gender', profile.get_gender_display()),
+        ('Birthday', profile.birthday),
+        ('Phone Number', profile.phone_number),
+        ('Major', profile.get_major_display()),
+        ('Graduation Term', profile.graduation_term),
+    )
 
-    return render_profile_page(request, 'profile.html', {'user': user, 'profile': profile, 'fields': fields, 
-        'resume_pdf': time.ctime(os.path.getmtime(profile.resume_pdf.path)) if profile.resume_pdf else None,
-        'resume_word': time.ctime(os.path.getmtime(profile.resume_word.path)) if profile.resume_word else None,
-        'requirements': requirements, 'details': details})
+    return render_profile_page(
+        request, 'profile.html', {
+            'user': user, 'profile': profile, 'fields': fields,
+            'resume_pdf': time.ctime(os.path.getmtime(profile.resume_pdf.path)) if profile.resume_pdf else None,
+            'resume_word': time.ctime(os.path.getmtime(profile.resume_word.path)) if profile.resume_word else None,
+            'requirements': requirements, 'details': details
+        })
+
 
 @login_required(login_url=login)
 def edit(request, from_redirect=''):
@@ -132,7 +141,7 @@ def edit(request, from_redirect=''):
             profile_dict.update({
                 'graduation_quarter': profile.graduation_term.quarter,
                 'graduation_year': profile.graduation_term.year
-                })
+            })
         profile_form = ProfileForm(initial=profile_dict)
 
     else:
@@ -143,15 +152,13 @@ def edit(request, from_redirect=''):
 
         if all(valid_forms):
             term, created = Term.objects.get_or_create(quarter=profile_form.cleaned_data['graduation_quarter'], 
-                    year=profile_form.cleaned_data['graduation_year'])
+                                                       year=profile_form.cleaned_data['graduation_year'])
 
             user_personal_form.save()
             profile.middle_name = user_personal_form.cleaned_data['middle_name']
             profile.graduation_term = term
             profile_form.save()
             return redirect(profile_view)
-
-    classes = profile.classes.all()
 
     return render_profile_page(request, 'edit.html', {
         'user_personal_form': user_personal_form, 'profile_form': profile_form, 
@@ -184,28 +191,6 @@ def add(request):
     return render_profile_page(request, 'add.html', {'departments': departments, 'classes': profile.classes.all()})
 
 @login_required(login_url=login)
-def resume_pdf(request):
-    user = request.user
-    try:
-        f = open(BASE_DIR + '/resumes_pdf/' + str(user.id))
-        response = HttpResponse(FileWrapper(f), content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=resume.pdf'
-        return response
-    except IOError:
-        return redirect_next(request)
-
-@login_required(login_url=login)
-def resume_word(request):
-    user = request.user
-    try:
-        f = open(BASE_DIR + '/resumes_word/' + str(user.id))
-        response = HttpResponse(FileWrapper(f), content_type='application/msword')
-        response['Content-Disposition'] = 'attachment; filename=resume.doc'
-        return response
-    except IOError:
-        return redirect_next(request)
-
-@login_required(login_url=login)
 def requirements(request):
     profile = request.user.profile
     term = Settings.objects.term()
@@ -217,23 +202,30 @@ def requirements(request):
             if candidate.tutoring is None:
                 candidate.tutoring = Tutoring.with_weeks(profile=profile, term=term)
                 form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
+                shirt_form = ShirtForm(request.POST, instance=candidate)
                 if form.is_valid():
                     form.save()
-                    candidate.save()
+                    shirt_form.save()
                     form = CandidateForm()
+                    shirt_form = None
 
             else:
                 form = CandidateForm(request.POST, request.FILES, instance=candidate)
+                shirt_form = None
                 if form.is_valid():
                     form.save()
 
         else:
             if candidate.tutoring is None:
                 form = TutoringPreferencesForm()
+                shirt_form = ShirtForm()
             else:
                 form = CandidateForm()
+                shirt_form = None
 
-        return render_profile_page(request, 'candidate_requirements.html', {'term': term, 'form': form})
+        return render_profile_page(request, 'candidate_requirements.html', {
+            'term': term, 'form': form, 'shirt_form': shirt_form
+        })
                 
     else:
         if request.method == "POST":
@@ -262,17 +254,22 @@ def requirements(request):
                 member_form = MemberForm()
                 tutoring_preferences_form = TutoringPreferencesForm()
 
-        return render_profile_page(request, 'member_requirements.html', 
-                {'term': term, 'requirement': member.get_requirement_choice_display() if member else '', 
-                    'member_form': member_form, 'tutoring_preferences_form': tutoring_preferences_form})
+        return render_profile_page(
+            request, 'member_requirements.html', {
+                'term': term, 'requirement': member.get_requirement_choice_display() if member else '',
+                'member_form': member_form, 'tutoring_preferences_form': tutoring_preferences_form
+            })
+
 
 @staff_member_required
 def candidates(request):
     return render(request, 'all_candidate_requirements.html', {'candidate_list': Candidate.current.order_by('profile')})
 
+
 @staff_member_required
 def active_members(request):
     return render(request, 'active_members.html', {'member_list': ActiveMember.current.order_by('profile')})
+
 
 @staff_member_required
 def pending_community_service(request):
@@ -280,29 +277,38 @@ def pending_community_service(request):
         for id in request.POST:
             if request.POST[id] == 'on':
                 Candidate.objects.filter(id=id).update(community_service=1)
-    return render(request, 'pending_community_service.html', 
-            {'candidates': [candidate for candidate in Candidate.objects.filter(term=Settings.objects.term, community_service=0).order_by('profile')
-                if not candidate.community_service_complete() and candidate.community_service_proof]})
+    return render(
+        request, 'pending_community_service.html', {
+            'candidates': [candidate for candidate in
+                           Candidate.objects.filter(term=Settings.objects.term, community_service=0).order_by('profile')
+                           if not candidate.community_service_complete() and candidate.community_service_proof]
+        })
+
 
 @staff_member_required
 def tutoring_hours(request):
     return render(request, 'tutoring_hours.html', {'tutoring_list': Tutoring.objects.order_by('profile')})
 
+
 @staff_member_required
 def tutoring_feedback(request):
     return render(request, 'tutoring_feedback.html', {'tutoring_feedback': Feedback.objects.order_by('-timestamp')})
+
 
 @staff_member_required
 def downloads(request):
     return render(request, 'downloads.html')
 
+
 @staff_member_required
 def spreadsheet(request):
-    data = '\n'.join(['First Name,Middle Name,Last Name,Email,Nickname,Gender,Birthday,Phone Number,Major,Initiation Term,Graduation Term'] + 
-            [profile.dump() for profile in Profile.objects.all() if profile.user.id != 1])
+    data = '\n'.join(['First Name,Middle Name,Last Name,Email,Nickname,Gender,Birthday,Phone Number,Major,'
+                      'Initiation Term,Graduation Term'] +
+                     [profile.dump() for profile in Profile.objects.all() if profile.user.id != 1])
     response = HttpResponse(data, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=spreadsheet.csv'
     return response
+
 
 class FileView(View):
 
@@ -327,10 +333,12 @@ class FileView(View):
     def get_object(self, request, id):
         raise NotImplementedError
 
+
 class ProfileFileView(FileView):
 
     def get_object(self, request, id):
         return getattr(request.user.profile, self.field)
+
 
 class CandidateFileView(FileView):
 

@@ -6,35 +6,37 @@ from main.models import Settings, TermManager
 TUTORING_HOURS_PER_WEEK = 2
 
 TWO_HOUR_CHOICES = (
-        ('0', '10am-12pm'),
-        ('1', '11am-1pm'),
-        ('2', '12pm-2pm'),
-        ('3', '1pm-3pm'),
-        ('4', '2pm-4pm'),
-        ('5', '3pm-5pm'),
-        )
+    ('0', '10am-12pm'),
+    ('1', '11am-1pm'),
+    ('2', '12pm-2pm'),
+    ('3', '1pm-3pm'),
+    ('4', '2pm-4pm'),
+    ('5', '3pm-5pm'),
+)
+
 
 class Feedback(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     comment = models.TextField()
 
+
 class Class(models.Model):
     DEPT_CHOICES = (
-            ('BE', 'BE'),
-            ('CEE', 'CEE'),
-            ('CHEM', 'CHEM'),
-            ('CHEME', 'CHEME'),
-            ('CS', 'CS'),
-            ('EE', 'EE'),
-            ('ENGR', 'ENGR'),
-            ('LS', 'LS'),
-            ('MAE', 'MAE'),
-            ('MATH', 'MATH'),
-            ('MGMT', 'MGMT'),
-            ('MSE', 'MSE'),
-            ('PHYSICS', 'PHYSICS'),
-            ('STATS', 'STATS'),
-            )
+        ('BE', 'BE'),
+        ('CEE', 'CEE'),
+        ('CHEM', 'CHEM'),
+        ('CHEME', 'CHEME'),
+        ('CS', 'CS'),
+        ('EE', 'EE'),
+        ('ENGR', 'ENGR'),
+        ('LS', 'LS'),
+        ('MAE', 'MAE'),
+        ('MATH', 'MATH'),
+        ('MGMT', 'MGMT'),
+        ('MSE', 'MSE'),
+        ('PHYSICS', 'PHYSICS'),
+        ('STATS', 'STATS'),
+    )
     department = models.CharField(max_length=10, choices=DEPT_CHOICES)
     course_number = models.CharField(max_length=10)
     display = models.BooleanField(default=False)
@@ -45,26 +47,27 @@ class Class(models.Model):
     def __unicode__(self):
         return self.department + ' ' + self.course_number
 
+
 class Tutoring(models.Model):
     profile = models.ForeignKey('main.Profile')
     term = models.ForeignKey('main.Term')
 
     DAY_CHOICES = (
-            ('0', 'Monday'),
-            ('1', 'Tuesday'),
-            ('2', 'Wednesday'),
-            ('3', 'Thursday'),
-            ('4', 'Friday'),
-            )
+        ('0', 'Monday'),
+        ('1', 'Tuesday'),
+        ('2', 'Wednesday'),
+        ('3', 'Thursday'),
+        ('4', 'Friday'),
+    )
     HOUR_CHOICES = (
-            ('0', '10am'),
-            ('1', '11am'),
-            ('2', '12pm'),
-            ('3', '1pm'),
-            ('4', '2pm'),
-            ('5', '3pm'),
-            ('6', '4pm'),
-            )
+        ('0', '10am'),
+        ('1', '11am'),
+        ('2', '12pm'),
+        ('3', '1pm'),
+        ('4', '2pm'),
+        ('5', '3pm'),
+        ('6', '4pm'),
+    )
 
     best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Best Day")
     best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='0', verbose_name="Best Hour")
@@ -119,6 +122,7 @@ class Tutoring(models.Model):
         tutoring_weeks = {'week_{}'.format(d): globals()['Week{}'.format(d)].objects.create() for d in range(3, 10)}
         return cls.objects.create(profile=profile, term=term, **tutoring_weeks)
 
+
 class WeekManager(models.Manager):
     def get_query_set(self):
         if not Settings.objects.display_all_terms():
@@ -126,6 +130,7 @@ class WeekManager(models.Manager):
             if term:
                 return super(WeekManager, self).get_query_set().filter(tutoring__term=term)
         return super(WeekManager, self).get_query_set()
+
 
 class Week(models.Model):
     hours = models.IntegerField(default=0)
@@ -136,7 +141,7 @@ class Week(models.Model):
     class Meta:
         abstract = True
         ordering = ('tutoring__day_1', 'tutoring__hour_1',
-                'tutoring__day_2', 'tutoring__hour_2', 'tutoring__profile')
+                    'tutoring__day_2', 'tutoring__hour_2', 'tutoring__profile')
 
     def __unicode__(self):
         return self.profile().__unicode__()
@@ -145,7 +150,7 @@ class Week(models.Model):
         return self.hours >= TUTORING_HOURS_PER_WEEK
 
     def points(self):
-        return (0 if not self.complete() else self.hours - TUTORING_HOURS_PER_WEEK)
+        return 0 if not self.complete() else self.hours - TUTORING_HOURS_PER_WEEK
 
     def day_1(self):
         return self.tutoring.get_day_1_display()
@@ -165,33 +170,41 @@ class Week(models.Model):
     def term(self):
         return self.tutoring.term
 
+
 class Week3(Week):
     class Meta(Week.Meta):
         verbose_name_plural = "Week 3"
+
 
 class Week4(Week):
     class Meta(Week.Meta):
         verbose_name_plural = "Week 4"
 
+
 class Week5(Week):
     class Meta(Week.Meta):
         verbose_name_plural = "Week 5"
+
 
 class Week6(Week):
     class Meta(Week.Meta):
         verbose_name_plural = "Week 6"
 
+
 class Week7(Week):
     class Meta(Week.Meta):
         verbose_name_plural = "Week 7"
+
 
 class Week8(Week):
     class Meta(Week.Meta):
         verbose_name_plural = "Week 8"
 
+
 class Week9(Week):
     class Meta(Week.Meta):
         verbose_name_plural = "Week 9"
+
 
 class TutoringPreferencesForm(ModelForm):
 

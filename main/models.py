@@ -12,77 +12,83 @@ CANDIDATE_SOCIAL = 2
 ACTIVE_MEMBER_SOCIAL = 2
 
 MAJOR_CHOICES = (
-        ('0', 'Aerospace Engineering'),
-        ('1', 'Bioengineering'),
-        ('2', 'Chemical Engineering'),
-        ('3', 'Civil Engineering'),
-        ('4', 'Computer Science'),
-        ('5', 'Computer Science and Engineering'),
-        ('6', 'Electrical Engineering'),
-        ('7', 'Materials Engineering'),
-        ('8', 'Mechanical Engineering'),
-        )
+    ('0', 'Aerospace Engineering'),
+    ('1', 'Bioengineering'),
+    ('2', 'Chemical Engineering'),
+    ('3', 'Civil Engineering'),
+    ('4', 'Computer Science'),
+    ('5', 'Computer Science and Engineering'),
+    ('6', 'Electrical Engineering'),
+    ('7', 'Materials Engineering'),
+    ('8', 'Mechanical Engineering'),
+)
 DEPT_CHOICES = (
-        ('0', 'Bioengineering'),
-        ('1', 'Chemical Engineering'),
-        ('2', 'Civil and Environmental Engineering'),
-        ('3', 'Computer Science'),
-        ('4', 'Electrical Engineering'),
-        ('5', 'Mechanical and Aerospace Engineering'),
-        ('6', 'Materials Science and Engineering') )
+    ('0', 'Bioengineering'),
+    ('1', 'Chemical Engineering'),
+    ('2', 'Civil and Environmental Engineering'),
+    ('3', 'Computer Science'),
+    ('4', 'Electrical Engineering'),
+    ('5', 'Mechanical and Aerospace Engineering'),
+    ('6', 'Materials Science and Engineering'),
+)
 PLACE_CHOICES = (
-        ('0', 'Not Completed'),
-        ('1', 'Completed'),
-        ('2', '3rd'),
-        ('3', '2nd'),
-        ('4', '1st'),
-        )
+    ('0', 'Not Completed'),
+    ('1', 'Completed'),
+    ('2', '3rd'),
+    ('3', '2nd'),
+    ('4', '1st'),
+)
 PLACE_POINTS = {
-        '0': 0,
-        '1': 0,
-        '2': 5,
-        '3': 10,
-        '4': 25,
-        }
+    '0': 0,
+    '1': 0,
+    '2': 5,
+    '3': 10,
+    '4': 25,
+}
 DAY_CHOICES = (
-        ('0', 'Monday'),
-        ('1', 'Tuesday'),
-        ('2', 'Wednesday'),
-        ('3', 'Thursday'),
-        ('4', 'Friday'),
-        )
+    ('0', 'Monday'),
+    ('1', 'Tuesday'),
+    ('2', 'Wednesday'),
+    ('3', 'Thursday'),
+    ('4', 'Friday'),
+)
 HOUR_CHOICES = (
-        ('0', '10am-12pm'),
-        ('1', '11am-1pm'),
-        ('2', '12pm-2pm'),
-        ('3', '1pm-3pm'),
-        ('4', '2pm-4pm'),
-        ('5', '3pm-5pm'),
-        )
+    ('0', '10am-12pm'),
+    ('1', '11am-1pm'),
+    ('2', '12pm-2pm'),
+    ('3', '1pm-3pm'),
+    ('4', '2pm-4pm'),
+    ('5', '3pm-5pm'),
+)
 GENDER_CHOICES = (
-        ('M', 'Male'),
-        ('F', 'Female'),
-        )
+    ('M', 'Male'),
+    ('F', 'Female'),
+)
 QUARTER_CHOICES = (
-        ('0', 'Winter'),
-        ('1', 'Spring'),
-        ('2', 'Summer'),
-        ('3', 'Fall'),
-        )
+    ('0', 'Winter'),
+    ('1', 'Spring'),
+    ('2', 'Summer'),
+    ('3', 'Fall'),
+)
 
 fs = FileSystemStorage(location='/media')
+
 
 def resume_pdf_path(instance, filename):
     return 'resumes_pdf/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
 
+
 def resume_word_path(instance, filename):
     return 'resumes_word/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
+
 
 def professor_interview_path(instance, filename):
     return 'professor_interviews/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
 
+
 def community_service_proof_path(instance, filename):
     return 'community_service_proof/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
+
 
 class Term(models.Model):
     quarter = models.CharField(max_length=1, choices=QUARTER_CHOICES)
@@ -94,6 +100,7 @@ class Term(models.Model):
 
     def __unicode__(self):
         return '{} {}'.format(self.get_quarter_display(), self.year)
+
 
 class SettingsManager(models.Manager):
     def settings(self):
@@ -114,6 +121,7 @@ class SettingsManager(models.Manager):
     def get_eligibility_list(self):
         return self.settings().eligibility_list
 
+
 class Settings(models.Model):
     term = models.ForeignKey('Term', blank=True, null=True)
     display_all_terms = models.BooleanField(default=False)
@@ -128,6 +136,7 @@ class Settings(models.Model):
     def __unicode__(self):
         return 'Settings'
 
+
 class TermManager(models.Manager):
     def get_query_set(self):
         if not Settings.objects.display_all_terms():
@@ -136,22 +145,24 @@ class TermManager(models.Manager):
                 return super(TermManager, self).get_query_set().filter(term=term)
         return super(TermManager, self).get_query_set()
 
+
 class House(models.Model):
     HOUSE_CHOICES = (
-            ('0', 'Tau'),
-            ('1', 'Beta'),
-            ('2', 'Pi'),
-            ('3', 'Epsilon'),
-            )
+        ('0', 'Tau'),
+        ('1', 'Beta'),
+        ('2', 'Pi'),
+        ('3', 'Epsilon'),
+    )
     house = models.CharField(max_length=1, choices=HOUSE_CHOICES, unique=True)
 
     def __unicode__(self):
         return self.get_house_display()
 
+
 class HousePoints(models.Model):
     house = models.ForeignKey('House')
     term = models.ForeignKey('Term')
-    
+
     resume = models.CharField(max_length=1, choices=PLACE_CHOICES, default='0')
     professor_interview = models.CharField(max_length=1, choices=PLACE_CHOICES, default='0')
     signature_book = models.CharField(max_length=1, choices=PLACE_CHOICES, default='0')
@@ -164,7 +175,7 @@ class HousePoints(models.Model):
         ordering = ('-term', 'house')
         unique_together = ('house', 'term')
         verbose_name_plural = "House Points"
-                     
+
     def __unicode__(self):
         return self.house.__unicode__()
 
@@ -196,8 +207,10 @@ class HousePoints(models.Model):
         return sum(candidate.other for candidate in self.candidate_list()) + self.other
 
     def points(self):
-        return sum([self.resume_points(), self.professor_interview_points(), self.signature_book_points(), self.candidate_quiz_points(),
-            self.social(), self.tutoring(), self.community_service(), self.other_points()])
+        return sum([self.resume_points(), self.professor_interview_points(), self.signature_book_points(),
+                    self.candidate_quiz_points(), self.social(), self.tutoring(), self.community_service(),
+                    self.other_points()])
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
@@ -211,18 +224,18 @@ class Profile(models.Model):
     CANDIDATE = '0'
     MEMBER = '1'
     POSITION_CHOICES = (
-            (CANDIDATE, 'Candidate'),
-            (MEMBER, 'Member'),
-            )
+        (CANDIDATE, 'Candidate'),
+        (MEMBER, 'Member'),
+    )
     position = models.CharField(max_length=1, choices=POSITION_CHOICES, default='0')
     house = models.ForeignKey('House', blank=True, null=True)
     major = models.CharField(max_length=1, choices=MAJOR_CHOICES, default='0')
     initiation_term = models.ForeignKey('Term', related_name='profile_initiation_term', default=Settings.objects.term)
     graduation_term = models.ForeignKey('Term', related_name='profile_graduation_term', blank=True, null=True)
-    resume_pdf = models.FileField(upload_to=resume_pdf_path, storage=fs, 
-            blank=True, null=True, default=None, verbose_name="Resume (PDF)")
-    resume_word = models.FileField(upload_to=resume_word_path, storage=fs, 
-            blank=True, null=True, default=None, verbose_name="Resume (word)")
+    resume_pdf = models.FileField(upload_to=resume_pdf_path, storage=fs,
+                                  blank=True, null=True, default=None, verbose_name="Resume (PDF)")
+    resume_word = models.FileField(upload_to=resume_word_path, storage=fs,
+                                   blank=True, null=True, default=None, verbose_name="Resume (word)")
 
     classes = models.ManyToManyField('tutoring.Class', blank=True, null=True)
 
@@ -239,12 +252,24 @@ class Profile(models.Model):
         return self.resume_pdf or self.resume_word
 
     def dump(self):
-        return ','.join(thing for thing in [self.user.first_name, self.middle_name, self.user.last_name, self.user.email, self.nickname, self.gender, 
-            self.birthday.strftime('%x') if self.birthday else '', self.phone_number, self.get_major_display(), 
-            self.initiation_term.__unicode__() if self.initiation_term else '', self.graduation_term.__unicode__() if self.graduation_term else ''])
+        return ','.join(field for field in [self.user.first_name, self.middle_name, self.user.last_name,
+                                            self.user.email,  self.nickname, self.gender,
+                                            self.birthday.strftime('%x') if self.birthday else '', self.phone_number,
+                                            self.get_major_display(),
+                                            self.initiation_term.__unicode__() if self.initiation_term else '',
+                                            self.graduation_term.__unicode__() if self.graduation_term else ''])
+
 
 class Candidate(models.Model):
     profile = models.OneToOneField('Profile')
+
+    SHIRT_SIZES = (
+        ('S', 'S'),
+        ('M', 'M'),
+        ('L', 'L'),
+        ('XL', 'XL'),
+    )
+    shirt_size = models.CharField(max_length=2, default='M', choices=SHIRT_SIZES, verbose_name="T-Shirt Size")
 
     tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
     term = models.ForeignKey('Term')
@@ -253,13 +278,13 @@ class Candidate(models.Model):
     candidate_quiz = models.BooleanField(default=False)
     candidate_meet_and_greet = models.BooleanField(default=False)
     signature_book = models.BooleanField(default=False)
-    community_service_proof = models.FileField(upload_to=community_service_proof_path, storage=fs, 
-            blank=True, null=True, default=None, verbose_name="Community Service Proof")
+    community_service_proof = models.FileField(upload_to=community_service_proof_path, storage=fs, blank=True,
+                                               null=True, default=None, verbose_name="Community Service Proof")
     community_service = models.IntegerField(default=0)
     initiation_fee = models.BooleanField(default=False)
     engineering_futures = models.BooleanField(default=False)
-    professor_interview = models.FileField(upload_to=professor_interview_path, storage=fs, 
-            blank=True, null=True, default=None, verbose_name="Professor Interview")
+    professor_interview = models.FileField(upload_to=professor_interview_path, storage=fs,
+                                           blank=True, null=True, default=None, verbose_name="Professor Interview")
     other = models.IntegerField(default=0)
 
     current = TermManager()
@@ -282,40 +307,41 @@ class Candidate(models.Model):
         return Event.objects.filter(attendees=self, term=self.term).count()
 
     def social_complete(self):
-        return (self.social_count() >= CANDIDATE_SOCIAL)
+        return self.social_count() >= CANDIDATE_SOCIAL
 
     def social_points(self):
-        return (0 if not social_complete() else 5 * (self.social_count() - CANDIDATE_SOCIAL))
+        return 0 if not self.social_complete() else 5 * (self.social_count() - CANDIDATE_SOCIAL)
 
     def community_service_complete(self):
         return self.community_service >= CANDIDATE_COMMUNITY_SERVICE
 
     def community_service_points(self):
-        return (0 if not self.community_service_points() else 5 * (self.community_service - CANDIDATE_COMMUNITY_SERVICE))
+        return 0 if not self.community_service_points() else 5 * (self.community_service - CANDIDATE_COMMUNITY_SERVICE)
 
     def points(self):
-        return sum([PLACE_POINTS[self.signature_book], PLACE_POINTS[self.candidate_quiz], 
-            self.social_points(), self.tutoring_points(), self.community_service_points(), self.other])
+        return sum([PLACE_POINTS[self.signature_book], PLACE_POINTS[self.candidate_quiz],
+                    self.social_points(), self.tutoring_points(), self.community_service_points(), self.other])
 
     def resume(self):
         return self.profile.resume()
 
     def requirements(self):
         return (
-                ('Tutoring', self.tutoring_complete()),
-                ('Bent Polish', self.bent_polish),
-                ('Candidate Quiz', self.candidate_quiz),
-                ('Signature Book', self.signature_book),
-                ('Community Service', self.community_service_complete()),
-                ('Initiation Fee', self.initiation_fee),
-                ('Engineering Futures', self.engineering_futures),
-                ('Social', self.social_complete()),
-                ('Resume', self.resume()),
-                ('Professor Interview', self.professor_interview)
-                )
+            ('Tutoring', self.tutoring_complete()),
+            ('Bent Polish', self.bent_polish),
+            ('Candidate Quiz', self.candidate_quiz),
+            ('Signature Book', self.signature_book),
+            ('Community Service', self.community_service_complete()),
+            ('Initiation Fee', self.initiation_fee),
+            ('Engineering Futures', self.engineering_futures),
+            ('Social', self.social_complete()),
+            ('Resume', self.resume()),
+            ('Professor Interview', self.professor_interview),
+        )
 
     def complete(self):
         return all(requirement for name, requirement in self.requirements())
+
 
 class ActiveMember(models.Model):
     profile = models.ForeignKey('Profile')
@@ -327,10 +353,10 @@ class ActiveMember(models.Model):
     TUTORING = '1'
     COMMITTEE = '2'
     REQUIREMENT_CHOICES = (
-            (EMCC, 'EMCC'),
-            (TUTORING, 'Tutoring'),
-            (COMMITTEE, 'Committee'),
-            )
+        (EMCC, 'EMCC'),
+        (TUTORING, 'Tutoring'),
+        (COMMITTEE, 'Committee'),
+    )
     requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
     requirement_complete = models.BooleanField(default=False)
     tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
@@ -356,28 +382,30 @@ class ActiveMember(models.Model):
 
     def requirements(self):
         return (
-                (self.get_requirement_choice_display(), self.requirement()),
-                ('Social', self.social_complete()),
-                )
+            (self.get_requirement_choice_display(), self.requirement()),
+            ('Social', self.social_complete()),
+        )
 
     def complete(self):
         return all(requirement for name, requirement in self.requirements())
 
+
 class Officer(models.Model):
     profile = models.ManyToManyField('Profile')
-    
+
     position = models.CharField(max_length=30)
     rank = models.IntegerField()
     mail_alias = models.CharField(max_length=30)
 
-    def list_profiles( self ):
-        return ', '.join( [ str( a ) for a in self.profile.all() ] )
+    def list_profiles(self):
+        return ', '.join([str(a) for a in self.profile.all()])
 
     def __unicode__(self):
         return self.position
 
     class Meta:
         ordering = ('rank',)
+
 
 class Faculty(models.Model):
     name = models.CharField(max_length=40)
@@ -389,6 +417,7 @@ class Faculty(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class UserForm(ModelForm):
 
     def check_password(self, password):
@@ -397,11 +426,10 @@ class UserForm(ModelForm):
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
 
-        current_password, username, new_password, confirm_password = map(cleaned_data.get, 
-                ('current_password', 'username', 'new_password', 'confirm_password'))
+        current_password, username, new_password, confirm_password = map(
+            cleaned_data.get, ('current_password', 'username', 'new_password', 'confirm_password'))
 
-        if (any([username != self.instance.get_username(), new_password, confirm_password]) 
-                and not current_password):
+        if any([username != self.instance.get_username(), new_password, confirm_password]) and not current_password:
             self._errors['current_password'] = self.error_class(["Current password required."])
 
         if current_password and not self.check_password(current_password):
@@ -414,6 +442,7 @@ class UserForm(ModelForm):
             self._errors['confirm_password'] = self.error_class(["Passwords do not match."])
 
         return cleaned_data
+
 
 class UserAccountForm(UserForm):
     current_password = forms.CharField(widget=forms.widgets.PasswordInput, required=True, label="Current Password")
@@ -428,6 +457,7 @@ class UserAccountForm(UserForm):
     def check_password(self, password):
         return self.instance.check_password(password)
 
+
 class RegisterForm(UserForm):
     current_password = forms.CharField(widget=forms.widgets.PasswordInput, label="Registration Code")
     username = forms.CharField()
@@ -441,6 +471,7 @@ class RegisterForm(UserForm):
     def check_password(self, password):
         return password == Settings.objects.get_registration_code()
 
+
 class UserPersonalForm(ModelForm):
     # TODO: change to email field
     email = forms.CharField(required=True)
@@ -452,17 +483,19 @@ class UserPersonalForm(ModelForm):
         model = User
         fields = ['email', 'first_name', 'middle_name', 'last_name']
 
+
 class ProfileForm(ModelForm):
     graduation_quarter = forms.ChoiceField(choices=QUARTER_CHOICES, label="Graduation Quarter")
     graduation_year = forms.IntegerField(label="Graduation Year")
 
     class Meta:
         model = Profile
-        fields = ['nickname', 'gender', 'birthday', 'phone_number', 'major', 
-                'graduation_quarter', 'graduation_year', 'resume_pdf', 'resume_word']
+        fields = ['nickname', 'gender', 'birthday', 'phone_number', 'major',
+                  'graduation_quarter', 'graduation_year', 'resume_pdf', 'resume_word']
         widgets = {
-                'gender': forms.widgets.RadioSelect
-                }
+            'gender': forms.widgets.RadioSelect
+        }
+
 
 class LoginForm(forms.Form):
     username = forms.CharField()
@@ -477,14 +510,23 @@ class LoginForm(forms.Form):
             cleaned_data['user'] = user
         return cleaned_data
 
+
 class CandidateForm(ModelForm):
 
     class Meta:
         model = Candidate
         fields = ['professor_interview', 'community_service_proof']
 
+
 class MemberForm(ModelForm):
 
     class Meta:
         model = ActiveMember
         fields = ['requirement_choice']
+
+
+class ShirtForm(ModelForm):
+
+    class Meta:
+        model = Candidate
+        fields = ['shirt_size']
