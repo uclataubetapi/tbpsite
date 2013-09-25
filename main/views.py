@@ -207,12 +207,13 @@ def requirements(request):
                     form.save()
                     shirt_form.save()
                     form = CandidateForm()
+                    shirt_form = None
 
             else:
                 form = CandidateForm(request.POST, request.FILES, instance=candidate)
+                shirt_form = None
                 if form.is_valid():
                     form.save()
-                shirt_form = None
 
         else:
             if candidate.tutoring is None:

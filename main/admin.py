@@ -42,7 +42,7 @@ class ProfileAdmin(admin.ModelAdmin):
     actions = ('create_candidate', 'create_active_member', 'promote_candidate')
 
     def create_candidate(self, request, queryset):
-        term = Settings.objects.get_term()
+        term = Settings.objects.term()
         if term is None:
             self.message_user(request, 'Current term not set')
 
@@ -52,16 +52,19 @@ class ProfileAdmin(admin.ModelAdmin):
                 self.message_user(request, '{} is already a member'.format(profile))
                 return
 
-            if profile.candidate is not None:
+            try:
+                profile.candidate
                 self.message_user(request, '{} is already a candidate'.format(profile))
                 return
+            except Candidate.DoesNotExist:
+                pass
 
         for profile in queryset:
-            profile.candidate = Candidate(profile=profile, term=Settings.objects.term)
+            profile.candidate = Candidate.objects.create(profile=profile, term=Settings.objects.term())
             profile.save()
 
     def create_active_member(self, request, queryset):
-        term = Settings.objects.get_term()
+        term = Settings.objects.term()
         if term is None:
             self.message_user(request, 'Current term not set')
             return
