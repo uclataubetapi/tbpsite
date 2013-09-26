@@ -18,15 +18,17 @@ class MyUserAdmin(UserAdmin):
             password = User.objects.make_random_password()
             user.set_password(password)
             user.save()
-            send_mail('TBP Account Password Reset', 
-                    'Username: %s\n'
-                    'Password: %s\n'
-                    '\n'
-                    'Please change your password and update your information so we can keep the resumes we send out up to date.\n'
-                    '\n'
-                    'Webmaster - Tau Beta Pi\n'
-                    'UCLA - CA Epsilon\n' % (user.get_username(), password),
-                    'webmaster@tbp.seas.ucla.edu', [user.email], fail_silently=False)
+            user.email_user(
+                'TBP Account Password Reset',
+                'Username: %s\n'
+                'Password: %s\n'
+                '\n'
+                'Please change your password and update your information so we can keep the resumes we send out up to date.\n'
+                '\n'
+                'Webmaster - Tau Beta Pi\n'
+                'UCLA - CA Epsilon\n' % (user.get_username(), password),
+                'webmaster@tbp.seas.ucla.edu'
+            )
 
 
 class HousePointsAdmin(admin.ModelAdmin):
