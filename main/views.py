@@ -321,7 +321,7 @@ class FileView(View):
             raise Http404
 
         try:
-            f = open(os.path.join(obj.storage.base_location, obj.url))
+            f = open(obj.path)
         except IOError:
             raise Http404
 
@@ -336,7 +336,12 @@ class FileView(View):
 class ProfileFileView(FileView):
 
     def get_object(self, request, id):
-        return getattr(request.user.profile, self.field)
+        if not id:
+            return getattr(request.user.profile, self.field)
+        else:
+            if not request.user.is_staff:
+                raise Http404
+            return getattr(get_object_or_404(Profile, id=id), self.field)
 
 
 class CandidateFileView(FileView):

@@ -71,23 +71,14 @@ QUARTER_CHOICES = (
     ('3', 'Fall'),
 )
 
-fs = FileSystemStorage(location='/media')
+resume_pdf_fs = FileSystemStorage(location='/media/resumes_pdf')
+resume_word_fs = FileSystemStorage(location='/media/resumes_word')
+professor_interview_fs = FileSystemStorage(location='/media/professor_interviews')
+community_service_fs = FileSystemStorage(location='/media/community_service_proof')
 
 
-def resume_pdf_path(instance, filename):
-    return 'resumes_pdf/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
-
-
-def resume_word_path(instance, filename):
-    return 'resumes_word/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
-
-
-def professor_interview_path(instance, filename):
-    return 'professor_interviews/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
-
-
-def community_service_proof_path(instance, filename):
-    return 'community_service_proof/{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
+def upload_to_path(instance, filename):
+    return '{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
 
 
 class Term(models.Model):
@@ -232,9 +223,9 @@ class Profile(models.Model):
     major = models.CharField(max_length=1, choices=MAJOR_CHOICES, default='0')
     initiation_term = models.ForeignKey('Term', related_name='profile_initiation_term', default=Settings.objects.term)
     graduation_term = models.ForeignKey('Term', related_name='profile_graduation_term', blank=True, null=True)
-    resume_pdf = models.FileField(upload_to=resume_pdf_path, storage=fs,
+    resume_pdf = models.FileField(upload_to=upload_to_path, storage=resume_pdf_fs,
                                   blank=True, null=True, default=None, verbose_name="Resume (PDF)")
-    resume_word = models.FileField(upload_to=resume_word_path, storage=fs,
+    resume_word = models.FileField(upload_to=upload_to_path, storage=resume_word_fs,
                                    blank=True, null=True, default=None, verbose_name="Resume (word)")
 
     classes = models.ManyToManyField('tutoring.Class', blank=True, null=True)
@@ -278,12 +269,12 @@ class Candidate(models.Model):
     candidate_quiz = models.BooleanField(default=False)
     candidate_meet_and_greet = models.BooleanField(default=False)
     signature_book = models.BooleanField(default=False)
-    community_service_proof = models.FileField(upload_to=community_service_proof_path, storage=fs, blank=True,
+    community_service_proof = models.FileField(upload_to=upload_to_path, storage=community_service_fs, blank=True,
                                                null=True, default=None, verbose_name="Community Service Proof")
     community_service = models.IntegerField(default=0)
     initiation_fee = models.BooleanField(default=False)
     engineering_futures = models.BooleanField(default=False)
-    professor_interview = models.FileField(upload_to=professor_interview_path, storage=fs,
+    professor_interview = models.FileField(upload_to=upload_to_path, storage=professor_interview_fs,
                                            blank=True, null=True, default=None, verbose_name="Professor Interview")
     other = models.IntegerField(default=0)
 
