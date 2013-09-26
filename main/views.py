@@ -15,7 +15,6 @@ from django.utils.decorators import method_decorator
 
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings,\
     LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm
-from tbpsite.settings import BASE_DIR
 from tutoring.models import Tutoring, Class, Feedback, TutoringPreferencesForm
 from common import render
 

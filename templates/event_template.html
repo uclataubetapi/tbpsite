@@ -10,7 +10,7 @@
 <div class="row">
   <div class="col-lg-8">
 
-    <img src="{% if event.image %}/media/{{ event.image.url }}{% endif %}" width=80% style="margin: 0px auto; margin-bottom:10px; display:block"> 
+    <img src="{% if event.image %}{{ event.image.url }}{% endif %}" width=80% style="margin: 0 auto 10px; display:block">
     {% autoescape off %}
     {{ event.description }}
     {% endautoescape %}

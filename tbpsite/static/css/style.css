@@ -30,11 +30,7 @@ ul.nav li.dropdown:hover > ul.dropdown-menu{
   display:
   block;    
 }
-a.menu:after, .dropdown-toggle:after
-{
-  content:
-  none;
-}
+
 ul.dropdown-menu
 {
   padding-top:3px;
