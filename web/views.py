@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 
 from common import MyTemplateView
 from event.models import Event
-from main.models import Candidate, Faculty, Officer
+from main.models import Faculty, Officer
 from tutoring.models import Feedback
 
 about = MyTemplateView.as_view(template_name='about.html')
@@ -15,8 +15,8 @@ contact = MyTemplateView.as_view(template_name='contact.html')
 emcc = MyTemplateView.as_view(template_name='emcc.html')
 fe = MyTemplateView.as_view(template_name='fe.html')
 home = MyTemplateView.as_view(template_name='home.html', 
-        additional={'upcomingEvents': sorted(Event.objects.filter(dropdown=True), 
-                key=operator.attrgetter('start'))})
+                              additional={'upcomingEvents': sorted(Event.objects.filter(dropdown=True),
+                                                                   key=operator.attrgetter('start'))})
 programs = MyTemplateView.as_view(template_name='programs.html')
 requirements = MyTemplateView.as_view(template_name='requirements.html')
 tutoring = MyTemplateView.as_view(template_name='tutoring.html')

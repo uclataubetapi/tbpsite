@@ -60,7 +60,8 @@
     <a href="{% url 'tutoring.views.schedule' %}" class="btn btn-large btn-primary">The Tutoring Schedule is Up!</a>
     <h4>Upcoming Events</h4> 
     {% for event in upcomingEvents %}
-    <dl><a href="/events/{{ event.url }}">{{ event.name }}</a>
+    <dl>
+      <dd><a href="/events/{{ event.url }}">{{ event.name }}</a></dd>
       <dd>{{ event.location }}</dd>
       <dd>{{ event.get_date }}</dd>
       <dd>{{ event.get_time }}</dd>
@@ -75,7 +76,8 @@
     <a href="{% url 'tutoring.views.schedule' %}" class="btn btn-large btn-primary">The Tutoring Schedule is Up!</a>
     <h4>Upcoming Events</h4> 
     {% for event in upcomingEvents %}
-    <dl><a href="/events/{{ event.url }}">{{ event.name }}</a>
+    <dl>
+      <dd><a href="/events/{{ event.url }}">{{ event.name }}</a></dd>
       <dd>{{ event.location }}</dd>
       <dd>{{ event.get_date }}</dd>
       <dd>{{ event.get_time }}</dd>

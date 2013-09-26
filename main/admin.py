@@ -52,12 +52,9 @@ class ProfileAdmin(admin.ModelAdmin):
                 self.message_user(request, '{} is already a member'.format(profile))
                 return
 
-            try:
-                profile.candidate
+            if hasattr(profile, 'candidate'):
                 self.message_user(request, '{} is already a candidate'.format(profile))
                 return
-            except Candidate.DoesNotExist:
-                pass
 
         for profile in queryset:
             profile.candidate = Candidate.objects.create(profile=profile, term=Settings.objects.term())
