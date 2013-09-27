@@ -1,5 +1,8 @@
+import cStringIO as StringIO
+import datetime
 import os
 import time
+import zipfile
 
 from django.forms.models import model_to_dict
 from django.contrib import auth
@@ -13,10 +16,22 @@ from django.core.urlresolvers import reverse
 from django.views.generic.base import View
 from django.utils.decorators import method_decorator
 
-from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings,\
+from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES,\
     LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm
 from tutoring.models import Tutoring, Class, Feedback, TutoringPreferencesForm
 from common import render
+
+MAJOR_MAPPING = {
+    '0': 'AeroE',
+    '1': 'BE',
+    '2': 'ChemE',
+    '3': 'CivilE',
+    '4': 'CS',
+    '5': 'CSE',
+    '6': 'EE',
+    '7': 'MatE',
+    '8': 'MechE'
+}
 
 
 def render_profile_page(request, template, template_args=None):
@@ -306,6 +321,46 @@ def spreadsheet(request):
                      [profile.dump() for profile in Profile.objects.all() if profile.user.id != 1])
     response = HttpResponse(data, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=spreadsheet.csv'
+    return response
+
+
+@staff_member_required
+def resumes_pdf(request):
+    resumes = [(profile, profile.resume_pdf.path) for profile in Profile.objects.all() if profile.resume_pdf]
+    buffer = StringIO.StringIO()
+    with zipfile.ZipFile(buffer, 'w') as z:
+        for _, major in MAJOR_CHOICES:
+            z.writestr(zipfile.ZipInfo('resumes/{}/'.format(major)), "")
+        for profile, resume in resumes:
+            date_string = datetime.datetime.fromtimestamp(os.path.getmtime(resume)).strftime('%Y%m')
+            path = 'resumes/{}/{}{}_{}{}{}'.format(profile.get_major_display(),
+                                                   date_string, MAJOR_MAPPING[profile.major],
+                                                   profile.user.first_name[0], profile.user.last_name,
+                                                   os.path.splitext(resume)[1])
+            z.write(resume, path)
+
+    response = HttpResponse(buffer.getvalue(), content_type='application/x-zip-compressed')
+    response['Content-Disposition'] = 'attachment; filename=resumes.zip'
+    return response
+
+
+@staff_member_required
+def resumes_word(request):
+    resumes = [(profile, profile.resume_word.path) for profile in Profile.objects.all() if profile.resume_word]
+    buffer = StringIO.StringIO()
+    with zipfile.ZipFile(buffer, 'w') as z:
+        for _, major in MAJOR_CHOICES:
+            z.writestr(zipfile.ZipInfo('resumes/{}/'.format(major)), "")
+        for profile, resume in resumes:
+            date_string = datetime.datetime.fromtimestamp(os.path.getmtime(resume)).strftime('%Y%m')
+            path = 'resumes/{}/{}{}_{}{}{}'.format(profile.get_major_display(),
+                                                   date_string, MAJOR_MAPPING[profile.major],
+                                                   profile.user.first_name[0], profile.user.last_name,
+                                                   os.path.splitext(resume)[1])
+            z.write(resume, path)
+
+    response = HttpResponse(buffer.getvalue(), content_type='application/x-zip-compressed')
+    response['Content-Disposition'] = 'attachment; filename=resumes.zip'
     return response
 
 
