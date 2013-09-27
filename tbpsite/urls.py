@@ -31,6 +31,8 @@ urlpatterns += patterns('main.views',
     url(r'^active_members/$', 'active_members'),
     url(r'^downloads/$', 'downloads'),
     url(r'^spreadsheet/$', 'spreadsheet'),
+    url(r'^resumes_pdf/$', 'resumes_pdf'),
+    url(r'^resumes_word/$', 'resumes_word'),
 
     url(r'^logout/$', 'logout'),
     url(r'^login/$', 'login'),
