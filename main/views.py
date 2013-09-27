@@ -324,14 +324,12 @@ def spreadsheet(request):
     return response
 
 
-@staff_member_required
-def resumes_pdf(request):
-    resumes = [(profile, profile.resume_pdf.path) for profile in Profile.objects.all() if profile.resume_pdf]
+def create_zipfile(filenames):
     buffer = StringIO.StringIO()
     with zipfile.ZipFile(buffer, 'w') as z:
         for _, major in MAJOR_CHOICES:
             z.writestr(zipfile.ZipInfo('resumes/{}/'.format(major)), "")
-        for profile, resume in resumes:
+        for profile, resume in filenames:
             date_string = datetime.datetime.fromtimestamp(os.path.getmtime(resume)).strftime('%Y%m')
             path = 'resumes/{}/{}{}_{}{}{}'.format(profile.get_major_display(),
                                                    date_string, MAJOR_MAPPING[profile.major],
@@ -342,26 +340,18 @@ def resumes_pdf(request):
     response = HttpResponse(buffer.getvalue(), content_type='application/x-zip-compressed')
     response['Content-Disposition'] = 'attachment; filename=resumes.zip'
     return response
+
+
+@staff_member_required
+def resumes_pdf(request):
+    resumes = [(profile, profile.resume_pdf.path) for profile in Profile.objects.all() if profile.resume_pdf]
+    return create_zipfile(resumes)
 
 
 @staff_member_required
 def resumes_word(request):
     resumes = [(profile, profile.resume_word.path) for profile in Profile.objects.all() if profile.resume_word]
-    buffer = StringIO.StringIO()
-    with zipfile.ZipFile(buffer, 'w') as z:
-        for _, major in MAJOR_CHOICES:
-            z.writestr(zipfile.ZipInfo('resumes/{}/'.format(major)), "")
-        for profile, resume in resumes:
-            date_string = datetime.datetime.fromtimestamp(os.path.getmtime(resume)).strftime('%Y%m')
-            path = 'resumes/{}/{}{}_{}{}{}'.format(profile.get_major_display(),
-                                                   date_string, MAJOR_MAPPING[profile.major],
-                                                   profile.user.first_name[0], profile.user.last_name,
-                                                   os.path.splitext(resume)[1])
-            z.write(resume, path)
-
-    response = HttpResponse(buffer.getvalue(), content_type='application/x-zip-compressed')
-    response['Content-Disposition'] = 'attachment; filename=resumes.zip'
-    return response
+    return create_zipfile(resumes)
 
 
 class FileView(View):
