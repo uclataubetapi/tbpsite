@@ -2,14 +2,15 @@ from django.db import models
 from main.models import TermManager, Settings
 import datetime
 
+
 class Event(models.Model):
     EVENT_TYPE_CHOICES = (
-            ('0', 'Social'),
-            ('1', 'Project'),
-            ('2', 'Mentorship'),
-            ('3', 'House'),
-            ('4', 'Infosession'),
-            )
+        ('0', 'Social'),
+        ('1', 'Project'),
+        ('2', 'Mentorship'),
+        ('3', 'House'),
+        ('4', 'Infosession'),
+    )
 
     term = models.ForeignKey('main.Term', default=Settings.objects.term)
     name = models.CharField(max_length=40)

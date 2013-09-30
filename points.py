@@ -16,15 +16,15 @@ BENT_POLISH_POINTS = 2
 
 QUIZ_FIRST_TRY_POINTS = 2
 QUIZ_POINTS = {
-    range(80, 90): 5,
-    range(90, 100): 10,
-    range(100, 101): 15,
+    tuple(range(80, 90)): 5,
+    tuple(range(90, 100)): 10,
+    tuple(range(100, 101)): 15,
 }
 
 HOUSE_SOCIAL_POINTS = {
-    set(range(50, 70)): 1,
-    set(range(70, 100)): 2,
-    set(range(100, 101)): 3,
+    tuple(range(50, 70)): 1,
+    tuple(range(70, 100)): 2,
+    tuple(range(100, 101)): 3,
 }
 
 FIRST = '1'
