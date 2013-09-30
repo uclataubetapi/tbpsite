@@ -1,11 +1,15 @@
-from django.db import models
-from main.models import TermManager, Settings
 import datetime
+
+from django.db import models
+
+from main.models import TermManager, Settings, Candidate, Profile
+from points import house_social_points
 
 
 class Event(models.Model):
+    SOCIAL = '0'
     EVENT_TYPE_CHOICES = (
-        ('0', 'Social'),
+        (SOCIAL, 'Social'),
         ('1', 'Project'),
         ('2', 'Mentorship'),
         ('3', 'House'),
@@ -63,3 +67,12 @@ class Event(models.Model):
         if self.is_same_day():
             return '{}{}'.format(self.get_start(), self.end.strftime("-%I:%M%p") if self.display_time else '')
         return '{}-{}'.format(self.get_start(), self.get_end())
+
+    def points(self, house):
+        total_members = set(Candidate.objects.filter(term=self.term, profile__house=house))
+        total_attendees = set(profile.candidate for profile in
+                              self.attendees.filter(house=house, position=Profile.CANDIDATE)) & total_members
+        if not total_attendees:
+            return 0
+        percentage = len(total_members) * 100 / len(total_attendees)
+        return house_social_points(percentage)

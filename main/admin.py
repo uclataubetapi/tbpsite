@@ -31,8 +31,8 @@ class MyUserAdmin(UserAdmin):
 
 
 class HousePointsAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'term', 'resume', 'professor_interview', 'other')
-    list_editable = ('resume', 'professor_interview', 'other')
+    list_display = ('__unicode__', 'term', 'professor_interview_and_resume', 'other')
+    list_editable = ('professor_interview_and_resume', 'other')
 
 
 class ProfileAdmin(admin.ModelAdmin):
