@@ -50,3 +50,10 @@ def quiz_points(score):
         if score in bracket:
             return points
     return 0
+
+
+def house_social_points(score):
+    for bracket, points in HOUSE_SOCIAL_POINTS.iteritems():
+        if score in bracket:
+            return points
+    return 0

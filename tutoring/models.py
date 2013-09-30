@@ -2,8 +2,7 @@ from django.db import models
 from django.forms import ModelForm
 
 from main.models import Settings, TermManager
-
-TUTORING_HOURS_PER_WEEK = 2
+from points import *
 
 TWO_HOUR_CHOICES = (
     ('0', '10am-12pm'),
@@ -135,6 +134,7 @@ class WeekManager(models.Manager):
 class Week(models.Model):
     hours = models.IntegerField(default=0)
     tutees = models.IntegerField(default=0)
+    no_makeup = models.BooleanField(default=True)
 
     objects = WeekManager()
 
@@ -147,10 +147,16 @@ class Week(models.Model):
         return self.profile().__unicode__()
 
     def complete(self):
-        return self.hours >= TUTORING_HOURS_PER_WEEK
+        return self.hours >= MIN_TUTORING_HOURS
 
     def points(self):
-        return 0 if not self.complete() else self.hours - TUTORING_HOURS_PER_WEEK
+        count = self.hours
+        points = 0
+        if count > MIN_TUTORING_HOURS:
+            points += EXTRA_TUTORING_POINTS * max(count - MIN_TUTORING_HOURS, MAX_TUTORING_HOURS-MIN_TUTORING_HOURS)
+        if self.no_makeup:
+            points += TUTORING_POINTS * max(count, MIN_TUTORING_HOURS)
+        return points
 
     def day_1(self):
         return self.tutoring.get_day_1_display()

@@ -134,8 +134,7 @@ class HousePoints(models.Model):
     house = models.ForeignKey('House')
     term = models.ForeignKey('Term')
 
-    resume = models.CharField(max_length=1, choices=PLACE_CHOICES, default=FOURTH)
-    professor_interview = models.CharField(max_length=1, choices=PLACE_CHOICES, default=FOURTH)
+    professor_interview_and_resume = models.CharField(max_length=1, choices=PLACE_CHOICES, default=FOURTH)
     other = models.IntegerField(default=0)
 
     current = TermManager()
@@ -149,21 +148,21 @@ class HousePoints(models.Model):
     def __unicode__(self):
         return self.house.__unicode__()
 
+    def social_list(self):
+        from event.models import Event
+        return Event.objects.select_related().filter(term=self.term)
+
     def member_list(self):
         return (list(Candidate.objects.select_related().filter(profile__house=self.house, term=self.term)) +
                 list(ActiveMember.objects.select_related().filter(profile__house=self.house, term=self.term)))
 
-    def professor_interview_points(self):
-        return DOCUMENT_POINTS[self.professor_interview] * len(self.member_list())
-
-    def resume_points(self):
-        return DOCUMENT_POINTS[self.resume] * len(self.member_list())
+    def professor_interview_and_resume_points(self):
+        return DOCUMENT_POINTS[self.professor_interview_and_resume] * len(self.member_list())
 
     def points(self):
-        return sum([
-            sum(member.points() for member in self.member_list()),
-            self.professor_interview_points(), self.resume_points(), self.other
-        ])
+        return sum([sum(member.points() for member in self.member_list()),
+                    sum(social.points(self.house) for social in self.social_list()),
+                    self.professor_interview_and_resume_points(), self.other])
 
 
 class Profile(models.Model):
