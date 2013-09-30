@@ -1,85 +1,118 @@
 {% extends "base.html" %}
 
-{% block title %}House Points{% endblock %}
+{% block title %}TBP House Cup Competition Rules{% endblock %}
 
 {% block content %}
 
-<h1>House Points</h1>
+  <h1>TBP House Cup Competition Rules</h1>
 
-<p>Each initiation quarter, candidates and officers will be divided into four houses - Tau, Beta, Pi, and Epsilon - and will compete throughout the quarter to earn points for their house. The house that earns the most points by the end of the quarter will win the honor of Top House, as well as a special prize.
+  <p>This is a friendly competition held among the candidates and members of Tau Beta Pi during initiation quarters. The goal is to foster meaningful friendships and experiences between members as well as to add some competitive flavor to the quarter. Individuals can earn points in the following ways:</p>
 
-<h4>Ways to Earn House Points:</h4>
+  <h4>Ways to Earn House Points:</h4>
+  <table class="table">
+    <caption><b>Completing the Initiation Process</b></caption>
+    <tr>
+      <td>Tutoring at your scheduled hours (7 weeks) – no points for makeup</td>
+      <td>2 points/wk</td>
+    </tr>
+    <tr>
+      <td>Community Service</td>
+      <td>6 points</td>
+    </tr>
+    <tr>
+      <td>Attend social event (2)</td>
+      <td>2 points/event</td>
+    </tr>
+    <tr>
+      <td>Turn in professor interview, resume on time</td>
+      <td>6 points</td>
+    </tr>
+    <tr>
+      <td>Turn in signature book on time</td>
+      <td>6 points</td>
+    </tr>
+    <tr>
+      <td>Bent polish</td>
+      <td>2 points</td>
+    </tr>
+    <tr>
+      <td>Passing quiz on first try (70%+)</td>
+      <td>2 points</td>
+    </tr>
+    <tr>
+      <td><b>Total:</b></td>
+      <td><b>40 points</b></td>
+    </tr>
+    <caption><b>Extra stuff/ways to make up points</b></caption>
+    <tr>
+      <td>Extra tutoring (max 2 hours per week)</td>
+      <td>5 points/hr</td>
+    </tr>
+    <tr>
+      <td>Extra community service</td>
+      <td>15 points/event</td>
+    </tr>
+    <tr>
+      <td>Attending an extra social event (3+)</td>
+      <td>5 points/event</td>
+    </tr>
+    <tr>
+      <td>100%     on membership quiz</td>
+      <td>15 points</td>
+    </tr>
+    <tr>
+      <td>90%-99%  on membership quiz</td>
+      <td>10 points</td>
+    </tr>
+    <tr>
+      <td>80%-89%  on membership quiz</td>
+      <td>5 points</td>
+    </tr>
+    <caption><b>Social events</b></caption>
+    <tr>
+      <td>If 100% members of house attend an event/social</td>
+      <td>3 points/attendee</td>
+    </tr>
+    <tr>
+      <td>If 70%+ members of house attend an event/social</td>
+      <td>2 points/attendee</td>
+    </tr>
+    <tr>
+      <td>If 50%+ members of house attend an event/social</td>
+      <td>1 points/attendee</td>
+    </tr>
+    <caption><b>Interviews and Resumes</b></caption>
+    <tr>
+      <td>1st house to turn in all interviews and resumes</td>
+      <td>6 points/person</td>
+    </tr>
+    <tr>
+      <td>2nd house to turn in all interviews and resumes</td>
+      <td>4 points/person</td>
+    </tr>
+    <tr>
+      <td>3rd house to turn in all interviews and resumes</td>
+      <td>2 points/person</td>
+    </tr>
+    <caption><b>Completing the Initiation Process</b></caption>
+    <tr>
+      <td>Tutoring at your scheduled hours (7 weeks) – no points for makeup</td>
+      <td>2 points/wk</td>
+    </tr>
+    <tr>
+      <td>Extra tutoring (max 2 hours per week)</td>
+      <td>5 points/hr</td>
+    </tr>
+    <tr>
+      <td>Attend social event (2)</td>
+      <td>2 points/event</td>
+    </tr>
+    <tr>
+      <td>Attending an extra social event (3+)</td>
+      <td>5 points/event</td>
+    </tr>
+  </table>
 
-<ul>
-  <li>First three houses to turn in Professor Interview/Resume (1st: 25, 2nd: 10, 3rd: 5)</li>
-  <li>Best candidate signature book (1st: 25, 2nd: 10, 3rd: 5)</li>
-  <li>Best candidate quiz score (1st: 25, 2nd: 10, 3rd: 5)</li>
-  <li>Attending info-sessions (5 per event)</li>
-  <li>Complete extra tutoring hours (1 per hour, max 5 per week)</li>
-  <li>Extra community service events (5 per event)</li>
-  <li>Attend extra social events (5 per event, 50 if entire house attends extra social)</li>
-  <li>Win games at social events (1st: 25, 2nd: 10, 3rd: 5)</li>
-</ul>
-
-<table class="table table-striped">
-  <th></th>
-  {% for house in houses %}
-  <th>{{ house }}</th>
-  {% endfor %}
-  <tr>
-    <td>Resume</td>
-    {% for house in houses %}
-    <td>{{ house.resume_points }}</td>
-    {% endfor %}
-  </tr>
-  <tr>
-    <td>Professor Interview</td>
-    {% for house in houses %}
-    <td>{{ house.professor_interview_points }}</td>
-    {% endfor %}
-  </tr>
-  <tr>
-    <td>Signature Book</td>
-    {% for house in houses %}
-    <td>{{ house.signature_book_points }}</td>
-    {% endfor %}
-  </tr>
-  <tr>
-    <td>Candidate Quiz</td>
-    {% for house in houses %}
-    <td>{{ house.candidate_quiz_points }}</td>
-    {% endfor %}
-  </tr>
-  <tr>
-    <td>Social</td>
-    {% for house in houses %}
-    <td>{{ house.social }}</td>
-    {% endfor %}
-  </tr>
-  <tr>
-    <td>Tutoring</td>
-    {% for house in houses %}
-    <td>{{ house.tutoring }}</td>
-    {% endfor %}
-  </tr>
-  <tr>
-    <td>Community Service</td>
-    {% for house in houses %}
-    <td>{{ house.community_service }}</td>
-    {% endfor %}
-  </tr>
-  <tr>
-    <td>Other</td>
-    {% for house in houses %}
-    <td>{{ house.other_points }}</td>
-    {% endfor %}
-  </tr>
-  <tr>
-    <td>Total</td>
-    {% for house in houses %}
-    <td>{{ house.points }}</td>
-    {% endfor %}
-  </tr>
-</table>
+  {% include "house_points_snippet.html" %}
 
 {% endblock %}
