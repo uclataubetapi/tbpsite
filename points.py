@@ -41,6 +41,7 @@ DOCUMENT_POINTS = {
     FIRST: 6,
     SECOND: 4,
     THIRD: 2,
+    FOURTH: 0,
 }
 
 
