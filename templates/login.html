@@ -3,11 +3,11 @@
 {% block tabcontent %}
 
 <div class="row">
-  <div class="col-lg-6">
+  <div>
     {% if from_redirect %}
     <p class="text-info">Please enter the following information</p>
     {% endif %}
-    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+    <form class="form-horizontal col-lg-6" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <fieldset>  
         {% include "form_snippet.html" %}
@@ -15,6 +15,7 @@
           <button type="submit" class="btn btn-primary">Login</button>
         </div>
       </fieldset>
+      <p class="row">If you're having trouble logging in, contact the webmasters at <a href="mailto:webmaster@tbp.seas.ucla.edu">webmaster@tbp.seas.ucla.edu</a></p>
     </form>
   </div>
 </div>
