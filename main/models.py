@@ -138,7 +138,8 @@ class HousePoints(models.Model):
     professor_interview = models.CharField(max_length=1, choices=PLACE_CHOICES, default=FOURTH)
     other = models.IntegerField(default=0)
 
-    objects = TermManager()
+    current = TermManager()
+    objects = models.Manager()
 
     class Meta:
         ordering = ('-term', 'house')
@@ -148,30 +149,21 @@ class HousePoints(models.Model):
     def __unicode__(self):
         return self.house.__unicode__()
 
-    def resume_points(self):
-        return DOCUMENT_POINTS[self.resume]
+    def member_list(self):
+        return (list(Candidate.objects.select_related().filter(profile__house=self.house, term=self.term)) +
+                list(ActiveMember.objects.select_related().filter(profile__house=self.house, term=self.term)))
 
     def professor_interview_points(self):
-        return DOCUMENT_POINTS[self.professor_interview]
+        return DOCUMENT_POINTS[self.professor_interview] * len(self.member_list())
 
-    def member_list(self):
-        return Candidate.objects.select_related().filter(profile__house=self.house, term=self.term)
-
-    def social(self):
-        return sum(member.social_points() for member in self.member_list())
-
-    def tutoring(self):
-        return sum(member.tutoring_points() for member in self.member_list())
-
-    def community_service(self):
-        return sum(member.community_service_points() for member in self.member_list())
-
-    def other_points(self):
-        return sum(member.other for member in self.member_list()) + self.other
+    def resume_points(self):
+        return DOCUMENT_POINTS[self.resume] * len(self.member_list())
 
     def points(self):
-        return sum([self.resume_points(), self.professor_interview_points(), self.social(), self.tutoring(),
-                    self.community_service(), self.other_points()])
+        return sum([
+            sum(member.points() for member in self.member_list()),
+            self.professor_interview_points(), self.resume_points(), self.other
+        ])
 
 
 class Profile(models.Model):
@@ -268,7 +260,7 @@ class Member(models.Model):
         return SOCIAL_POINTS * count
 
     def points(self):
-        return sum((self.tutoring_points, self.social_points(), self.other))
+        return sum((self.tutoring_points(), self.social_points(), self.other))
 
 
 class Candidate(Member):
@@ -282,7 +274,7 @@ class Candidate(Member):
     )
     shirt_size = models.CharField(max_length=2, default='M', choices=SHIRT_SIZES, verbose_name="T-Shirt Size")
     bent_polish = models.BooleanField(default=False)
-    candidate_quiz = models.BooleanField(default=False)
+    candidate_quiz = models.IntegerField(default=0)
     candidate_meet_and_greet = models.BooleanField(default=False)
     signature_book = models.BooleanField(default=False)
     community_service_proof = models.FileField(upload_to=upload_to_path, storage=community_service_fs, blank=True,
@@ -315,6 +307,10 @@ class Candidate(Member):
         )
 
     # POINTS
+    professor_interview_on_time = models.BooleanField(default=False)
+    resume_on_time = models.BooleanField(default=False)
+    quiz_first_try = models.BooleanField(default=False)
+
     def community_service_points(self):
         count = self.community_service
         if count > MIN_COMMUNITY_SERVICE:
@@ -322,8 +318,24 @@ class Candidate(Member):
                     COMMUNITY_SERVICE_POINTS * (count - MIN_COMMUNITY_SERVICE))
         return COMMUNITY_SERVICE_POINTS * count
 
+    def professor_interview_on_time_points(self):
+        return ON_TIME_POINTS if self.professor_interview_on_time else 0
+
+    def resume_on_time_points(self):
+        return ON_TIME_POINTS if self.resume_on_time else 0
+
+    def bent_polish_points(self):
+        return BENT_POLISH_POINTS if self.bent_polish else 0
+
+    def quiz_first_try_points(self):
+        return QUIZ_FIRST_TRY_POINTS if self.quiz_first_try else 0
+
     def points(self):
-        return sum((super(Candidate, self).points(), self.community_service_points()))
+        return sum((
+            super(Candidate, self).points(), self.community_service_points(),
+            self.professor_interview_on_time_points(), self.resume_on_time_points(), self.bent_polish_points(),
+            self.quiz_first_try_points(), quiz_points(self.candidate_quiz), self.other,
+        ))
 
 
 class ActiveMember(Member):

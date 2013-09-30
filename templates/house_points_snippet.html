@@ -1,0 +1,12 @@
+<table class="table table-striped">
+  <th></th>
+  {% for house in houses %}
+    <th>{{ house }}</th>
+  {% endfor %}
+  <tr>
+    <td>Points</td>
+    {% for house in houses %}
+      <td>{{ house.points }}</td>
+    {% endfor %}
+  </tr>
+</table>
