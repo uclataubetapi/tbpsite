@@ -163,7 +163,7 @@ def edit(request):
             profile_form = ProfileForm(initial=profile_dict)
         else:
             profile_form = FirstProfileForm(initial=profile_dict)
-            form = TutoringPreferencesForm()
+            tutoring_form = TutoringPreferencesForm()
             shirt_form = ShirtForm()
 
     else:
@@ -174,9 +174,9 @@ def edit(request):
             valid_forms = [form.is_valid() for form in (user_personal_form, profile_form)]
         else:
             profile_form = FirstProfileForm(request.POST, instance=profile)
-            form = TutoringPreferencesForm(request.POST)
+            tutoring_form = TutoringPreferencesForm(request.POST)
             shirt_form = ShirtForm(request.POST, instance=profile.candidate)
-            valid_forms = [form.is_valid() for form in (user_personal_form, profile_form, form, shirt_form)]
+            valid_forms = [form.is_valid() for form in (user_personal_form, profile_form, tutoring_form, shirt_form)]
 
         if all(valid_forms):
             term, created = Term.objects.get_or_create(quarter=profile_form.cleaned_data['graduation_quarter'],
@@ -190,8 +190,8 @@ def edit(request):
             if first_time:
                 candidate = profile.candidate
                 candidate.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
-                form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
-                form.save()
+                tutoring_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
+                tutoring_form.save()
                 shirt_form.save()
 
             return redirect(add)
@@ -202,7 +202,7 @@ def edit(request):
     else:
         return render_profile_page(request, 'first_edit.html',
                                    {'user_personal_form': user_personal_form, 'profile_form': profile_form,
-                                    'form': form, 'shirt_form': shirt_form})
+                                    'tutoring_form': tutoring_form, 'shirt_form': shirt_form})
 
 
 @login_required(login_url=login)
