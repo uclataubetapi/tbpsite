@@ -4,11 +4,11 @@
 
 <div class="row">
   <div class="col-lg-6">
-    <p>Hello! We're excited that you'll be initiating into the Tau Beta Pi, California Epsilon Chapter this quarter.
     <form class="form-horizontal" method="post" enctype="multipart/form-data">
       {% csrf_token %}
-      <fieldset>  
+      <fieldset>
         <legend>Register TBP Account</legend>
+        <p class="help-block">Hello! We're excited that you'll be initiating into the Tau Beta Pi, California Epsilon Chapter this quarter.
         {% include "form_snippet.html" %}
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">Submit</button>
