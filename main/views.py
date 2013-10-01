@@ -303,12 +303,6 @@ def pending_community_service(request):
 def tutoring_hours(request):
     return render(request, 'tutoring_hours.html', {'tutoring_list': Tutoring.objects.order_by('profile')})
 
-
-@staff_member_required
-def tutoring_feedback(request):
-    return render(request, 'tutoring_feedback.html', {'tutoring_feedback': Feedback.objects.order_by('-timestamp')})
-
-
 @staff_member_required
 def downloads(request):
     return render(request, 'downloads.html')
