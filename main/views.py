@@ -174,10 +174,8 @@ def edit(request):
             valid_forms = [form.is_valid() for form in (user_personal_form, profile_form)]
         else:
             profile_form = FirstProfileForm(request.POST, instance=profile)
-            candidate = profile.candidate
-            candidate.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
-            form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
-            shirt_form = ShirtForm(request.POST, instance=candidate)
+            form = TutoringPreferencesForm(request.POST)
+            shirt_form = ShirtForm(request.POST, instance=profile.candidate)
             valid_forms = [form.is_valid() for form in (user_personal_form, profile_form, form, shirt_form)]
 
         if all(valid_forms):
@@ -190,6 +188,9 @@ def edit(request):
             profile_form.save()
 
             if first_time:
+                candidate = profile.candidate
+                candidate.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
+                form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
                 form.save()
                 shirt_form.save()
 
