@@ -22,7 +22,6 @@ urlpatterns = patterns('web.views',
 
 urlpatterns += patterns('main.views',
     url(r'^tutoring_hours/$', 'tutoring_hours'),
-    url(r'^tutoring_feedback/$', 'tutoring_feedback'),
     url(r'^houses/$', 'houses'),
 
     url(r'^profile_requirements/$', 'requirements'),
@@ -62,6 +61,7 @@ urlpatterns += patterns('event.views',
 
 urlpatterns += patterns('',
     url(r'^schedule/$', 'tutoring.views.schedule'),
+    url(r'^tutoring/feedback/$', 'tutoring.views.feedback'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

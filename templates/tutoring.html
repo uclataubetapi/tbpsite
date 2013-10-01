@@ -19,14 +19,4 @@ Monday through Friday<br />
 10AM - 5PM<br />
 Weeks 3 through 9
 
-<form method="post" action="{% url 'web.views.feedback' %}">
-  {% csrf_token %}
-  <legend>Tutoring Feedback</legend>
-  <label>Comment</label>
-  <br />
-  <textarea rows="6" name="comment"></textarea>
-  <br />
-  <button type="submit" class="btn">Submit</button>
-</form>
-
 {% endblock %}

@@ -13,12 +13,6 @@ TWO_HOUR_CHOICES = (
     ('5', '3pm-5pm'),
 )
 
-
-class Feedback(models.Model):
-    timestamp = models.DateTimeField(auto_now_add=True)
-    comment = models.TextField()
-
-
 class Class(models.Model):
     DEPT_CHOICES = (
         ('BE', 'BE'),

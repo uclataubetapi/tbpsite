@@ -3,22 +3,5 @@
 {% block title %}Tutoring Hours{% endblock %}
 
 {% block content %}
-<h1 style>Tutoring Feedback</h1>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Timestamp</th>
-      <th>Comment</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for feedback in tutoring_feedback %}
-    <tr>
-      <td>{{ feedback.timestamp }}</td>
-      <td>{{ feedback.comment }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+<iframe src="https://docs.google.com/forms/d/1VeyZKAKkRX-GzQd6fIrhl3l2oP6yeFB6WjBf1HQq-LY/viewform?embedded=true" seamless style="width:100%; min-height:120%;">Loading...</iframe>
 {% endblock %}
