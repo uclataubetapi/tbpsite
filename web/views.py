@@ -6,7 +6,6 @@ from django.shortcuts import redirect
 from common import MyTemplateView
 from event.models import Event
 from main.models import Faculty, Officer
-from tutoring.models import Feedback
 
 about = MyTemplateView.as_view(template_name='about.html')
 awards = MyTemplateView.as_view(template_name='awards.html')
@@ -57,9 +56,3 @@ faculty = MyTemplateView.as_view(template_name='faculty.html',
                                  additional={'faculty' : get_faculty_by_dept, 'facultyAdvisor': 'Ann R. Karagozian'})
 officers = MyTemplateView.as_view(template_name='officers.html', 
                                   additional={'term': 'Summer - Fall 2013', 'positions': get_officers})
-
-
-def feedback(request):
-    if request.method == "POST" and 'comment' in request.POST:
-        Feedback(comment=request.POST.get('comment')).save()
-    return redirect('main.views.tutoring')

@@ -1,14 +1,6 @@
 from django.contrib import admin
 from tutoring.models import *
 
-
-class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ('timestamp', 'comment') 
-    def __init__(self, *args, **kwargs):
-        super(FeedbackAdmin, self).__init__(*args, **kwargs)
-        self.list_display_links = (None,)
-
-
 class ClassAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'display')
     list_editable = ('display',)
@@ -38,7 +30,6 @@ class WeekAdmin(admin.ModelAdmin):
     def fill_hours(self, request, queryset):
         queryset.update(hours=TUTORING_HOURS_PER_WEEK)
 
-admin.site.register(Feedback, FeedbackAdmin)
 admin.site.register(Class, ClassAdmin)
 admin.site.register(Tutoring, TutoringAdmin)
 admin.site.register(Week3, WeekAdmin)

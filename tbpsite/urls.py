@@ -17,7 +17,6 @@ urlpatterns = patterns('web.views',
 
     url(r'^officers/$', 'officers'),
     url(r'^faculty/$', 'faculty'),
-    url(r'^feedback/$', 'feedback'),
 )
 
 urlpatterns += patterns('main.views',
