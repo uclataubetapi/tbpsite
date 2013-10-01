@@ -193,7 +193,7 @@ def edit(request):
                 form.save()
                 shirt_form.save()
 
-            return redirect(profile_view)
+            return redirect(add)
 
     if not first_time:
         return render_profile_page(request, 'edit.html',
