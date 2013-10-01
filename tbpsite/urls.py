@@ -22,7 +22,6 @@ urlpatterns = patterns('web.views',
 
 urlpatterns += patterns('main.views',
     url(r'^tutoring_hours/$', 'tutoring_hours'),
-    url(r'^tutoring_feedback/$', 'tutoring_feedback'),
     url(r'^houses/$', 'houses'),
 
     url(r'^profile_requirements/$', 'requirements'),
