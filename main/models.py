@@ -473,6 +473,18 @@ class ProfileForm(ModelForm):
         }
 
 
+class FirstProfileForm(ModelForm):
+    graduation_quarter = forms.ChoiceField(choices=Term.QUARTER_CHOICES, label="Graduation Quarter")
+    graduation_year = forms.IntegerField(label="Graduation Year")
+
+    class Meta:
+        model = Profile
+        fields = ['nickname', 'gender', 'birthday', 'phone_number', 'major', 'graduation_quarter', 'graduation_year']
+        widgets = {
+            'gender': forms.widgets.RadioSelect
+        }
+
+
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.widgets.PasswordInput)

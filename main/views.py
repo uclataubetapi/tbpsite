@@ -17,7 +17,8 @@ from django.views.generic.base import View
 from django.utils.decorators import method_decorator
 
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES,\
-    LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm
+    LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm,\
+    FirstProfileForm
 from tutoring.models import Tutoring, Class, TutoringPreferencesForm
 from common import render
 
@@ -73,7 +74,7 @@ def register(request):
             auth.login(request, auth.authenticate(username=username, password=new_password))
             profile = Profile.objects.create(user=user)
             Candidate.objects.create(profile=profile, term=Settings.objects.term())
-            return redirect(edit, from_redirect='redirect')
+            return redirect(edit)
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
@@ -102,7 +103,7 @@ def profile_view(request):
     user = request.user
     profile = user.profile
     if not all([user.email, user.first_name, user.last_name, profile.graduation_term and profile.graduation_term.year]):
-        return redirect(edit, from_redirect='redirect')
+        return redirect(edit)
 
     if profile.position == Profile.CANDIDATE:
         candidate = profile.candidate
@@ -141,9 +142,10 @@ def profile_view(request):
 
 
 @login_required(login_url=login)
-def edit(request, from_redirect=''):
+def edit(request):
     user = request.user
     profile = user.profile
+    first_time = profile.candidate and profile.candidate.tutoring is None
 
     if request.method != "POST":
         personal_dict = model_to_dict(user)
@@ -156,27 +158,51 @@ def edit(request, from_redirect=''):
                 'graduation_quarter': profile.graduation_term.quarter,
                 'graduation_year': profile.graduation_term.year
             })
-        profile_form = ProfileForm(initial=profile_dict)
+
+        if not first_time:
+            profile_form = ProfileForm(initial=profile_dict)
+        else:
+            profile_form = FirstProfileForm(initial=profile_dict)
+            form = TutoringPreferencesForm()
+            shirt_form = ShirtForm()
 
     else:
         user_personal_form = UserPersonalForm(request.POST, instance=user)
-        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
 
-        valid_forms = [form.is_valid() for form in (user_personal_form, profile_form)]
+        if not first_time:
+            profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+            valid_forms = [form.is_valid() for form in (user_personal_form, profile_form)]
+        else:
+            profile_form = FirstProfileForm(request.POST, instance=profile)
+            candidate = profile.candidate
+            candidate.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
+            form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
+            shirt_form = ShirtForm(request.POST, instance=candidate)
+            valid_forms = [form.is_valid() for form in (user_personal_form, profile_form, form, shirt_form)]
 
         if all(valid_forms):
-            term, created = Term.objects.get_or_create(quarter=profile_form.cleaned_data['graduation_quarter'], 
+            term, created = Term.objects.get_or_create(quarter=profile_form.cleaned_data['graduation_quarter'],
                                                        year=profile_form.cleaned_data['graduation_year'])
 
             user_personal_form.save()
             profile.middle_name = user_personal_form.cleaned_data['middle_name']
             profile.graduation_term = term
             profile_form.save()
+
+            if first_time:
+                form.save()
+                shirt_form.save()
+
             return redirect(profile_view)
 
-    return render_profile_page(request, 'edit.html', {
-        'user_personal_form': user_personal_form, 'profile_form': profile_form, 
-        'from_redirect': from_redirect, 'user': user, 'profile': profile})
+    if not first_time:
+        return render_profile_page(request, 'edit.html',
+                                   {'user_personal_form': user_personal_form, 'profile_form': profile_form})
+    else:
+        return render_profile_page(request, 'first_edit.html',
+                                   {'user_personal_form': user_personal_form, 'profile_form': profile_form,
+                                    'form': form, 'shirt_form': shirt_form})
+
 
 @login_required(login_url=login)
 def add(request):
@@ -213,33 +239,14 @@ def requirements(request):
         candidate = profile.candidate
 
         if request.method == "POST":
-            if candidate.tutoring is None:
-                candidate.tutoring = Tutoring.with_weeks(profile=profile, term=term)
-                form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
-                shirt_form = ShirtForm(request.POST, instance=candidate)
-                if form.is_valid():
-                    form.save()
-                    shirt_form.save()
-                    form = CandidateForm()
-                    shirt_form = None
-
-            else:
-                form = CandidateForm(request.POST, request.FILES, instance=candidate)
-                shirt_form = None
-                if form.is_valid():
-                    form.save()
+            form = CandidateForm(request.POST, request.FILES, instance=candidate)
+            if form.is_valid():
+                form.save()
 
         else:
-            if candidate.tutoring is None:
-                form = TutoringPreferencesForm()
-                shirt_form = ShirtForm()
-            else:
-                form = CandidateForm()
-                shirt_form = None
+            form = CandidateForm()
 
-        return render_profile_page(request, 'candidate_requirements.html', {
-            'term': term, 'form': form, 'shirt_form': shirt_form
-        })
+        return render_profile_page(request, 'candidate_requirements.html', {'term': term, 'form': form})
                 
     else:
         if request.method == "POST":
