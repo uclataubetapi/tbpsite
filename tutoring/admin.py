@@ -28,6 +28,7 @@ class TutoringAdmin(admin.ModelAdmin):
 class ForeignTutoringAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'day_1', 'hour_1', 'day_2', 'hour_2')
     list_editable = ('day_1', 'hour_1', 'day_2', 'hour_2')
+    filter_horizontal = ('classes',)
 
 
 class WeekAdmin(admin.ModelAdmin):

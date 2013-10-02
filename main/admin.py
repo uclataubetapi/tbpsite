@@ -41,6 +41,7 @@ class ProfileAdmin(admin.ModelAdmin):
     list_filter = ('position',)
     search_fields = ('user__first_name', 'user__last_name', 'user__email')
     actions = ('create_candidate', 'create_active_member', 'promote_candidate')
+    filter_horizontal = ('classes',)
 
     def create_candidate(self, request, queryset):
         term = Settings.objects.term()
