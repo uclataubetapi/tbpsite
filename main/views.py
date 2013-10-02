@@ -145,7 +145,7 @@ def profile_view(request):
 def edit(request):
     user = request.user
     profile = user.profile
-    first_time = profile.candidate and profile.candidate.tutoring is None
+    first_time = hasattr(profile, 'candidate') and profile.candidate.tutoring is None
 
     if request.method != "POST":
         personal_dict = model_to_dict(user)

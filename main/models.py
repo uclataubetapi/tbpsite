@@ -452,7 +452,7 @@ class UserPersonalForm(ModelForm):
     # TODO: change to email field
     email = forms.CharField(required=True)
     first_name = forms.CharField(required=True, label="First Name")
-    middle_name = forms.CharField(required=True, label="Middle Name")
+    middle_name = forms.CharField(required=False, label="Middle Name")
     last_name = forms.CharField(required=True, label="Last Name")
 
     class Meta:
