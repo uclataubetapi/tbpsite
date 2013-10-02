@@ -61,7 +61,7 @@ class Class(models.Model):
 
 
 class BaseTutoring(models.Model):
-    term = models.ForeignKey('main.Term')
+    term = models.ForeignKey('main.Term', default=Settings.objects.term)
     day_1 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
     hour_1 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
     day_2 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
