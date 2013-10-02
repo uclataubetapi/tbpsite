@@ -1,7 +1,7 @@
 import re
 
 from main.models import Settings
-from tutoring.models import Tutoring, Class 
+from tutoring.models import Tutoring, ForeignTutoring, Class, HOUR_CHOICES, DAY_CHOICES
 from common import render
 
 number = re.compile(r'\d+')
@@ -10,13 +10,15 @@ numbers = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine
 
 def schedule(request):
     term = Settings.objects.term()
-    tutoring = Tutoring.objects.filter(term=term)
     tutors = []
-    for hour, hour_name in Tutoring.HOUR_CHOICES:
+    for hour, hour_name in HOUR_CHOICES:
         tutors_for_hour = []
-        for day, day_name in Tutoring.DAY_CHOICES:
+        for day, day_name in DAY_CHOICES:
             if Settings.objects.display_tutoring() or (request.user.is_authenticated and request.user.is_staff):
-                tutors_for_hour.append(list(tutoring.filter(hour_1=hour, day_1=day)) + list(tutoring.filter(hour_2=hour, day_2=day)))
+                tutors_for_hour.append(list(Tutoring.current.filter(hour_1=hour, day_1=day)) +
+                                       list(Tutoring.current.filter(hour_2=hour, day_2=day)) +
+                                       list(ForeignTutoring.current.filter(hour_1=hour, day_1=day)) +
+                                       list(ForeignTutoring.current.filter(hour_2=hour, day_2=day)))
             else:
                 tutors_for_hour.append(None)
         tutors.append((hour_name, tutors_for_hour))

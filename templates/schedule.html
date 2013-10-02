@@ -45,7 +45,7 @@
           {% for tutors in item.1 %}
           <td>
             {% for tutor in tutors %}
-            <p id="{{ forloop.parentloop.parentloop.counter }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="{{ tutor.get_class_classes }}" data-title="{{ tutor }}" data-content="{{ tutor.get_day_1_display }} {{ tutor.get_hour_1_display }}, {{ tutor.get_day_2_display }} {{ tutor.get_hour_2_display }}<br \>{{ tutor.get_classes }}" data-trigger="hover" data-html="true" data-placement="left">{{ tutor }}</p>
+            <p id="{{ forloop.parentloop.parentloop.counter }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="{{ tutor.get_class_ids }}" data-title="{{ tutor }}" data-content="{{ tutor.get_day_1_display }} {{ tutor.get_hour_1_display }}, {{ tutor.get_day_2_display }} {{ tutor.get_hour_2_display }}<br>{{ tutor.display_classes }}" data-trigger="hover" data-html="true" data-placement="left">{{ tutor }}</p>
             <script>
                 $(function(){
                     $( "#{{ forloop.parentloop.parentloop.counter }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" ).popover();

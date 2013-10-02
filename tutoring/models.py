@@ -4,6 +4,23 @@ from django.forms import ModelForm
 from main.models import Settings, TermManager
 from points import *
 
+DAY_CHOICES = (
+    ('0', 'Monday'),
+    ('1', 'Tuesday'),
+    ('2', 'Wednesday'),
+    ('3', 'Thursday'),
+    ('4', 'Friday'),
+)
+HOUR_CHOICES = (
+    ('0', '10am'),
+    ('1', '11am'),
+    ('2', '12pm'),
+    ('3', '1pm'),
+    ('4', '2pm'),
+    ('5', '3pm'),
+    ('6', '4pm'),
+    ('7', '5pm'),
+)
 TWO_HOUR_CHOICES = (
     ('0', '10am-12pm'),
     ('1', '11am-1pm'),
@@ -13,6 +30,7 @@ TWO_HOUR_CHOICES = (
     ('5', '3pm-5pm'),
     ('6', '4pm-6pm'),
 )
+
 
 class Class(models.Model):
     DEPT_CHOICES = (
@@ -42,28 +60,28 @@ class Class(models.Model):
         return self.department + ' ' + self.course_number
 
 
-class Tutoring(models.Model):
-    profile = models.ForeignKey('main.Profile')
+class BaseTutoring(models.Model):
     term = models.ForeignKey('main.Term')
+    day_1 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
+    hour_1 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
+    day_2 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
+    hour_2 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
 
-    DAY_CHOICES = (
-        ('0', 'Monday'),
-        ('1', 'Tuesday'),
-        ('2', 'Wednesday'),
-        ('3', 'Thursday'),
-        ('4', 'Friday'),
-    )
-    HOUR_CHOICES = (
-        ('0', '10am'),
-        ('1', '11am'),
-        ('2', '12pm'),
-        ('3', '1pm'),
-        ('4', '2pm'),
-        ('5', '3pm'),
-        ('6', '4pm'),
-        ('7', '5pm'),
-        ('8', '6pm'),
-    )
+    class Meta:
+        abstract = True
+
+    def get_classes(self):
+        raise NotImplementedError
+
+    def display_classes(self):
+        return ', '.join(c.__unicode__() for c in self.get_classes() if c.display)
+
+    def get_class_ids(self):
+        return ' '.join(c.department+c.course_number+'_1' for c in self.get_classes() if c.display)
+
+
+class Tutoring(BaseTutoring):
+    profile = models.ForeignKey('main.Profile')
 
     best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Best Day")
     best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='0', verbose_name="Best Hour")
@@ -71,11 +89,6 @@ class Tutoring(models.Model):
     second_best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='2', verbose_name="Second Best Hour")
     third_best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Third Best Day")
     third_best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='4', verbose_name="Third Best Hour")
-
-    day_1 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
-    hour_1 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
-    day_2 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
-    hour_2 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
 
     week_3 = models.OneToOneField('Week3')
     week_4 = models.OneToOneField('Week4')
@@ -85,7 +98,8 @@ class Tutoring(models.Model):
     week_8 = models.OneToOneField('Week8')
     week_9 = models.OneToOneField('Week9')
 
-    objects = TermManager()
+    current = TermManager()
+    objects = models.Manager()
 
     class Meta:
         ordering = ('-term', 'profile')
@@ -95,8 +109,8 @@ class Tutoring(models.Model):
     def __unicode__(self):
         return self.profile.__unicode__()
 
-    def classes(self):
-        return self.profile.classes
+    def get_classes(self):
+        return self.profile.classes.all()
 
     def get_weeks(self):
         return [self.week_3, self.week_4, self.week_5, self.week_6, self.week_7, self.week_8, self.week_9]
@@ -106,12 +120,6 @@ class Tutoring(models.Model):
 
     def points(self):
         return sum(week.points() for week in self.get_weeks())
-
-    def get_class_classes(self):
-        return ' '.join([c.department+c.course_number+'_1' for c in self.classes().all() if c.display])
-
-    def get_classes(self):
-        return ', '.join([c.__unicode__() for c in self.classes().all() if c.display])
 
     def preferences(self):
         def logical_hours( hour_choice ):
@@ -215,6 +223,25 @@ class Week8(Week):
 class Week9(Week):
     class Meta(Week.Meta):
         verbose_name_plural = "Week 9"
+
+
+class ForeignTutoring(BaseTutoring):
+    name = models.CharField(max_length=80)
+    classes = models.ManyToManyField(Class)
+
+    current = TermManager()
+    objects = models.Manager()
+
+    class Meta:
+        ordering = ('-term', 'name')
+        unique_together = ('name', 'term')
+        verbose_name_plural = "ForeignTutoring"
+
+    def __unicode__(self):
+        return self.name
+
+    def get_classes(self):
+        return self.classes.all()
 
 
 class TutoringPreferencesForm(ModelForm):
