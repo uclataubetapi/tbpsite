@@ -11,6 +11,7 @@ TWO_HOUR_CHOICES = (
     ('3', '1pm-3pm'),
     ('4', '2pm-4pm'),
     ('5', '3pm-5pm'),
+    ('6', '4pm-6pm'),
 )
 
 class Class(models.Model):
@@ -60,6 +61,8 @@ class Tutoring(models.Model):
         ('4', '2pm'),
         ('5', '3pm'),
         ('6', '4pm'),
+        ('7', '5pm'),
+        ('8', '6pm'),
     )
 
     best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Best Day")
@@ -109,6 +112,14 @@ class Tutoring(models.Model):
 
     def get_classes(self):
         return ', '.join([c.__unicode__() for c in self.classes().all() if c.display])
+
+    def preferences(self):
+        def logical_hours( hour_choice ):
+            return ( int( hour_choice ) + 10, int( hour_choice ) + 11 )
+
+        return ( ( int( self.best_day ), logical_hours( self.best_hour ) ), 
+                 ( int( self.second_best_day ), logical_hours( self.second_best_hour ) ), 
+                 ( int( self.third_best_day ), logical_hours( self.third_best_hour ) ) )
 
     @classmethod
     def with_weeks(cls, profile, term):
