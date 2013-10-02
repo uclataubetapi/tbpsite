@@ -35,7 +35,9 @@ def schedule(request):
                                                                          c.course_number).groups()))
             ], 'collapse{}'.format(number)))
             
-    return render(request, 'schedule.html', {'term': term, 'classes': classes, 'tutors': tutors})
+    return render(request, 'schedule.html', {'term': term, 'classes': classes, 'tutors': tutors,
+                                             'display': Settings.objects.display_tutoring()})
+
 
 def feedback(request):
     return render(request, 'tutoring_feedback.html')
