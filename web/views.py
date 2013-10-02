@@ -1,8 +1,6 @@
 import operator
 import re
 
-from django.shortcuts import redirect
-
 from common import MyTemplateView
 from event.models import Event
 from main.models import Faculty, Officer

@@ -1,5 +1,8 @@
 from django.contrib import admin
+
 from tutoring.models import *
+from points import MIN_TUTORING_HOURS
+
 
 class ClassAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'display')
@@ -28,7 +31,7 @@ class WeekAdmin(admin.ModelAdmin):
     actions = ('fill_hours',)
 
     def fill_hours(self, request, queryset):
-        queryset.update(hours=TUTORING_HOURS_PER_WEEK)
+        queryset.update(hours=MIN_TUTORING_HOURS)
 
 admin.site.register(Class, ClassAdmin)
 admin.site.register(Tutoring, TutoringAdmin)
