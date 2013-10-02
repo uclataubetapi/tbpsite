@@ -187,14 +187,15 @@ def edit(request):
             profile.graduation_term = term
             profile_form.save()
 
-            if first_time:
+            if not first_time:
+                return redirect(profile_view)
+            else:
                 candidate = profile.candidate
                 candidate.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
                 tutoring_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
                 tutoring_form.save()
                 shirt_form.save()
-
-            return redirect(add)
+                return redirect(add)
 
     if not first_time:
         return render_profile_page(request, 'edit.html',
