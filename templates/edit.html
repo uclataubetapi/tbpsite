@@ -6,9 +6,6 @@
 
 <div class="row">
   <div class="col-lg-6">
-    {% if from_redirect %}
-    <p class="text-info">Please enter the following information</p>
-    {% endif %}
     <form class="form-horizontal" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <fieldset>  

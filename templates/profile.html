@@ -50,31 +50,31 @@
       </fieldset>
     </form>
   </div>
-</div>
-<div class="col-lg-6">
-  <h4>{{ profile.get_position_display }}</h4>
-  {% if requirements %}
-  <p>Requirements:</p>
-  <table class="table">
-    {% for requirement in requirements %}
-    <tr>
-      <td>{{ requirement.0 }}</td>
-      <td>{{ requirement.1 }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-  {% endif %}
-  {% if profile.position == "1"%}
-  <p>Distinguished Active Terms:</p>
-  <table class="table">
-    {% for detail in details %}
-    <tr>
-      <td>{{ detail.0 }}</td>
-      <td>{{ detail.1 }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-  {% endif %}
+  <div class="col-lg-6">
+    <h4>{{ profile.get_position_display }}</h4>
+    {% if requirements %}
+    <p>Requirements:</p>
+    <table class="table">
+      {% for requirement in requirements %}
+      <tr>
+        <td>{{ requirement.0 }}</td>
+        <td>{{ requirement.1 }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+    {% if profile.position == "1"%}
+    <p>Distinguished Active Terms:</p>
+    <table class="table">
+      {% for detail in details %}
+      <tr>
+        <td>{{ detail.0 }}</td>
+        <td>{{ detail.1 }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+  </div>
 </div>
 
 {% endblock %}

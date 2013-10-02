@@ -175,8 +175,8 @@ class Profile(models.Model):
         ('F', 'Female'),
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='M')
-    birthday = models.DateField(null=True)
-    phone_number = models.CharField(max_length=25, verbose_name="Phone Number")
+    birthday = models.DateField(null=True, verbose_name="Birthday (mm/dd/yyyy)")
+    phone_number = models.CharField(max_length=25, verbose_name="Phone Number (xxx-xxx-xxxx)")
     CANDIDATE = '0'
     MEMBER = '1'
     POSITION_CHOICES = (
@@ -452,7 +452,7 @@ class UserPersonalForm(ModelForm):
     # TODO: change to email field
     email = forms.CharField(required=True)
     first_name = forms.CharField(required=True, label="First Name")
-    middle_name = forms.CharField(required=True, label="Middle Name")
+    middle_name = forms.CharField(required=False, label="Middle Name")
     last_name = forms.CharField(required=True, label="Last Name")
 
     class Meta:
@@ -468,6 +468,18 @@ class ProfileForm(ModelForm):
         model = Profile
         fields = ['nickname', 'gender', 'birthday', 'phone_number', 'major',
                   'graduation_quarter', 'graduation_year', 'resume_pdf', 'resume_word']
+        widgets = {
+            'gender': forms.widgets.RadioSelect
+        }
+
+
+class FirstProfileForm(ModelForm):
+    graduation_quarter = forms.ChoiceField(choices=Term.QUARTER_CHOICES, label="Graduation Quarter")
+    graduation_year = forms.IntegerField(label="Graduation Year")
+
+    class Meta:
+        model = Profile
+        fields = ['nickname', 'gender', 'birthday', 'phone_number', 'major', 'graduation_quarter', 'graduation_year']
         widgets = {
             'gender': forms.widgets.RadioSelect
         }

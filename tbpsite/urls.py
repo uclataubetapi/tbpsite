@@ -17,7 +17,6 @@ urlpatterns = patterns('web.views',
 
     url(r'^officers/$', 'officers'),
     url(r'^faculty/$', 'faculty'),
-    url(r'^feedback/$', 'feedback'),
 )
 
 urlpatterns += patterns('main.views',
@@ -36,7 +35,6 @@ urlpatterns += patterns('main.views',
     url(r'^logout/$', 'logout'),
     url(r'^login/$', 'login'),
     url(r'^profile/$', 'profile_view'),
-    url(r'^edit/(?P<from_redirect>\w+?)$', 'edit'),
     url(r'^edit/$', 'edit'),
     url(r'^add/$', 'add'),
     url(r'^register/$', 'register'),
