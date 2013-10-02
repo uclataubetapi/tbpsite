@@ -36,7 +36,7 @@ def schedule(request):
             ], 'collapse{}'.format(number)))
             
     return render(request, 'schedule.html', {'term': term, 'classes': classes, 'tutors': tutors,
-                                             'display': Settings.objects.display_tutoring()})
+                                             'display': request.user.is_staff or Settings.objects.display_tutoring()})
 
 
 def feedback(request):
