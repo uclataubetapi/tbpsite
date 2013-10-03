@@ -9,7 +9,8 @@
     <form class="form-inline" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <legend>Add Classes</legend>
-      <p class="help-block">Please email <a href="mailto:webmaster@tbp.seas.ucla.edu">webmaster@tbp.seas.ucla.edu</a> if there are any classes that you can tutor and the department isn't listed.</p>
+      <p class="help-block">Please choose classes that you would be able to tutor, or classes that you would able to quickly refresh your knowledge about.
+        Please email <a href="mailto:webmaster@tbp.seas.ucla.edu">webmaster@tbp.seas.ucla.edu</a> if there are any classes that you can tutor and the department isn't listed.</p>
       <fieldset>
         <div class="form-group">
           <select name="dept" class="form-control">{% for dept in departments %}
@@ -95,7 +96,7 @@
     </form>
     <form class="form" method="post" enctype="multipart/form-data">
       {% csrf_token %}
-      <legend>Current Classes</legend>
+      <legend>Current Tutoring Classes</legend>
       <ul class="list-unstyled">
         {% for class in classes %}
         <div class="checkbox">
