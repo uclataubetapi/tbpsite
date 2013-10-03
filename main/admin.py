@@ -8,6 +8,10 @@ from main.models import *
 class MyUserAdmin(UserAdmin):
     actions = ('create_profile', 'reset_password')
 
+    def __init__( self, *args, **kwargs ):
+        super( UserAdmin, self ).__init__( *args, **kwargs )
+        self.list_display += ( 'date_joined', )
+
     def create_profile(self, request, queryset):
         for user in queryset:
             Profile.objects.create(user=user)
