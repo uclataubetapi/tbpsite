@@ -9,6 +9,7 @@ from django.contrib import auth
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponse, Http404
 from django.shortcuts import redirect, get_object_or_404
@@ -213,26 +214,29 @@ def add(request):
     error = None
 
     if request.method == "POST":
-        dept = request.POST.get('dept')
-        cnums = request.POST.get('cnum')
+        if 'add' in request.POST:
+            dept = request.POST.get('dept')
+            cnums = request.POST.get('cnum')
 
-        if cnums:
             cnums = cnums.strip()
             if not re.match( r'^[A-Z]*[1-9][0-9]*[A-Z]*(,\s*[A-Z]*[1-9][0-9]*[A-Z]*)*$', cnums ):
                 error = 'Invalid format for course number. Please use the format in the provided examples.'
             else:
                 for cnum in cnums.split(','):
                     profile.classes.add(Class.objects.get_or_create(department=dept, course_number=cnum.strip())[0])
-        else:
+        elif 'remove' in request.POST:
             for cls in request.POST:
                 if request.POST[cls] == 'on':
-                    dept, cnum = cls.split()
+                    dept, cnum = cls.split(' ', 1)
 
                     try:
                         cls = Class.objects.get(department=dept, course_number=cnum)
                         profile.classes.remove(cls)
                     except Class.DoesNotExist:
                         pass
+
+        else:
+            raise ValidationError
     
     return render_profile_page(request, 'add.html', 
             {'error': error, 'departments': departments, 'classes': profile.classes.all()})

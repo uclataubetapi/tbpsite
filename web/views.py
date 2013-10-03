@@ -3,7 +3,7 @@ import re
 
 from common import MyTemplateView
 from event.models import Event
-from main.models import Faculty, Officer
+from main.models import Faculty, Officer, Settings
 
 about = MyTemplateView.as_view(template_name='about.html')
 awards = MyTemplateView.as_view(template_name='awards.html')
@@ -13,7 +13,8 @@ emcc = MyTemplateView.as_view(template_name='emcc.html')
 fe = MyTemplateView.as_view(template_name='fe.html')
 home = MyTemplateView.as_view(template_name='home.html', 
                               additional={'upcomingEvents': sorted(Event.objects.filter(dropdown=True),
-                                                                   key=operator.attrgetter('start'))})
+                                                                   key=operator.attrgetter('start')),
+                                          'display': Settings.objects.display_tutoring()})
 programs = MyTemplateView.as_view(template_name='programs.html')
 requirements = MyTemplateView.as_view(template_name='requirements.html')
 tutoring = MyTemplateView.as_view(template_name='tutoring.html')

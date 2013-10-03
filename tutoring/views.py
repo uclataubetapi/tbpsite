@@ -29,7 +29,7 @@ def schedule(request):
         classes.append(
             (department, [
                 (cls.course_number, cls.department+cls.course_number)
-                for cls in sorted(Class.objects.filter(department=department, display=True),
+                for cls in sorted((c for c in Class.objects.filter(department=department, display=True) if c.profile_set.all()),
                                   key=lambda c: tuple(int(s) if s.isdigit() else s
                                                       for s in re.search(r'(\d+)([ABCD]?L?)?',
                                                                          c.course_number).groups()))
