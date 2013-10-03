@@ -310,7 +310,7 @@ def pending_community_service(request):
 
 @staff_member_required
 def tutoring_hours(request):
-    return render(request, 'tutoring_hours.html', {'tutoring_list': Tutoring.objects.order_by('profile')})
+    return render(request, 'tutoring_hours.html', {'tutoring_list': Tutoring.current.order_by('profile')})
 
 @staff_member_required
 def downloads(request):
