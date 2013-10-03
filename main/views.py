@@ -225,7 +225,7 @@ def add(request):
         else:
             for cls in request.POST:
                 if request.POST[cls] == 'on':
-                    dept, cnum = cls.split()
+                    dept, cnum = cls.split(' ', 1)
 
                     try:
                         cls = Class.objects.get(department=dept, course_number=cnum)

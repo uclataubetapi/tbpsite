@@ -48,6 +48,7 @@ class Class(models.Model):
         ('MSE', 'MSE'),
         ('PHYSICS', 'PHYSICS'),
         ('STATS', 'STATS'),
+        ('ECON', 'ECON'),
     )
     department = models.CharField(max_length=10, choices=DEPT_CHOICES)
     course_number = models.CharField(max_length=10)
@@ -57,7 +58,7 @@ class Class(models.Model):
         verbose_name_plural = "Classes"
 
     def __unicode__(self):
-        return self.department + ' ' + self.course_number
+        return '{} {}'.format(self.department, self.course_number)
 
 
 class BaseTutoring(models.Model):
