@@ -5,7 +5,7 @@ from points import MIN_TUTORING_HOURS
 
 
 class ClassAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'display')
+    list_display = ('__unicode__', 'department', 'display')
     list_editable = ('display',)
 
 
