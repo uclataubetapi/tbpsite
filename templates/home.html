@@ -57,7 +57,7 @@
     <div class="col-md-4 visible-md visible-lg">
       <h2>UCLA Tau Beta Pi</h2>
       <h4>Announcements</h4>
-      <a href="{% url 'tutoring.views.schedule' %}" class="btn btn-large btn-primary">The Tutoring Schedule is Up!</a>
+      {% if display %}<a href="{% url 'tutoring.views.schedule' %}" class="btn btn-large btn-primary">The Tutoring Schedule is Up!</a>{% endif %}
       <h4>Upcoming Events</h4>
       {% for event in upcomingEvents %}
         <dl>
