@@ -9,6 +9,7 @@ from django.contrib import auth
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponse, Http404
 from django.shortcuts import redirect, get_object_or_404
@@ -212,17 +213,18 @@ def add(request):
     profile = request.user.profile
 
     if request.method == "POST":
-        dept = request.POST.get('dept')
-        cnums = request.POST.get('cnum')
 
-        if cnums:
+        if 'add' in request.POST:
+            dept = request.POST.get('dept')
+            cnums = request.POST.get('cnum')
+
             for cnum in cnums.split(','):
                 if not cnum.strip():
                     cnum = '0'
 
                 profile.classes.add(Class.objects.get_or_create(department=dept, course_number=cnum.strip())[0])
 
-        else:
+        elif 'remove' in request.POST:
             for cls in request.POST:
                 if request.POST[cls] == 'on':
                     dept, cnum = cls.split(' ', 1)
@@ -232,6 +234,9 @@ def add(request):
                         profile.classes.remove(cls)
                     except Class.DoesNotExist:
                         pass
+
+        else:
+            raise ValidationError
     
     return render_profile_page(request, 'add.html', {'departments': departments, 'classes': profile.classes.all()})
 
