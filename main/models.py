@@ -451,8 +451,8 @@ class RegisterForm(UserForm):
 class UserPersonalForm(ModelForm):
     # TODO: change to email field
     email = forms.CharField(required=True)
-    first_name = forms.CharField(required=True, label="First Name")
-    middle_name = forms.CharField(required=False, label="Middle Name (if applicable)")
+    first_name = forms.CharField(required=True, label="Legal First Name")
+    middle_name = forms.CharField(required=False, label="Preferred Name (if applicable)")
     last_name = forms.CharField(required=True, label="Last Name")
 
     class Meta:
