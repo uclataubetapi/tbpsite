@@ -65,6 +65,9 @@ class Term(models.Model):
     quarter = models.CharField(max_length=1, choices=QUARTER_CHOICES)
     year = models.IntegerField()
 
+    start_date = models.DateField()
+    due_date = models.DateField()
+
     class Meta:
         ordering = ['-year', '-quarter']
         unique_together = ('quarter', 'year')

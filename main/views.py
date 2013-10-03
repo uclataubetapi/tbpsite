@@ -36,6 +36,12 @@ MAJOR_MAPPING = {
 }
 
 
+def update_professor_interview_and_resume(candidate):
+    if candidate.resume() and candidate.professor_interview() and datetime.datetime.today() < Settings.objects.term().due_date:
+        candidate.professor_interview_and_resume = True
+        candidate.save()
+
+
 def render_profile_page(request, template, template_args=None):
     if not template_args:
         template_args = {}
@@ -189,6 +195,8 @@ def edit(request):
             profile_form.save()
 
             if not first_time:
+                if profile.position == Profile.CANDIDATE:
+                    update_professor_interview_and_resume(profile.candidate)
                 return redirect(profile_view)
             else:
                 candidate = profile.candidate
@@ -252,6 +260,7 @@ def requirements(request):
             form = CandidateForm(request.POST, request.FILES, instance=candidate)
             if form.is_valid():
                 form.save()
+                update_professor_interview_and_resume(candidate)
 
         else:
             form = CandidateForm()
