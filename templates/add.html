@@ -11,6 +11,9 @@
       <legend>Add Classes</legend>
       <p class="help-block">Please choose classes that you would be able to tutor, or classes that you would able to quickly refresh your knowledge about.
         Please email <a href="mailto:webmaster@tbp.seas.ucla.edu">webmaster@tbp.seas.ucla.edu</a> if there are any classes that you can tutor and the department isn't listed.</p>
+      {% if error %}
+      <p class="has-error">{{ error }}</p>
+      {% endif %}
       <fieldset>
         <div class="form-group">
           <select name="dept" class="form-control">{% for dept in departments %}

@@ -1,6 +1,6 @@
 import cStringIO as StringIO
 import datetime
-import os
+import os, re
 import time
 import zipfile
 
@@ -210,18 +210,19 @@ def edit(request):
 def add(request):
     departments = (department for department, _ in Class.DEPT_CHOICES)
     profile = request.user.profile
+    error = None
 
     if request.method == "POST":
         dept = request.POST.get('dept')
         cnums = request.POST.get('cnum')
 
         if cnums:
-            for cnum in cnums.split(','):
-                if not cnum.strip():
-                    cnum = '0'
-
-                profile.classes.add(Class.objects.get_or_create(department=dept, course_number=cnum.strip())[0])
-
+            cnums = cnums.strip()
+            if not re.match( r'^[A-Z]*[1-9][0-9]*[A-Z]*(,\s*[A-Z]*[1-9][0-9]*[A-Z]*)*$', cnums ):
+                error = 'Invalid format for course number. Please use the format in the provided examples.'
+            else:
+                for cnum in cnums.split(','):
+                    profile.classes.add(Class.objects.get_or_create(department=dept, course_number=cnum.strip())[0])
         else:
             for cls in request.POST:
                 if request.POST[cls] == 'on':
@@ -233,7 +234,8 @@ def add(request):
                     except Class.DoesNotExist:
                         pass
     
-    return render_profile_page(request, 'add.html', {'departments': departments, 'classes': profile.classes.all()})
+    return render_profile_page(request, 'add.html', 
+            {'error': error, 'departments': departments, 'classes': profile.classes.all()})
 
 @login_required(login_url=login)
 def requirements(request):
