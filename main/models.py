@@ -464,6 +464,7 @@ class UserPersonalForm(ModelForm):
 
 
 class ProfileForm(ModelForm):
+    birthday = forms.DateField(label="Birthday (mm/dd/yyyy)", widget=forms.DateInput)
     graduation_quarter = forms.ChoiceField(choices=Term.QUARTER_CHOICES, label="Graduation Quarter")
     graduation_year = forms.IntegerField(label="Graduation Year")
 
