@@ -9,8 +9,10 @@ from event.models import Event
 def events(request): 
     today = datetime.today()
     return render(request, 'events.html', 
-            {'upcoming_events': Event.objects.filter(end__gt=today),
-                'past_events': Event.objects.filter(end__lte=today)})
+                  {'upcoming_events': [event for event in Event.objects.filter(end__gt=today)
+                                       if event.event_type != Event.SOCIAL or request.user.is_authenticated()],
+                   'past_events': [event for event in Event.objects.filter(end__lte=today)
+                                   if event.event_type != Event.SOCIAL or request.user.is_authenticated()]})
 
 
 def event(request, url):
