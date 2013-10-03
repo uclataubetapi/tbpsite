@@ -217,6 +217,9 @@ def add(request):
 
         if cnums:
             for cnum in cnums.split(','):
+                if not cnum.strip():
+                    cnum = '0'
+
                 profile.classes.add(Class.objects.get_or_create(department=dept, course_number=cnum.strip())[0])
 
         else:
