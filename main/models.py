@@ -65,6 +65,9 @@ class Term(models.Model):
     quarter = models.CharField(max_length=1, choices=QUARTER_CHOICES)
     year = models.IntegerField()
 
+    start_date = models.DateField()
+    due_date = models.DateField()
+
     class Meta:
         ordering = ['-year', '-quarter']
         unique_together = ('quarter', 'year')
@@ -203,6 +206,19 @@ class Profile(models.Model):
             return '{} {}'.format(self.nickname, self.user.last_name)
         name = self.user.get_full_name()
         return name if name else self.user.get_username()
+
+    def current(self):
+        if self.position == Profile.CANDIDATE:
+            try:
+                self.candidate.tutoring
+            except Candidate.DoesNotExist:
+                return False
+        elif self.position == Profile.MEMBER:
+            try:
+                ActiveMember.objects.get(profile=self, term=Settings.objects.term())
+            except ActiveMember.DoesNotExist:
+                return False
+        return True
 
     def dump(self):
         return ','.join(field for field in [self.user.first_name, self.middle_name, self.user.last_name,
@@ -461,6 +477,7 @@ class UserPersonalForm(ModelForm):
 
 
 class ProfileForm(ModelForm):
+    birthday = forms.DateField(label="Birthday (mm/dd/yyyy)", widget=forms.DateInput)
     graduation_quarter = forms.ChoiceField(choices=Term.QUARTER_CHOICES, label="Graduation Quarter")
     graduation_year = forms.IntegerField(label="Graduation Year")
 
