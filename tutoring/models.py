@@ -39,6 +39,7 @@ class Class(models.Model):
         ('CHEM', 'CHEM'),
         ('CHEME', 'CHEME'),
         ('CS', 'CS'),
+        ('ECON', 'ECON'),
         ('EE', 'EE'),
         ('ENGR', 'ENGR'),
         ('LS', 'LS'),
@@ -48,7 +49,6 @@ class Class(models.Model):
         ('MSE', 'MSE'),
         ('PHYSICS', 'PHYSICS'),
         ('STATS', 'STATS'),
-        ('ECON', 'ECON'),
     )
     department = models.CharField(max_length=10, choices=DEPT_CHOICES)
     course_number = models.CharField(max_length=10)
