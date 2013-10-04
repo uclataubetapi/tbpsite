@@ -1,6 +1,6 @@
 import re
 
-from main.models import Settings
+from main.models import Settings, Profile
 from tutoring.models import Tutoring, ForeignTutoring, Class, HOUR_CHOICES, DAY_CHOICES
 from common import render
 
@@ -27,7 +27,8 @@ def schedule(request):
     for department, number in zip(Class.DEPT_CHOICES, numbers):
         department, _ = department
         courses = [(cls.course_number, cls.department+cls.course_number)
-                   for cls in sorted((c for c in Class.objects.filter(department=department, display=True) if c.profile_set.all()),
+                   for cls in sorted((c for c in Class.objects.filter(department=department, display=True)
+                                      if any(filter(Profile.current, c.profile_set.all()))),
                                      key=lambda c: tuple(int(s) if s.isdigit() else s
                                                          for s in re.search(r'(\d+)([ABCD]?L?)?',
                                                                             c.course_number).groups()))]

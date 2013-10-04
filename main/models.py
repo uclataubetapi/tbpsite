@@ -207,6 +207,19 @@ class Profile(models.Model):
         name = self.user.get_full_name()
         return name if name else self.user.get_username()
 
+    def current(self):
+        if self.position == Profile.CANDIDATE:
+            try:
+                self.candidate.tutoring
+            except Candidate.DoesNotExist:
+                return False
+        elif self.position == Profile.MEMBER:
+            try:
+                ActiveMember.objects.get(profile=self, term=Settings.objects.term())
+            except ActiveMember.DoesNotExist:
+                return False
+        return True
+
     def dump(self):
         return ','.join(field for field in [self.user.first_name, self.middle_name, self.user.last_name,
                                             self.user.email,  self.nickname, self.gender,
