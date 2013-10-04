@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 from main.models import *
 
@@ -33,6 +34,10 @@ class MyUserAdmin(UserAdmin):
                 'webmaster@tbp.seas.ucla.edu'
             )
 
+        send_mail( 'TBP Password Reset Accounting', 
+                'The following users had their passwords reset: %s' %
+                    ', '.join( [ user.get_username() for user in queryset ] ),
+                'webmaster@tbp.seas.ucla.edu', [ 'webmaster@tbp.seas.ucla.edu' ] )
 
 class HousePointsAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'term', 'professor_interview_and_resume', 'other')
