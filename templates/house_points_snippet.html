@@ -1,4 +1,14 @@
-<table class="table table-striped">
+<style>
+table.bluetable {
+    border-color: #2a6395;
+}
+table.bluetable th {
+    background-color: #357ebd
+    color: white;
+}
+</style>
+
+<table class="bluetable" style="table-layout:fixed;">
   <th></th>
   {% for house in houses %}
     <th>{{ house }}</th>
@@ -10,3 +20,4 @@
     {% endfor %}
   </tr>
 </table>
+
