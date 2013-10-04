@@ -55,6 +55,7 @@ class Class(models.Model):
     display = models.BooleanField(default=False)
 
     class Meta:
+        ordering = ('department', 'course_number')
         verbose_name_plural = "Classes"
 
     def __unicode__(self):
