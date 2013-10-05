@@ -203,7 +203,7 @@ class Profile(models.Model):
 
     def __unicode__(self):
         if self.nickname:
-            return '{} {}'.format(self.nickname, self.user.last_name)
+            return '%s %s' % ( self.nickname, self.user.last_name )
         name = self.user.get_full_name()
         return name if name else self.user.get_username()
 
