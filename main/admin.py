@@ -47,7 +47,7 @@ class MyUserAdmin(UserAdmin):
 
     def clear_groups(self, request, queryset):
         for user in queryset:
-            user.groups.remove()
+            user.groups.clear()
 
 
 class HousePointsAdmin(admin.ModelAdmin):
