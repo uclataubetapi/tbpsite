@@ -7,7 +7,7 @@ from main.models import *
 
 
 class MyUserAdmin(UserAdmin):
-    actions = ('create_profile', 'reset_password')
+    actions = ('create_profile', 'reset_password', 'add_staff', 'remove_staff', 'clear_groups')
 
     def __init__( self, *args, **kwargs ):
         super( UserAdmin, self ).__init__( *args, **kwargs )
@@ -38,6 +38,17 @@ class MyUserAdmin(UserAdmin):
                 'The following users had their passwords reset: %s' %
                     ', '.join( [ user.get_username() for user in queryset ] ),
                 'webmaster@tbp.seas.ucla.edu', [ 'webmaster@tbp.seas.ucla.edu' ] )
+
+    def add_staff(self, request, queryset):
+        queryset.update(is_staff=True)
+
+    def remove_staff(self, request, queryset):
+        queryset.update(is_staff=False)
+
+    def clear_groups(self, request, queryset):
+        for user in queryset:
+            user.groups.remove()
+
 
 class HousePointsAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'term', 'professor_interview_and_resume', 'other')
