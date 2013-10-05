@@ -1,23 +1,22 @@
-<style>
-table.bluetable {
-    border-color: #2a6395;
-}
-table.bluetable th {
-    background-color: #357ebd
-    color: white;
-}
-</style>
-
-<table class="bluetable" style="table-layout:fixed;">
-  <th></th>
-  {% for house in houses %}
-    <th>{{ house }}</th>
-  {% endfor %}
-  <tr>
-    <td>Points</td>
-    {% for house in houses %}
-      <td>{{ house.points }}</td>
-    {% endfor %}
-  </tr>
-</table>
-
+<div class="panel panel-primary">
+   <div class="panel-heading" style="padding:5px; margin:0px;">
+        <table class="table table-condensed" style="table-layout:fixed; padding:0px; margin:0px">
+            <tr>
+            <th style="border-top: none;"></th>
+            {% for house in houses %}
+            <th style="border-top: none;">{{ house }}</th>
+            {% endfor %}
+            </tr>
+        </table>
+   </div>
+   <div class="panel-body" style="padding:5px; margin:0px;">
+       <table class="table table-condensed" style="table-layout:fixed; padding:0px; margin:0px">
+        <tr>
+        <td style="border-top: none;">Points</td>
+        {% for house in houses %}
+        <td style="border-top: none;">{{ house.points }}</td>
+        {% endfor %}
+        </tr>
+        </table>
+   </div>
+</div>
