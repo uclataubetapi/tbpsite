@@ -362,7 +362,8 @@ class ActiveMember(Member):
     REQUIREMENT_CHOICES = (
         (EMCC, 'EMCC'),
         (TUTORING, 'Tutoring'),
-        (COMMITTEE, 'Committee'),
+        # TODO: comment as necessary
+        (COMMITTEE, 'Rube Goldberg Committee'),
     )
     requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
     requirement_complete = models.BooleanField(default=False)
