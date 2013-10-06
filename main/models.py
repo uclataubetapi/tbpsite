@@ -65,8 +65,8 @@ class Term(models.Model):
     quarter = models.CharField(max_length=1, choices=QUARTER_CHOICES)
     year = models.IntegerField()
 
-    start_date = models.DateField()
-    due_date = models.DateField()
+    start_date = models.DateField(blank=True, null=True)
+    due_date = models.DateField(blank=True, null=True)
 
     class Meta:
         ordering = ['-year', '-quarter']
@@ -203,7 +203,7 @@ class Profile(models.Model):
 
     def __unicode__(self):
         if self.nickname:
-            return '{} {}'.format(self.nickname, self.user.last_name)
+            return '%s %s' % ( self.nickname, self.user.last_name )
         name = self.user.get_full_name()
         return name if name else self.user.get_username()
 
@@ -362,7 +362,8 @@ class ActiveMember(Member):
     REQUIREMENT_CHOICES = (
         (EMCC, 'EMCC'),
         (TUTORING, 'Tutoring'),
-        (COMMITTEE, 'Committee'),
+        # TODO: comment as necessary
+        (COMMITTEE, 'Rube Goldberg Committee'),
     )
     requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
     requirement_complete = models.BooleanField(default=False)
