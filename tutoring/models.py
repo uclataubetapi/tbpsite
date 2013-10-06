@@ -240,7 +240,7 @@ class ForeignTutoring(BaseTutoring):
     class Meta:
         ordering = ('-term', 'name')
         unique_together = ('name', 'term')
-        verbose_name_plural = "ForeignTutoring"
+        verbose_name_plural = "Foreign Tutoring"
 
     def __unicode__(self):
         return self.name

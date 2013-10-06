@@ -278,7 +278,7 @@ def requirements(request):
             if all(valid_forms):
                 if member_form.cleaned_data['requirement_choice'] == ActiveMember.TUTORING:
                     member.tutoring = Tutoring.with_weeks(profile=profile, term=term)
-                    tutoring_preferences_form = TutoringPreferencesForm(request.POST)
+                    tutoring_preferences_form = TutoringPreferencesForm(request.POST, instance=member.tutoring)
                     tutoring_preferences_form.save()
 
                 member_form.save()
