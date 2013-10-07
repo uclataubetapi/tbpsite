@@ -10,7 +10,8 @@ setup_environ( settings )
 from tutoring.models import Tutoring, DAY_CHOICES, HOUR_CHOICES
 
 MAX_TUTORS_PER_HOUR = 6
-MIN_TUTORS_PER_HOUR = 2
+MIN_TUTORS_PER_HOUR = 3 # Want this
+ENFORCED_MIN_TUTORS_PER_HOUR = 2 # Enforce this
 
 TUTORING_START = 10 # 10AM
 TUTORING_END = 18 # 6 PM
@@ -19,6 +20,33 @@ tutoringHours = {}
 for d in DAY_CHOICES:
     for h in HOUR_CHOICES:
         tutoringHours[ ( int( d[ 0 ] ), int( h[ 0 ] ) + TUTORING_START ) ] = []
+
+def tutoringHoursStatus( enforce=False ):
+    minSatisfied = True
+    totalAssignedHours = 0
+    for slot in sorted( tutoringHours ):
+        assignees = tutoringHours[ slot ]
+        for c in DAY_CHOICES:
+            if int( c[ 0 ] ) == slot[ 0 ]:
+                print c[ 1 ], 'at',
+                break
+        time = slot[ 1 ] % 12
+        if not time:
+            time = 12
+        print time, 'AM' if slot[ 1 ] < 12 else 'PM', ': ',
+        print ', '.join( [ repr( assignee ) for assignee in assignees ] )
+
+        totalAssignedHours += len( assignees )
+
+        if len( assignees ) < ENFORCED_MIN_TUTORS_PER_HOUR:
+            print "*** The time slot above does not satisfy the minimum %d tutors per hour" % ENFORCED_MIN_TUTORS_PER_HOUR
+            minSatisfied = False
+
+    print 'There are', len( Tutoring.current.all() ), 'tutoring objects'
+    print 'Total %d tutoring hours per week' % totalAssignedHours
+
+    if enforce:
+        assert minSatisfied and totalAssignedHours / len( Tutoring.current.all() ) == 2
 
 tutoringObjs = [ t for t in Tutoring.current.all() ]
 
@@ -52,6 +80,12 @@ while assignCount <= MAX_TUTORS_PER_HOUR:
 
     assignCount += 1
 
+tutoringHoursStatus()
+
+for time, assignees in tutoringHours.items():
+    assert len( assignees ) <= MAX_TUTORS_PER_HOUR, '%s has %d tutors, max %d' % ( time, len( assignees ), MAX_TUTORS_PER_HOUR )
+
+unassigned = []
 # Try assigning everyone else based on preferences
 for t in tutoringObjs:
     hoursAssigned = False
@@ -67,55 +101,55 @@ for t in tutoringObjs:
 
     if not hoursAssigned:
         print "Tutoring hours were not assigned for", t.profile
+        unassigned.append( t )
+
+for time, assignees in tutoringHours.items():
+    assert len( assignees ) <= MAX_TUTORS_PER_HOUR, '%s has %d tutors, max %d' % ( time, len( assignees ), MAX_TUTORS_PER_HOUR )
 
 # Fill unfilled slots
 for time, assignees in tutoringHours.items():
-    if len( assignees ) < MIN_TUTORS_PER_HOUR:
-        for day in range( 5 ):
-            for slot in range( TUTORING_START, TUTORING_END, 2 ):
-                # Can we can pull someone from this slot?
-                if len( tutoringHours[ ( day, slot ) ] ) > MIN_TUTORS_PER_HOUR:
-                    for t in tutoringHours[ ( day, slot ) ]:
-                        if time in t.preferences( twoHour=False ):
-                            slotBefore = tutoringHours.get( ( day, slot - 1 ) )
-                            slotAfter = tutoringHours.get( ( day, slot + 1 ) )
+    while len( assignees ) < MIN_TUTORS_PER_HOUR:
+        reassigned = False
+        for day, slot in tutoringHours:
+            curSlotAssignees = tutoringHours[ ( day, slot ) ]
+            # Can we can pull someone from this slot?
+            if len( curSlotAssignees ) > MIN_TUTORS_PER_HOUR:
+                for t in curSlotAssignees:
+                    if time in t.preferences( twoHour=False ):
+                        #print 'Reassigning', t.profile,
 
-                            # Remove tutor from original slots
-                            tutoringHours[ ( day, slot ) ].remove( t )
-                            if slotBefore and t in slotBefore:
-                                slotBefore.remove( t )
-                            else:
-                                assert t in slotAfter
-                                slotAfter.remove( t )
+                        slotBefore = tutoringHours.get( ( day, slot - 1 ) )
+                        slotAfter = tutoringHours.get( ( day, slot + 1 ) )
 
-                            # Reassign
-                            tutoringHours[ time ].append( t )
-                            tutoringHours[ ( time[ 0 ], time[ 1 ] + 1 ) ].append( t )
+                        # Remove tutor from original slots
+                        tutoringHours[ ( day, slot ) ].remove( t )
+                        if slotBefore and t in slotBefore:
+                            if len( slotBefore ) <= MIN_TUTORS_PER_HOUR:
+                                continue
+                            slotBefore.remove( t )
+                        else:
+                            assert t in slotAfter
+                            if len( slotAfter ) <= MIN_TUTORS_PER_HOUR:
+                                continue
+                            slotAfter.remove( t )
 
-minSatisfied = True
-totalAssignedHours = 0
-for slot in sorted( tutoringHours ):
-    assignees = tutoringHours[ slot ]
-    for c in DAY_CHOICES:
-        if int( c[ 0 ] ) == slot[ 0 ]:
-            print c[ 1 ], 'at',
-            break
-    time = slot[ 1 ] % 12
-    if not time:
-        time = 12
-    print time, 'AM' if slot[ 1 ] < 12 else 'PM', ': ',
-    print ', '.join( [ repr( assignee ) for assignee in assignees ] )
+                        # Reassign
+                        tutoringHours[ time ].append( t )
+                        tutoringHours[ ( time[ 0 ], time[ 1 ] + 1 ) ].append( t )
 
-    totalAssignedHours += len( assignees )
+                        reassigned = True
+                        break
 
-    if len( assignees ) < MIN_TUTORS_PER_HOUR:
-        print "*** The time slot above does not satisfy the minimum %d tutors per hour" % MIN_TUTORS_PER_HOUR
-        minSatisfied = False
+            if reassigned:
+                break
 
-print 'There are', len( Tutoring.current.all() ), 'tutoring objects'
-print 'Total %d tutoring hours per week' % totalAssignedHours
+        assert reassigned, "Unable to find someone to fill %r" % time
 
-assert minSatisfied and totalAssignedHours / len( Tutoring.current.all() ) == 2
+for time, assignees in tutoringHours.items():
+    assert len( assignees ) <= MAX_TUTORS_PER_HOUR, '%s has %d tutors, max %d' % ( time, len( assignees ), MAX_TUTORS_PER_HOUR )
+
+tutoringHoursStatus( enforce=True )
+assert False
 
 # Validate assigned hours with preferences
 for time, assignees in tutoringHours.items():
