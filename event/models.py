@@ -33,7 +33,7 @@ class Event(models.Model):
     objects = models.Manager()
 
     class Meta:
-        ordering = ('-term', 'name')
+        ordering = ('end', '-term', 'name')
         unique_together = ('name', 'term')
 
     def __unicode__(self):

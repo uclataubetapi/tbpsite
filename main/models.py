@@ -172,7 +172,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User)
 
     middle_name = models.CharField(max_length=30, blank=True, verbose_name="Middle Name")
-    nickname = models.CharField(max_length=30, blank=True, verbose_name="Nickname (optional)")
+    nickname = models.CharField(max_length=30, blank=True, verbose_name="Preferred Name (optional)")
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
@@ -472,7 +472,7 @@ class UserPersonalForm(ModelForm):
     # TODO: change to email field
     email = forms.CharField(required=True)
     first_name = forms.CharField(required=True, label="Legal First Name")
-    middle_name = forms.CharField(required=False, label="Preferred Name (if applicable)")
+    middle_name = forms.CharField(required=False, label="Middle Name (if applicable)")
     last_name = forms.CharField(required=True, label="Last Name")
 
     class Meta:
