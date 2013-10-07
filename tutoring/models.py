@@ -231,8 +231,14 @@ class Week9(Week):
 
 
 class ForeignTutoring(BaseTutoring):
+    ORG_CHOICES = (
+        ('0', '(UPE)'),
+        ('1', '(HKN)'),
+        ('2', '')
+    )
     name = models.CharField(max_length=80)
     classes = models.ManyToManyField(Class)
+    organization = models.CharField(max_length=1, choices=ORG_CHOICES)
 
     current = TermManager()
     objects = models.Manager()
