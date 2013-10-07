@@ -123,9 +123,12 @@ class Tutoring(BaseTutoring):
     def points(self):
         return sum(week.points() for week in self.get_weeks())
 
-    def preferences(self):
+    def preferences(self, twoHour=False):
         def logical_hours( hour_choice ):
-            return ( int( hour_choice ) + 10, int( hour_choice ) + 11 )
+            if twoHour:
+                return ( int( hour_choice ) + 10, int( hour_choice ) + 11 )
+
+            return int( hour_choice ) + 10
 
         return ( ( int( self.best_day ), logical_hours( self.best_hour ) ), 
                  ( int( self.second_best_day ), logical_hours( self.second_best_hour ) ), 
@@ -237,7 +240,7 @@ class ForeignTutoring(BaseTutoring):
     class Meta:
         ordering = ('-term', 'name')
         unique_together = ('name', 'term')
-        verbose_name_plural = "ForeignTutoring"
+        verbose_name_plural = "Foreign Tutoring"
 
     def __unicode__(self):
         return self.name
