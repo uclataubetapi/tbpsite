@@ -35,8 +35,8 @@ class MyUserAdmin(UserAdmin):
             )
 
         send_mail( 'TBP Password Reset Accounting', 
-                'The following users had their passwords reset: %s' %
-                    ', '.join( [ user.get_username() for user in queryset ] ),
+                'The following users had their passwords reset:\n\n%s' %
+                    '\n'.join( [ user.get_username() for user in queryset ] ),
                 'webmaster@tbp.seas.ucla.edu', [ 'webmaster@tbp.seas.ucla.edu' ] )
 
     def add_staff(self, request, queryset):
