@@ -9,7 +9,7 @@ setup_environ( settings )
 
 from tutoring.models import Tutoring, DAY_CHOICES, HOUR_CHOICES
 
-MAX_TUTORS_PER_HOUR = 5
+MAX_TUTORS_PER_HOUR = 6
 MIN_TUTORS_PER_HOUR = 2
 
 TUTORING_START = 10 # 10AM
@@ -70,10 +70,6 @@ for t in tutoringObjs:
 
 # Fill unfilled slots
 for time, assignees in tutoringHours.items():
-    # Skip odd timeslots
-    if time[ 1 ] % 2:
-        continue
-
     if len( assignees ) < MIN_TUTORS_PER_HOUR:
         for day in range( 5 ):
             for slot in range( TUTORING_START, TUTORING_END, 2 ):
@@ -81,11 +77,22 @@ for time, assignees in tutoringHours.items():
                 if len( tutoringHours[ ( day, slot ) ] ) > MIN_TUTORS_PER_HOUR:
                     for t in tutoringHours[ ( day, slot ) ]:
                         if time in t.preferences( twoHour=False ):
+                            slotBefore = tutoringHours.get( ( day, slot - 1 ) )
+                            slotAfter = tutoringHours.get( ( day, slot + 1 ) )
+
+                            # Remove tutor from original slots
                             tutoringHours[ ( day, slot ) ].remove( t )
-                            tutoringHours[ ( day, slot + 1 ) ].remove( t )
+                            if slotBefore and t in slotBefore:
+                                slotBefore.remove( t )
+                            else:
+                                assert t in slotAfter
+                                slotAfter.remove( t )
+
+                            # Reassign
                             tutoringHours[ time ].append( t )
                             tutoringHours[ ( time[ 0 ], time[ 1 ] + 1 ) ].append( t )
 
+minSatisfied = True
 totalAssignedHours = 0
 for slot in sorted( tutoringHours ):
     assignees = tutoringHours[ slot ]
@@ -103,11 +110,18 @@ for slot in sorted( tutoringHours ):
 
     if len( assignees ) < MIN_TUTORS_PER_HOUR:
         print "*** The time slot above does not satisfy the minimum %d tutors per hour" % MIN_TUTORS_PER_HOUR
+        minSatisfied = False
 
 print 'There are', len( Tutoring.current.all() ), 'tutoring objects'
 print 'Total %d tutoring hours per week' % totalAssignedHours
 
-assert totalAssignedHours / len( Tutoring.current.all() ) == 2
+assert minSatisfied and totalAssignedHours / len( Tutoring.current.all() ) == 2
+
+# Validate assigned hours with preferences
+for time, assignees in tutoringHours.items():
+    for assignee in assignees:
+        assert time in assignee.preferences( twoHour=False ) or \
+               time in [ ( t[ 0 ], t[ 1 ] + 1 ) for t in assignee.preferences( twoHour=False ) ]
 
 # Commit
 for time, assignees in tutoringHours.items():
