@@ -59,6 +59,7 @@ urlpatterns += patterns('event.views',
 
 urlpatterns += patterns('',
     url(r'^schedule/$', 'tutoring.views.schedule'),
+    url(r'^expanded_schedule/$', 'tutoring.views.expanded_schedule'),
     url(r'^tutoring/feedback/$', 'tutoring.views.feedback'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
