@@ -172,7 +172,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User)
 
     middle_name = models.CharField(max_length=30, blank=True, verbose_name="Middle Name")
-    nickname = models.CharField(max_length=30, blank=True, verbose_name="Nickname (optional)")
+    nickname = models.CharField(max_length=30, blank=True, verbose_name="Preferred Name (optional)")
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
