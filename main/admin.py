@@ -6,15 +6,8 @@ from django.core.mail import send_mail
 from main.models import *
 
 
-class ProfileInline(admin.StackedInline):
-    model = Profile
-
-
 class MyUserAdmin(UserAdmin):
     actions = ('create_profile', 'reset_password', 'add_staff', 'remove_staff', 'clear_groups')
-    inlines = [
-        ProfileInline,
-    ]
 
     def __init__( self, *args, **kwargs ):
         super( UserAdmin, self ).__init__( *args, **kwargs )
@@ -22,7 +15,7 @@ class MyUserAdmin(UserAdmin):
 
     def create_profile(self, request, queryset):
         for user in queryset:
-            Profile.objects.create(user=user)
+            Profile.objects.create(user=user, position=Profile.MEMBER)
 
     def reset_password(self, request, queryset):
         for user in queryset:
