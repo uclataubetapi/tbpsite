@@ -40,15 +40,16 @@ def get_officers():
     positions = []
     liaisons = []
     for position in Officer.objects.all():
+        liaisonAlias = position.mail_alias
         match = position_re.match(position.position)
         if match:
             for officer in position.profile.all():
                 liaisons.append(' '.join([str(officer), match.group(1)]))
         else:
-            positions.append((position.position, [str(officer)  for officer in position.profile.all()]))
+            positions.append((position.position, position.mail_alias, [str(officer) for officer in position.profile.all()]))
 
-    positions.append(('Faculty Advisor', ['Bill Goodin']))
-    positions.append(('Club Liaison', liaisons))
+    positions.append(('Faculty Advisor', None, ['Bill Goodin']))
+    positions.append(('Club Liaison', liaisonAlias, liaisons))
     return positions
 
 faculty = MyTemplateView.as_view(template_name='faculty.html', 
