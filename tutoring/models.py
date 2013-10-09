@@ -173,9 +173,9 @@ class Week(models.Model):
         count = self.hours
         points = 0
         if count > MIN_TUTORING_HOURS:
-            points += EXTRA_TUTORING_POINTS * max(count - MIN_TUTORING_HOURS, MAX_TUTORING_HOURS-MIN_TUTORING_HOURS)
+            points += EXTRA_TUTORING_POINTS * min(count - MIN_TUTORING_HOURS, MAX_TUTORING_HOURS-MIN_TUTORING_HOURS)
         if self.no_makeup:
-            points += TUTORING_POINTS * max(count, MIN_TUTORING_HOURS)
+            points += TUTORING_POINTS * min(count, MIN_TUTORING_HOURS)
         return points
 
     def day_1(self):
@@ -233,8 +233,14 @@ class Week9(Week):
 
 
 class ForeignTutoring(BaseTutoring):
+    ORG_CHOICES = (
+        ('0', '(UPE)'),
+        ('1', '(HKN)'),
+        ('2', '')
+    )
     name = models.CharField(max_length=80)
     classes = models.ManyToManyField(Class)
+    organization = models.CharField(max_length=1, choices=ORG_CHOICES)
 
     current = TermManager()
     objects = models.Manager()
