@@ -109,7 +109,7 @@ class Tutoring(BaseTutoring):
         verbose_name_plural = "Tutoring"
 
     def __unicode__(self):
-        return self.profile.__unicode__()
+        return self.profile.user.get_full_name()
 
     def get_classes(self):
         return self.profile.classes.all()
