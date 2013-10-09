@@ -103,6 +103,8 @@ class Tutoring(BaseTutoring):
     current = TermManager()
     objects = models.Manager()
 
+    frozen = models.BooleanField(default=False)
+
     class Meta:
         ordering = ('-term', 'profile')
         unique_together = ('profile', 'term')
@@ -171,9 +173,9 @@ class Week(models.Model):
         count = self.hours
         points = 0
         if count > MIN_TUTORING_HOURS:
-            points += EXTRA_TUTORING_POINTS * max(count - MIN_TUTORING_HOURS, MAX_TUTORING_HOURS-MIN_TUTORING_HOURS)
+            points += EXTRA_TUTORING_POINTS * min(count - MIN_TUTORING_HOURS, MAX_TUTORING_HOURS-MIN_TUTORING_HOURS)
         if self.no_makeup:
-            points += TUTORING_POINTS * max(count, MIN_TUTORING_HOURS)
+            points += TUTORING_POINTS * min(count, MIN_TUTORING_HOURS)
         return points
 
     def day_1(self):
