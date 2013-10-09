@@ -103,6 +103,8 @@ class Tutoring(BaseTutoring):
     current = TermManager()
     objects = models.Manager()
 
+    frozen = models.BooleanField(default=False)
+
     class Meta:
         ordering = ('-term', 'profile')
         unique_together = ('profile', 'term')
