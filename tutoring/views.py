@@ -17,10 +17,12 @@ def schedule(request):
         tutors_for_hour = []
         for day, day_name in DAY_CHOICES:
             if Settings.objects.display_tutoring() or (request.user.is_authenticated and request.user.is_staff):
-                tutors_for_hour.append(list(Tutoring.current.filter(hour_1=hour, day_1=day)) +
-                                       list(Tutoring.current.filter(hour_2=hour, day_2=day)) +
-                                       list(ForeignTutoring.current.filter(hour_1=hour, day_1=day)) +
-                                       list(ForeignTutoring.current.filter(hour_2=hour, day_2=day)))
+                tutors_for_hour.append(
+                        sorted( list(Tutoring.current.filter(hour_1=hour, day_1=day)) +
+                                list(Tutoring.current.filter(hour_2=hour, day_2=day)) +
+                                list(ForeignTutoring.current.filter(hour_1=hour, day_1=day)) +
+                                list(ForeignTutoring.current.filter(hour_2=hour, day_2=day)),
+                                key=lambda t: str( t.profile ) ) )
             else:
                 tutors_for_hour.append(None)
         tutors.append((hour_name, tutors_for_hour))
