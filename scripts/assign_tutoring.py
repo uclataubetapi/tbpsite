@@ -10,7 +10,7 @@ setup_environ( settings )
 from tutoring.models import Tutoring, DAY_CHOICES, HOUR_CHOICES
 
 MAX_TUTORS_PER_HOUR = 7 
-MIN_TUTORS_PER_HOUR = 3 # Want this
+MIN_TUTORS_PER_HOUR = 4 # Want this
 ENFORCED_MIN_TUTORS_PER_HOUR = 2 # Enforce this
 
 TUTORING_START = 10 # 10AM
@@ -20,6 +20,18 @@ tutoringHours = {}
 for d in DAY_CHOICES:
     for h in HOUR_CHOICES:
         tutoringHours[ ( int( d[ 0 ] ), int( h[ 0 ] ) + TUTORING_START ) ] = []
+
+# Add all 'frozen' tutors to schedule
+tutoringObjs = []
+allTutors = []
+for t in Tutoring.current.all():
+    allTutors.append( t )
+    allTutors.append( t )
+    if t.frozen:
+        tutoringHours[ ( int( t.day_1 ), int( t.hour_1 ) + TUTORING_START ) ].append( t )
+        tutoringHours[ ( int( t.day_2 ), int( t.hour_2 ) + TUTORING_START ) ].append( t )
+    else:
+        tutoringObjs.append( t )
 
 def tutoringHoursStatus( enforce=False ):
     minSatisfied = True
@@ -59,41 +71,54 @@ def tutoringHoursStatus( enforce=False ):
         print 'Minimum satisfied:', minSatisfied
         print 'Maximum satsified:', maxSatisfied
         print 'Everyone assigned:', allAssigned
-        assert minSatisfied and maxSatisfied and allAssigned
 
-tutoringObjs = [ t for t in Tutoring.current.all() ]
+        if not allAssigned:
+            tutors = []
+            for tutor in Tutoring.current.all():
+                tutors.append( tutor )
+                tutors.append( tutor )
+
+            assert len( allTutors ) == len( Tutoring.current.all() ) * 2
+
+            for time, assignees in tutoringHours.iteritems():
+                for assignee in assignees:
+                    tutors.remove( assignee )
+
+            print tutors
+
+        assert minSatisfied and maxSatisfied and allAssigned
 
 def assignIfNecessary():
     global tutoringObjs
     global tutoringHours
 
     # Assign if necessary
-    assignCount = MIN_TUTORS_PER_HOUR
-    hoursAssigned = True 
-    while hoursAssigned:
-        hoursAssigned = False
+    for assignCount in range( ENFORCED_MIN_TUTORS_PER_HOUR, MIN_TUTORS_PER_HOUR + 1 ):
+        hoursAssigned = True 
+        while hoursAssigned:
+            hoursAssigned = False
 
-        # Each day
-        for day in range( 5 ):
-            # Each even 2-hour slot
-            for slot in range( TUTORING_START, TUTORING_END, 2 ):
-                tutorCount = 0
-                tutorObjs = []
+            # Each day
+            for day in range( 5 ):
+                # Each even 2-hour slot
+                for slot in range( TUTORING_START, TUTORING_END, 2 ):
+                    tutorCount = 0
+                    tutorObjs = []
 
-                for t in tutoringObjs:
-                    for p in t.preferences( twoHour=False ):
-                        if p[ 0 ] == day and p[ 1 ] == slot:
-                            tutorCount += 1
-                            tutorObjs.append( t )
-                            break
+                    for t in tutoringObjs:
+                        for p in t.preferences( twoHour=False ):
+                            if p[ 0 ] == day and p[ 1 ] == slot:
+                                tutorCount += 1
+                                tutorObjs.append( t )
+                                break
 
-                # Assign if we need to
-                if tutorCount and tutorCount + len( tutoringHours[ ( day, slot ) ] ) <= assignCount:
-                    hoursAssigned = True
-                    for t in tutorObjs:
-                        tutoringObjs.remove( t )
-                        tutoringHours[ ( day, slot ) ].append( t )
-                        tutoringHours[ ( day, slot + 1 ) ].append( t )
+                    # Assign if we need to
+                    if tutorCount and tutorCount + len( tutoringHours[ ( day, slot ) ] ) <= assignCount:
+                        hoursAssigned = True
+                        for t in tutorObjs:
+                            tutoringObjs.remove( t )
+                            tutoringHours[ ( day, slot ) ].append( t )
+                            tutoringHours[ ( day, slot + 1 ) ].append( t )
 
 assignIfNecessary()
 
@@ -147,6 +172,9 @@ for timeSlot, assignees in tutoringHours.iteritems():
             if len( assignees ) > MIN_TUTORS_PER_HOUR:
                 # Find someone we can move
                 for assignee in iterAssignees:
+                    if assignee.frozen:
+                        continue
+
                     # Is this slot in tutor's preferences?
                     reassignable = False
                     for pref in assignee.preferences( twoHour=True ):
@@ -175,21 +203,29 @@ for timeSlot, assignees in tutoringHours.iteritems():
 # Enforce min and max per hour
 tutoringHoursStatus( enforce=True )
 
+print tutoringObjs
+
 # Validate assigned hours with preferences
 for time, assignees in tutoringHours.items():
     for assignee in assignees:
-        assert time in assignee.preferences( twoHour=False ) or \
-               time in [ ( t[ 0 ], t[ 1 ] + 1 ) for t in assignee.preferences( twoHour=False ) ]
+        if assignee.frozen:
+            assert ( time[ 0 ] == int( assignee.day_1 ) 
+                     and time[ 1 ] == int( assignee.hour_1 ) + TUTORING_START ) or \
+                   ( time[ 0 ] == int( assignee.day_2 ) 
+                     and time[ 1 ] == int( assignee.hour_2 ) + TUTORING_START )
+        else:
+            assert time in assignee.preferences( twoHour=False ) or \
+                   time in [ ( t[ 0 ], t[ 1 ] + 1 ) for t in assignee.preferences( twoHour=False ) ]
 
 # Commit
 for time, assignees in tutoringHours.items():
-    if time[ 1 ] % 2:
-        continue
-
     for assignee in assignees:
-        assignee.day_1 = str( time[ 0 ] )
-        assignee.hour_1 = str( time[ 1 ] - TUTORING_START )
-        assignee.day_2 = str( time[ 0 ] )
-        assignee.hour_2 = str( time[ 1 ] + 1 - TUTORING_START )
+        if allTutors.count( assignee ) == 2:
+            allTutors.remove( assignee )
+            assignee.day_1 = str( time[ 0 ] )
+            assignee.hour_1 = str( time[ 1 ] - TUTORING_START )
+        else:
+            assignee.day_2 = str( time[ 0 ] )
+            assignee.hour_2 = str( time[ 1 ] - TUTORING_START )
 
         assignee.save()
