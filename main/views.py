@@ -108,7 +108,10 @@ def account(request):
 @login_required(login_url=login)
 def profile_view(request):
     user = request.user
-    profile = user.profile
+    try:
+        profile = user.profile
+    except Profile.DoesNotExist:
+        profile = Profile.objects.create(user=user)
     if not all([user.email, user.first_name, user.last_name, profile.graduation_term and profile.graduation_term.year]):
         return redirect(edit)
 
