@@ -1,4 +1,4 @@
-import os
+import os, re
 
 from django import forms
 from django.core.files.storage import FileSystemStorage
@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
+from django.core.exceptions import ValidationError
 
 from points import *
 
@@ -50,6 +51,9 @@ resume_word_fs = FileSystemStorage(location='/media/resumes_word')
 professor_interview_fs = FileSystemStorage(location='/media/professor_interviews')
 community_service_fs = FileSystemStorage(location='/media/community_service_proof')
 
+def validateRe( regex, value, msg ):
+    if not re.match( regex, value ):
+        raise ValidationError( msg )
 
 def upload_to_path(instance, filename):
     return '{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
@@ -179,7 +183,8 @@ class Profile(models.Model):
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='M')
     birthday = models.DateField(null=True, verbose_name="Birthday (mm/dd/yyyy)")
-    phone_number = models.CharField(max_length=25, verbose_name="Phone Number (xxx-xxx-xxxx)")
+    phone_number = models.CharField(max_length=25, verbose_name="Phone Number (xxx-xxx-xxxx)",
+            validators=[ lambda v: validateRe( r'^\d{3}-\d{3}-\d{4}$', v, 'Please enter a valid phone number' ) ] )
     CANDIDATE = '0'
     MEMBER = '1'
     POSITION_CHOICES = (
