@@ -1,0 +1,1953 @@
+{% extends "base.html" %}
+
+{% block title %}TBP Fall 2013 Tutoring Schedule{% endblock %}
+
+{% block content %}
+  <style>
+    p {
+      margin: 0;
+    }
+    .panel-heading, .panel-body {
+      padding: 5px;
+    }
+  </style>
+  <script src="/static/js/application.js" type="text/javascript"></script>
+  <script src="/static/js/tutor.js" type="text/javascript"></script><style></style>
+  <h1>TBP Fall 2013 Tutoring Schedule</h1>
+  
+    <div class="row">
+      <div class="col-lg-2">
+        <div class="panel-group" id="accordion">
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                  BE
+                </a>
+              </div>
+              <div id="collapseOne" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="BE100" onmouseover="highlight('BE100')" onmouseout="unhighlight('BE100')" onclick="return locklight('BE100')">100</a>,
+                  
+                    <a href="#" class="BE110" onmouseover="highlight('BE110')" onmouseout="unhighlight('BE110')" onclick="return locklight('BE110')">110</a>,
+                  
+                    <a href="#" class="BE120" onmouseover="highlight('BE120')" onmouseout="unhighlight('BE120')" onclick="return locklight('BE120')">120</a>,
+                  
+                    <a href="#" class="BE176" onmouseover="highlight('BE176')" onmouseout="unhighlight('BE176')" onclick="return locklight('BE176')">176</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                  CEE
+                </a>
+              </div>
+              <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="CEE15" onmouseover="highlight('CEE15')" onmouseout="unhighlight('CEE15')" onclick="return locklight('CEE15')">15</a>,
+                  
+                    <a href="#" class="CEE101" onmouseover="highlight('CEE101')" onmouseout="unhighlight('CEE101')" onclick="return locklight('CEE101')">101</a>,
+                  
+                    <a href="#" class="CEE103" onmouseover="highlight('CEE103')" onmouseout="unhighlight('CEE103')" onclick="return locklight('CEE103')">103</a>,
+                  
+                    <a href="#" class="CEE108" onmouseover="highlight('CEE108')" onmouseout="unhighlight('CEE108')" onclick="return locklight('CEE108')">108</a>,
+                  
+                    <a href="#" class="CEE120" onmouseover="highlight('CEE120')" onmouseout="unhighlight('CEE120')" onclick="return locklight('CEE120')">120</a>,
+                  
+                    <a href="#" class="CEE135A" onmouseover="highlight('CEE135A')" onmouseout="unhighlight('CEE135A')" onclick="return locklight('CEE135A')">135A</a>,
+                  
+                    <a href="#" class="CEE135B" onmouseover="highlight('CEE135B')" onmouseout="unhighlight('CEE135B')" onclick="return locklight('CEE135B')">135B</a>,
+                  
+                    <a href="#" class="CEE142" onmouseover="highlight('CEE142')" onmouseout="unhighlight('CEE142')" onclick="return locklight('CEE142')">142</a>,
+                  
+                    <a href="#" class="CEE150" onmouseover="highlight('CEE150')" onmouseout="unhighlight('CEE150')" onclick="return locklight('CEE150')">150</a>,
+                  
+                    <a href="#" class="CEE153" onmouseover="highlight('CEE153')" onmouseout="unhighlight('CEE153')" onclick="return locklight('CEE153')">153</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                  CHEM
+                </a>
+              </div>
+              <div id="collapseThree" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="CHEM20A" onmouseover="highlight('CHEM20A')" onmouseout="unhighlight('CHEM20A')" onclick="return locklight('CHEM20A')">20A</a>,
+                  
+                    <a href="#" class="CHEM20B" onmouseover="highlight('CHEM20B')" onmouseout="unhighlight('CHEM20B')" onclick="return locklight('CHEM20B')">20B</a>,
+                  
+                    <a href="#" class="CHEM20L" onmouseover="highlight('CHEM20L')" onmouseout="unhighlight('CHEM20L')" onclick="return locklight('CHEM20L')">20L</a>,
+                  
+                    <a href="#" class="CHEM30A" onmouseover="highlight('CHEM30A')" onmouseout="unhighlight('CHEM30A')" onclick="return locklight('CHEM30A')">30A</a>,
+                  
+                    <a href="#" class="CHEM30AL" onmouseover="highlight('CHEM30AL')" onmouseout="unhighlight('CHEM30AL')" onclick="return locklight('CHEM30AL')">30AL</a>,
+                  
+                    <a href="#" class="CHEM30B" onmouseover="highlight('CHEM30B')" onmouseout="unhighlight('CHEM30B')" onclick="return locklight('CHEM30B')">30B</a>,
+                  
+                    <a href="#" class="CHEM30BL" onmouseover="highlight('CHEM30BL')" onmouseout="unhighlight('CHEM30BL')" onclick="return locklight('CHEM30BL')">30BL</a>,
+                  
+                    <a href="#" class="CHEM30C" onmouseover="highlight('CHEM30C')" onmouseout="unhighlight('CHEM30C')" onclick="return locklight('CHEM30C')">30C</a>,
+                  
+                    <a href="#" class="CHEM153A" onmouseover="highlight('CHEM153A')" onmouseout="unhighlight('CHEM153A')" onclick="return locklight('CHEM153A')">153A</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+                  CHEME
+                </a>
+              </div>
+              <div id="collapseFour" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="CHEME100" onmouseover="highlight('CHEME100')" onmouseout="unhighlight('CHEME100')" onclick="return locklight('CHEME100')">100</a>,
+                  
+                    <a href="#" class="CHEME102A" onmouseover="highlight('CHEME102A')" onmouseout="unhighlight('CHEME102A')" onclick="return locklight('CHEME102A')">102A</a>,
+                  
+                    <a href="#" class="CHEME102B" onmouseover="highlight('CHEME102B')" onmouseout="unhighlight('CHEME102B')" onclick="return locklight('CHEME102B')">102B</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
+                  CS
+                </a>
+              </div>
+              <div id="collapseFive" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="CS31" onmouseover="highlight('CS31')" onmouseout="unhighlight('CS31')" onclick="return locklight('CS31')">31</a>,
+                  
+                    <a href="#" class="CS32" onmouseover="highlight('CS32')" onmouseout="unhighlight('CS32')" onclick="return locklight('CS32')">32</a>,
+                  
+                    <a href="#" class="CS33" onmouseover="highlight('CS33')" onmouseout="unhighlight('CS33')" onclick="return locklight('CS33')">33</a>,
+                  
+                    <a href="#" class="CS35L" onmouseover="highlight('CS35L')" onmouseout="unhighlight('CS35L')" onclick="return locklight('CS35L')">35L</a>,
+                  
+                    <a href="#" class="CSM51A" onmouseover="highlight('CSM51A')" onmouseout="unhighlight('CSM51A')" onclick="return locklight('CSM51A')">M51A</a>,
+                  
+                    <a href="#" class="CS174A" onmouseover="highlight('CS174A')" onmouseout="unhighlight('CS174A')" onclick="return locklight('CS174A')">174A</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven">
+                  EE
+                </a>
+              </div>
+              <div id="collapseSeven" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="EE1" onmouseover="highlight('EE1')" onmouseout="unhighlight('EE1')" onclick="return locklight('EE1')">1</a>,
+                  
+                    <a href="#" class="EE2" onmouseover="highlight('EE2')" onmouseout="unhighlight('EE2')" onclick="return locklight('EE2')">2</a>,
+                  
+                    <a href="#" class="EE3" onmouseover="highlight('EE3')" onmouseout="unhighlight('EE3')" onclick="return locklight('EE3')">3</a>,
+                  
+                    <a href="#" class="EE10" onmouseover="highlight('EE10')" onmouseout="unhighlight('EE10')" onclick="return locklight('EE10')">10</a>,
+                  
+                    <a href="#" class="EEM16" onmouseover="highlight('EEM16')" onmouseout="unhighlight('EEM16')" onclick="return locklight('EEM16')">M16</a>,
+                  
+                    <a href="#" class="EE100" onmouseover="highlight('EE100')" onmouseout="unhighlight('EE100')" onclick="return locklight('EE100')">100</a>,
+                  
+                    <a href="#" class="EE101" onmouseover="highlight('EE101')" onmouseout="unhighlight('EE101')" onclick="return locklight('EE101')">101</a>,
+                  
+                    <a href="#" class="EE102" onmouseover="highlight('EE102')" onmouseout="unhighlight('EE102')" onclick="return locklight('EE102')">102</a>,
+                  
+                    <a href="#" class="EE103" onmouseover="highlight('EE103')" onmouseout="unhighlight('EE103')" onclick="return locklight('EE103')">103</a>,
+                  
+                    <a href="#" class="EE110" onmouseover="highlight('EE110')" onmouseout="unhighlight('EE110')" onclick="return locklight('EE110')">110</a>,
+                  
+                    <a href="#" class="EE113" onmouseover="highlight('EE113')" onmouseout="unhighlight('EE113')" onclick="return locklight('EE113')">113</a>,
+                  
+                    <a href="#" class="EE115A" onmouseover="highlight('EE115A')" onmouseout="unhighlight('EE115A')" onclick="return locklight('EE115A')">115A</a>,
+                  
+                    <a href="#" class="EE131A" onmouseover="highlight('EE131A')" onmouseout="unhighlight('EE131A')" onclick="return locklight('EE131A')">131A</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseEight">
+                  ENGR
+                </a>
+              </div>
+              <div id="collapseEight" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="ENGR110" onmouseover="highlight('ENGR110')" onmouseout="unhighlight('ENGR110')" onclick="return locklight('ENGR110')">110</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseNine">
+                  LS
+                </a>
+              </div>
+              <div id="collapseNine" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="LS2" onmouseover="highlight('LS2')" onmouseout="unhighlight('LS2')" onclick="return locklight('LS2')">2</a>,
+                  
+                    <a href="#" class="LS3" onmouseover="highlight('LS3')" onmouseout="unhighlight('LS3')" onclick="return locklight('LS3')">3</a>,
+                  
+                    <a href="#" class="LS4" onmouseover="highlight('LS4')" onmouseout="unhighlight('LS4')" onclick="return locklight('LS4')">4</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTen">
+                  MAE
+                </a>
+              </div>
+              <div id="collapseTen" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="MAE94" onmouseover="highlight('MAE94')" onmouseout="unhighlight('MAE94')" onclick="return locklight('MAE94')">94</a>,
+                  
+                    <a href="#" class="MAE101" onmouseover="highlight('MAE101')" onmouseout="unhighlight('MAE101')" onclick="return locklight('MAE101')">101</a>,
+                  
+                    <a href="#" class="MAE102" onmouseover="highlight('MAE102')" onmouseout="unhighlight('MAE102')" onclick="return locklight('MAE102')">102</a>,
+                  
+                    <a href="#" class="MAE103" onmouseover="highlight('MAE103')" onmouseout="unhighlight('MAE103')" onclick="return locklight('MAE103')">103</a>,
+                  
+                    <a href="#" class="MAE105A" onmouseover="highlight('MAE105A')" onmouseout="unhighlight('MAE105A')" onclick="return locklight('MAE105A')">105A</a>,
+                  
+                    <a href="#" class="MAE105D" onmouseover="highlight('MAE105D')" onmouseout="unhighlight('MAE105D')" onclick="return locklight('MAE105D')">105D</a>,
+                  
+                    <a href="#" class="MAE131A" onmouseover="highlight('MAE131A')" onmouseout="unhighlight('MAE131A')" onclick="return locklight('MAE131A')">131A</a>,
+                  
+                    <a href="#" class="MAE150R" onmouseover="highlight('MAE150R')" onmouseout="unhighlight('MAE150R')" onclick="return locklight('MAE150R')">150R</a>,
+                  
+                    <a href="#" class="MAE150A" onmouseover="highlight('MAE150A')" onmouseout="unhighlight('MAE150A')" onclick="return locklight('MAE150A')">150A</a>,
+                  
+                    <a href="#" class="MAE150B" onmouseover="highlight('MAE150B')" onmouseout="unhighlight('MAE150B')" onclick="return locklight('MAE150B')">150B</a>,
+                  
+                    <a href="#" class="MAE156A" onmouseover="highlight('MAE156A')" onmouseout="unhighlight('MAE156A')" onclick="return locklight('MAE156A')">156A</a>,
+                  
+                    <a href="#" class="MAE182A" onmouseover="highlight('MAE182A')" onmouseout="unhighlight('MAE182A')" onclick="return locklight('MAE182A')">182A</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseEleven">
+                  MATH
+                </a>
+              </div>
+              <div id="collapseEleven" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="MATH31A" onmouseover="highlight('MATH31A')" onmouseout="unhighlight('MATH31A')" onclick="return locklight('MATH31A')">31A</a>,
+                  
+                    <a href="#" class="MATH31B" onmouseover="highlight('MATH31B')" onmouseout="unhighlight('MATH31B')" onclick="return locklight('MATH31B')">31B</a>,
+                  
+                    <a href="#" class="MATH32A" onmouseover="highlight('MATH32A')" onmouseout="unhighlight('MATH32A')" onclick="return locklight('MATH32A')">32A</a>,
+                  
+                    <a href="#" class="MATH32B" onmouseover="highlight('MATH32B')" onmouseout="unhighlight('MATH32B')" onclick="return locklight('MATH32B')">32B</a>,
+                  
+                    <a href="#" class="MATH33A" onmouseover="highlight('MATH33A')" onmouseout="unhighlight('MATH33A')" onclick="return locklight('MATH33A')">33A</a>,
+                  
+                    <a href="#" class="MATH33B" onmouseover="highlight('MATH33B')" onmouseout="unhighlight('MATH33B')" onclick="return locklight('MATH33B')">33B</a>,
+                  
+                    <a href="#" class="MATH61" onmouseover="highlight('MATH61')" onmouseout="unhighlight('MATH61')" onclick="return locklight('MATH61')">61</a>,
+                  
+                    <a href="#" class="MATH115A" onmouseover="highlight('MATH115A')" onmouseout="unhighlight('MATH115A')" onclick="return locklight('MATH115A')">115A</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThirteen">
+                  MSE
+                </a>
+              </div>
+              <div id="collapseThirteen" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="MSE104" onmouseover="highlight('MSE104')" onmouseout="unhighlight('MSE104')" onclick="return locklight('MSE104')">104</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseFourteen">
+                  PHYSICS
+                </a>
+              </div>
+              <div id="collapseFourteen" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="PHYSICS1A" onmouseover="highlight('PHYSICS1A')" onmouseout="unhighlight('PHYSICS1A')" onclick="return locklight('PHYSICS1A')">1A</a>,
+                  
+                    <a href="#" class="PHYSICS1B" onmouseover="highlight('PHYSICS1B')" onmouseout="unhighlight('PHYSICS1B')" onclick="return locklight('PHYSICS1B')">1B</a>,
+                  
+                    <a href="#" class="PHYSICS1C" onmouseover="highlight('PHYSICS1C')" onmouseout="unhighlight('PHYSICS1C')" onclick="return locklight('PHYSICS1C')">1C</a>,
+                  
+                    <a href="#" class="PHYSICS4AL" onmouseover="highlight('PHYSICS4AL')" onmouseout="unhighlight('PHYSICS4AL')" onclick="return locklight('PHYSICS4AL')">4AL</a>,
+                  
+                    <a href="#" class="PHYSICS4BL" onmouseover="highlight('PHYSICS4BL')" onmouseout="unhighlight('PHYSICS4BL')" onclick="return locklight('PHYSICS4BL')">4BL</a>,
+                  
+                    <a href="#" class="PHYSICS110A" onmouseover="highlight('PHYSICS110A')" onmouseout="unhighlight('PHYSICS110A')" onclick="return locklight('PHYSICS110A')">110A</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseFifteen">
+                  STATS
+                </a>
+              </div>
+              <div id="collapseFifteen" class="panel-collapse collapse">
+                <div class="panel-body">
+                  
+                    <a href="#" class="STATS10" onmouseover="highlight('STATS10')" onmouseout="unhighlight('STATS10')" onclick="return locklight('STATS10')">10</a>,
+                  
+                    <a href="#" class="STATS13" onmouseover="highlight('STATS13')" onmouseout="unhighlight('STATS13')" onclick="return locklight('STATS13')">13</a>,
+                  
+                    <a href="#" class="STATS100A" onmouseover="highlight('STATS100A')" onmouseout="unhighlight('STATS100A')" onclick="return locklight('STATS100A')">100A</a>
+                  
+                </div>
+              </div>
+            </div>
+          
+        </div>
+      </div>
+      <div class="col-lg-10">
+        <table class="table table-striped">
+          <tbody>
+          <tr>
+            <th>Hours</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+          </tr>
+          
+            <tr>
+              <td>10am</td>
+              
+                <td>
+                  
+                    <p id="1-1-1" class="PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Chinmay Bhoot" data-content="Monday 10am, Monday 11am<br>PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Chinmay Bhoot</p>
+                    <script>
+                      $(function(){
+                        $( "#1-1-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-1-2" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 CHEM30B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Jinchan  Niu" data-content="Monday 10am, Monday 11am<br>CHEM 20A, CHEM 20B, CHEM 30A, CHEM 30B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Jinchan  Niu</p>
+                    <script>
+                      $(function(){
+                        $( "#1-1-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-1-3" class="CHEM20B_1 LS2_1 LS3_1 PHYSICS1A_1" data-title="Luke Chiang" data-content="Monday 10am, Monday 11am<br>CHEM 20B, LS 2, LS 3, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Luke Chiang</p>
+                    <script>
+                      $(function(){
+                        $( "#1-1-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-1-4" class="" data-title="Patarapol Chutinuntanakul" data-content="Monday 10am, Monday 11am<br>" data-trigger="hover" data-html="true" data-placement="left">Patarapol Chutinuntanakul</p>
+                    <script>
+                      $(function(){
+                        $( "#1-1-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-1-5" class="CS31_1 CS32_1" data-title="Simon Liang" data-content="Monday 10am, Monday 11am<br>CS 31, CS 32" data-trigger="hover" data-html="true" data-placement="left">Simon Liang</p>
+                    <script>
+                      $(function(){
+                        $( "#1-1-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="1-2-1" class="CS31_1 CS32_1 EE3_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Bohan  Zhang" data-content="Tuesday 11am, Tuesday 10am<br>CS 31, CS 32, EE 3, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Bohan  Zhang</p>
+                    <script>
+                      $(function(){
+                        $( "#1-2-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-2-2" class="BE100_1 BE110_1 BE120_1 BE176_1" data-title="Jung Kim" data-content="Tuesday 11am, Tuesday 10am<br>BE 100, BE 110, BE 120, BE 176" data-trigger="hover" data-html="true" data-placement="left">Jung Kim</p>
+                    <script>
+                      $(function(){
+                        $( "#1-2-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-2-3" class="CS31_1 CS32_1 MATH31B_1 MATH32A_1 MATH32B_1" data-title="Matthew Goldberg" data-content="Tuesday 11am, Tuesday 10am<br>CS 31, CS 32, MATH 31B, MATH 32A, MATH 32B" data-trigger="hover" data-html="true" data-placement="left">Matthew Goldberg</p>
+                    <script>
+                      $(function(){
+                        $( "#1-2-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-2-4" class="CHEM20A_1 CS31_1 MAE105A_1 MATH31A_1 MSE104_1 PHYSICS1A_1" data-title="Maxim Khatsenko" data-content="Tuesday 11am, Tuesday 10am<br>CHEM 20A, CS 31, MAE 105A, MATH 31A, MSE 104, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Maxim Khatsenko</p>
+                    <script>
+                      $(function(){
+                        $( "#1-2-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-2-5" class="CS31_1 EE100_1 MAE101_1 MAE102_1 MAE103_1 MAE105A_1 MAE150A_1 MAE150B_1 MAE182A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Robert Grant" data-content="Tuesday 11am, Tuesday 10am<br>CS 31, EE 100, MAE 101, MAE 102, MAE 103, MAE 105A, MAE 150A, MAE 150B, MAE 182A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Robert Grant</p>
+                    <script>
+                      $(function(){
+                        $( "#1-2-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-2-6" class="CHEM20A_1 CHEM20B_1 MAE101_1 MAE102_1 MAE105A_1 MAE150R_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Christopher Shaffer" data-content="Tuesday 11am, Tuesday 10am<br>CHEM 20A, CHEM 20B, MAE 101, MAE 102, MAE 105A, MAE 150R, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Christopher Shaffer</p>
+                    <script>
+                      $(function(){
+                        $( "#1-2-6" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="1-3-1" class="CHEM30A_1 CHEM30B_1 CS31_1 MATH31A_1 MATH31B_1" data-title="Alex Nosrat" data-content="Wednesday 10am, Wednesday 11am<br>CHEM 30A, CHEM 30B, CS 31, MATH 31A, MATH 31B" data-trigger="hover" data-html="true" data-placement="left">Alex Nosrat</p>
+                    <script>
+                      $(function(){
+                        $( "#1-3-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-3-2" class="MAE101_1 MAE103_1 MAE105A_1 MATH31A_1 MATH31B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Biao Song" data-content="Wednesday 10am, Wednesday 11am<br>MAE 101, MAE 103, MAE 105A, MATH 31A, MATH 31B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Biao Song</p>
+                    <script>
+                      $(function(){
+                        $( "#1-3-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-3-3" class="MAE103_1 MAE105A_1 MATH33B_1 MSE104_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Lucio Celeste" data-content="Wednesday 10am, Wednesday 11am<br>MAE 103, MAE 105A, MATH 33B, MSE 104, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Lucio Celeste</p>
+                    <script>
+                      $(function(){
+                        $( "#1-3-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-3-4" class="MATH31A_1 MATH31B_1 MATH32A_1 MATH33A_1 PHYSICS1A_1" data-title="Ryan Li" data-content="Wednesday 10am, Tuesday 1pm<br>MATH 31A, MATH 31B, MATH 32A, MATH 33A, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Ryan Li</p>
+                    <script>
+                      $(function(){
+                        $( "#1-3-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="1-4-1" class="MATH31A_1 MATH32A_1 MATH32B_1 PHYSICS1A_1" data-title="Elinore Adelman" data-content="Thursday 11am, Thursday 10am<br>MATH 31A, MATH 32A, MATH 32B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Elinore Adelman</p>
+                    <script>
+                      $(function(){
+                        $( "#1-4-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-4-2" class="" data-title="Matthew Dempsey" data-content="Thursday 11am, Thursday 10am<br>" data-trigger="hover" data-html="true" data-placement="left">Matthew Dempsey</p>
+                    <script>
+                      $(function(){
+                        $( "#1-4-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-4-3" class="CHEM20A_1 CHEM20B_1 CHEM20L_1 CS31_1 LS2_1 MATH31A_1 MATH31B_1 MATH32A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Michael Tomasek" data-content="Thursday 11am, Thursday 10am<br>CHEM 20A, CHEM 20B, CHEM 20L, CS 31, LS 2, MATH 31A, MATH 31B, MATH 32A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Michael Tomasek</p>
+                    <script>
+                      $(function(){
+                        $( "#1-4-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-4-4" class="CS31_1 MATH31A_1 MATH31B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Prashanth Swaminathan" data-content="Thursday 11am, Thursday 10am<br>CS 31, MATH 31A, MATH 31B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Prashanth Swaminathan</p>
+                    <script>
+                      $(function(){
+                        $( "#1-4-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-4-5" class="CS31_1 CS32_1 CSM51A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1" data-title="Wesley Situ" data-content="Thursday 11am, Thursday 10am<br>CS 31, CS 32, CS M51A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Wesley Situ</p>
+                    <script>
+                      $(function(){
+                        $( "#1-4-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="1-5-1" class="" data-title="Cory Williams" data-content="Friday 10am, Friday 11am<br>" data-trigger="hover" data-html="true" data-placement="left">Cory Williams</p>
+                    <script>
+                      $(function(){
+                        $( "#1-5-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-5-2" class="MAE101_1 MAE103_1 MAE105D_1 MAE156A_1 MAE94_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="James Chinn" data-content="Friday 10am, Friday 11am<br>MAE 101, MAE 103, MAE 105D, MAE 156A, MAE 94, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">James Chinn</p>
+                    <script>
+                      $(function(){
+                        $( "#1-5-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-5-3" class="CHEM30A_1 CHEM30B_1 LS2_1 LS3_1 LS4_1 MATH31A_1 MATH32A_1 MATH32B_1 MATH33A_1" data-title="Jay Patrick Abraham" data-content="Friday 10am, Friday 11am<br>CHEM 30A, CHEM 30B, LS 2, LS 3, LS 4, MATH 31A, MATH 32A, MATH 32B, MATH 33A" data-trigger="hover" data-html="true" data-placement="left">Jay Patrick Abraham</p>
+                    <script>
+                      $(function(){
+                        $( "#1-5-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="1-5-4" class="CEE101_1 CEE108_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1" data-title="Laura McNerney" data-content="Friday 10am, Friday 11am<br>CEE 101, CEE 108, MATH 31A, MATH 31B, MATH 32A, MATH 32B" data-trigger="hover" data-html="true" data-placement="left">Laura McNerney</p>
+                    <script>
+                      $(function(){
+                        $( "#1-5-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+            </tr>
+          
+            <tr>
+              <td>11am</td>
+              
+                <td>
+                  
+                    <p id="2-1-1" class="PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Chinmay Bhoot" data-content="Monday 10am, Monday 11am<br>PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Chinmay Bhoot</p>
+                    <script>
+                      $(function(){
+                        $( "#2-1-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-1-2" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 CHEM30B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Jinchan  Niu" data-content="Monday 10am, Monday 11am<br>CHEM 20A, CHEM 20B, CHEM 30A, CHEM 30B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Jinchan  Niu</p>
+                    <script>
+                      $(function(){
+                        $( "#2-1-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-1-3" class="CHEM20B_1 LS2_1 LS3_1 PHYSICS1A_1" data-title="Luke Chiang" data-content="Monday 10am, Monday 11am<br>CHEM 20B, LS 2, LS 3, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Luke Chiang</p>
+                    <script>
+                      $(function(){
+                        $( "#2-1-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-1-4" class="" data-title="Patarapol Chutinuntanakul" data-content="Monday 10am, Monday 11am<br>" data-trigger="hover" data-html="true" data-placement="left">Patarapol Chutinuntanakul</p>
+                    <script>
+                      $(function(){
+                        $( "#2-1-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-1-5" class="CS31_1 CS32_1" data-title="Simon Liang" data-content="Monday 10am, Monday 11am<br>CS 31, CS 32" data-trigger="hover" data-html="true" data-placement="left">Simon Liang</p>
+                    <script>
+                      $(function(){
+                        $( "#2-1-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="2-2-1" class="CS31_1 CS32_1 EE3_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Bohan  Zhang" data-content="Tuesday 11am, Tuesday 10am<br>CS 31, CS 32, EE 3, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Bohan  Zhang</p>
+                    <script>
+                      $(function(){
+                        $( "#2-2-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-2-2" class="BE100_1 BE110_1 BE120_1 BE176_1" data-title="Jung Kim" data-content="Tuesday 11am, Tuesday 10am<br>BE 100, BE 110, BE 120, BE 176" data-trigger="hover" data-html="true" data-placement="left">Jung Kim</p>
+                    <script>
+                      $(function(){
+                        $( "#2-2-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-2-3" class="CS31_1 CS32_1 MATH31B_1 MATH32A_1 MATH32B_1" data-title="Matthew Goldberg" data-content="Tuesday 11am, Tuesday 10am<br>CS 31, CS 32, MATH 31B, MATH 32A, MATH 32B" data-trigger="hover" data-html="true" data-placement="left">Matthew Goldberg</p>
+                    <script>
+                      $(function(){
+                        $( "#2-2-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-2-4" class="CHEM20A_1 CS31_1 MAE105A_1 MATH31A_1 MSE104_1 PHYSICS1A_1" data-title="Maxim Khatsenko" data-content="Tuesday 11am, Tuesday 10am<br>CHEM 20A, CS 31, MAE 105A, MATH 31A, MSE 104, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Maxim Khatsenko</p>
+                    <script>
+                      $(function(){
+                        $( "#2-2-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-2-5" class="CS31_1 EE100_1 MAE101_1 MAE102_1 MAE103_1 MAE105A_1 MAE150A_1 MAE150B_1 MAE182A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Robert Grant" data-content="Tuesday 11am, Tuesday 10am<br>CS 31, EE 100, MAE 101, MAE 102, MAE 103, MAE 105A, MAE 150A, MAE 150B, MAE 182A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Robert Grant</p>
+                    <script>
+                      $(function(){
+                        $( "#2-2-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-2-6" class="CHEM20A_1 CHEM20B_1 MAE101_1 MAE102_1 MAE105A_1 MAE150R_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Christopher Shaffer" data-content="Tuesday 11am, Tuesday 10am<br>CHEM 20A, CHEM 20B, MAE 101, MAE 102, MAE 105A, MAE 150R, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Christopher Shaffer</p>
+                    <script>
+                      $(function(){
+                        $( "#2-2-6" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="2-3-1" class="CHEM30A_1 CHEM30B_1 CS31_1 MATH31A_1 MATH31B_1" data-title="Alex Nosrat" data-content="Wednesday 10am, Wednesday 11am<br>CHEM 30A, CHEM 30B, CS 31, MATH 31A, MATH 31B" data-trigger="hover" data-html="true" data-placement="left">Alex Nosrat</p>
+                    <script>
+                      $(function(){
+                        $( "#2-3-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-3-2" class="MAE101_1 MAE103_1 MAE105A_1 MATH31A_1 MATH31B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Biao Song" data-content="Wednesday 10am, Wednesday 11am<br>MAE 101, MAE 103, MAE 105A, MATH 31A, MATH 31B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Biao Song</p>
+                    <script>
+                      $(function(){
+                        $( "#2-3-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-3-3" class="CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Kevin Zhang" data-content="Wednesday 11am, Wednesday 12pm<br>CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 32B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Kevin Zhang</p>
+                    <script>
+                      $(function(){
+                        $( "#2-3-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-3-4" class="MAE103_1 MAE105A_1 MATH33B_1 MSE104_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Lucio Celeste" data-content="Wednesday 10am, Wednesday 11am<br>MAE 103, MAE 105A, MATH 33B, MSE 104, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Lucio Celeste</p>
+                    <script>
+                      $(function(){
+                        $( "#2-3-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-3-5" class="CHEM20B_1 MATH31A_1 MATH31B_1 MATH32B_1 PHYSICS1A_1" data-title="Meera Midha" data-content="Wednesday 11am, Wednesday 12pm<br>CHEM 20B, MATH 31A, MATH 31B, MATH 32B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Meera Midha</p>
+                    <script>
+                      $(function(){
+                        $( "#2-3-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="2-4-1" class="MATH31A_1 MATH32A_1 MATH32B_1 PHYSICS1A_1" data-title="Elinore Adelman" data-content="Thursday 11am, Thursday 10am<br>MATH 31A, MATH 32A, MATH 32B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Elinore Adelman</p>
+                    <script>
+                      $(function(){
+                        $( "#2-4-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-4-2" class="CS31_1 EE10_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1" data-title="Kevin Wang" data-content="Thursday 11am, Thursday 12pm<br>CS 31, EE 10, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Kevin Wang</p>
+                    <script>
+                      $(function(){
+                        $( "#2-4-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-4-3" class="" data-title="Matthew Dempsey" data-content="Thursday 11am, Thursday 10am<br>" data-trigger="hover" data-html="true" data-placement="left">Matthew Dempsey</p>
+                    <script>
+                      $(function(){
+                        $( "#2-4-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-4-4" class="CHEM20A_1 CHEM20B_1 CHEM20L_1 CS31_1 LS2_1 MATH31A_1 MATH31B_1 MATH32A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Michael Tomasek" data-content="Thursday 11am, Thursday 10am<br>CHEM 20A, CHEM 20B, CHEM 20L, CS 31, LS 2, MATH 31A, MATH 31B, MATH 32A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Michael Tomasek</p>
+                    <script>
+                      $(function(){
+                        $( "#2-4-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-4-5" class="CS31_1 MATH31A_1 MATH31B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Prashanth Swaminathan" data-content="Thursday 11am, Thursday 10am<br>CS 31, MATH 31A, MATH 31B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Prashanth Swaminathan</p>
+                    <script>
+                      $(function(){
+                        $( "#2-4-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-4-6" class="CS31_1 CS32_1 CSM51A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1" data-title="Wesley Situ" data-content="Thursday 11am, Thursday 10am<br>CS 31, CS 32, CS M51A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Wesley Situ</p>
+                    <script>
+                      $(function(){
+                        $( "#2-4-6" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="2-5-1" class="" data-title="Cory Williams" data-content="Friday 10am, Friday 11am<br>" data-trigger="hover" data-html="true" data-placement="left">Cory Williams</p>
+                    <script>
+                      $(function(){
+                        $( "#2-5-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-5-2" class="MAE101_1 MAE103_1 MAE105D_1 MAE156A_1 MAE94_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="James Chinn" data-content="Friday 10am, Friday 11am<br>MAE 101, MAE 103, MAE 105D, MAE 156A, MAE 94, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">James Chinn</p>
+                    <script>
+                      $(function(){
+                        $( "#2-5-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-5-3" class="CHEM30A_1 CHEM30B_1 LS2_1 LS3_1 LS4_1 MATH31A_1 MATH32A_1 MATH32B_1 MATH33A_1" data-title="Jay Patrick Abraham" data-content="Friday 10am, Friday 11am<br>CHEM 30A, CHEM 30B, LS 2, LS 3, LS 4, MATH 31A, MATH 32A, MATH 32B, MATH 33A" data-trigger="hover" data-html="true" data-placement="left">Jay Patrick Abraham</p>
+                    <script>
+                      $(function(){
+                        $( "#2-5-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="2-5-4" class="CEE101_1 CEE108_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1" data-title="Laura McNerney" data-content="Friday 10am, Friday 11am<br>CEE 101, CEE 108, MATH 31A, MATH 31B, MATH 32A, MATH 32B" data-trigger="hover" data-html="true" data-placement="left">Laura McNerney</p>
+                    <script>
+                      $(function(){
+                        $( "#2-5-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+            </tr>
+          
+            <tr>
+              <td>12pm</td>
+              
+                <td>
+                  
+                    <p id="3-1-1" class="CEE101_1 MATH31A_1 MATH31B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Andy Luu" data-content="Monday 12pm, Monday 1pm<br>CEE 101, MATH 31A, MATH 31B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Andy Luu</p>
+                    <script>
+                      $(function(){
+                        $( "#3-1-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-1-2" class="CS31_1 CS32_1 CS33_1 EE10_1 MATH31A_1 MATH31B_1" data-title="Kevin Ren" data-content="Monday 12pm, Monday 1pm<br>CS 31, CS 32, CS 33, EE 10, MATH 31A, MATH 31B" data-trigger="hover" data-html="true" data-placement="left">Kevin Ren</p>
+                    <script>
+                      $(function(){
+                        $( "#3-1-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-1-3" class="CHEM153A_1 CHEM30AL_1 CHEM30BL_1 CHEM30C_1 MATH33B_1" data-title="Mina Souliman" data-content="Monday 12pm, Monday 1pm<br>CHEM 153A, CHEM 30AL, CHEM 30BL, CHEM 30C, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Mina Souliman</p>
+                    <script>
+                      $(function(){
+                        $( "#3-1-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-1-4" class="CS31_1 CS32_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 MATH61_1 PHYSICS1A_1 PHYSICS1B_1 STATS100A_1" data-title="Yingjun Shen" data-content="Monday 12pm, Monday 1pm<br>CS 31, CS 32, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, MATH 61, PHYSICS 1A, PHYSICS 1B, STATS 100A" data-trigger="hover" data-html="true" data-placement="left">Yingjun Shen</p>
+                    <script>
+                      $(function(){
+                        $( "#3-1-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="3-2-1" class="EE10_1 EE101_1 EE102_1 EE110_1 EE2_1 EEM16_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Andrew Lin" data-content="Tuesday 1pm, Tuesday 12pm<br>EE 10, EE 101, EE 102, EE 110, EE 2, EE M16, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Andrew Lin</p>
+                    <script>
+                      $(function(){
+                        $( "#3-2-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-2-2" class="CEE101_1 CEE120_1 CEE135A_1 CEE135B_1 CEE142_1 CEE15_1 CEE150_1 CEE153_1 CS31_1 MAE182A_1 MSE104_1 PHYSICS1A_1" data-title="Maayan Cogan" data-content="Tuesday 1pm, Tuesday 12pm<br>CEE 101, CEE 120, CEE 135A, CEE 135B, CEE 142, CEE 15, CEE 150, CEE 153, CS 31, MAE 182A, MSE 104, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Maayan Cogan</p>
+                    <script>
+                      $(function(){
+                        $( "#3-2-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-2-3" class="CS31_1 EE10_1 EE101_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Nico Chaves" data-content="Tuesday 1pm, Tuesday 12pm<br>CS 31, EE 10, EE 101, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Nico Chaves</p>
+                    <script>
+                      $(function(){
+                        $( "#3-2-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-2-4" class="CHEM30A_1 CHEM30B_1 CS31_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1" data-title="Tuan Trinh" data-content="Tuesday 1pm, Tuesday 12pm<br>CHEM 30A, CHEM 30B, CS 31, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Tuan Trinh</p>
+                    <script>
+                      $(function(){
+                        $( "#3-2-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="3-3-1" class="" data-title="Benjamin Morris" data-content="Wednesday 1pm, Wednesday 12pm<br>" data-trigger="hover" data-html="true" data-placement="left">Benjamin Morris</p>
+                    <script>
+                      $(function(){
+                        $( "#3-3-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-3-2" class="MAE101_1 MAE105A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Elliot Plant" data-content="Wednesday 1pm, Wednesday 12pm<br>MAE 101, MAE 105A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Elliot Plant</p>
+                    <script>
+                      $(function(){
+                        $( "#3-3-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-3-3" class="CEE101_1 CEE103_1 CEE108_1 CEE15_1 ENGR110_1 MATH31A_1 MATH31B_1 PHYSICS1A_1" data-title="Kevin Sand" data-content="Wednesday 1pm, Wednesday 12pm<br>CEE 101, CEE 103, CEE 108, CEE 15, ENGR 110, MATH 31A, MATH 31B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Kevin Sand</p>
+                    <script>
+                      $(function(){
+                        $( "#3-3-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-3-4" class="CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Kevin Zhang" data-content="Wednesday 11am, Wednesday 12pm<br>CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 32B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Kevin Zhang</p>
+                    <script>
+                      $(function(){
+                        $( "#3-3-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-3-5" class="CHEM20B_1 MATH31A_1 MATH31B_1 MATH32B_1 PHYSICS1A_1" data-title="Meera Midha" data-content="Wednesday 11am, Wednesday 12pm<br>CHEM 20B, MATH 31A, MATH 31B, MATH 32B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Meera Midha</p>
+                    <script>
+                      $(function(){
+                        $( "#3-3-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-3-6" class="CHEM20A_1 CHEM20B_1 CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="William Strickfaden" data-content="Wednesday 1pm, Wednesday 12pm<br>CHEM 20A, CHEM 20B, CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 33A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">William Strickfaden</p>
+                    <script>
+                      $(function(){
+                        $( "#3-3-6" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="3-4-1" class="CHEM30A_1 CHEM30AL_1 CHEM30B_1 CS31_1 CS32_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Alborz Feizi" data-content="Thursday 1pm, Thursday 12pm<br>CHEM 30A, CHEM 30AL, CHEM 30B, CS 31, CS 32, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Alborz Feizi</p>
+                    <script>
+                      $(function(){
+                        $( "#3-4-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-4-2" class="CS31_1 MAE101_1 MAE105A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Jonathan Balcewicz" data-content="Thursday 1pm, Thursday 12pm<br>CS 31, MAE 101, MAE 105A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Jonathan Balcewicz</p>
+                    <script>
+                      $(function(){
+                        $( "#3-4-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-4-3" class="CS31_1 EE10_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1" data-title="Kevin Wang" data-content="Thursday 11am, Thursday 12pm<br>CS 31, EE 10, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Kevin Wang</p>
+                    <script>
+                      $(function(){
+                        $( "#3-4-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-4-4" class="CS31_1 CS32_1 MATH32A_1" data-title="Raymond Cothern" data-content="Thursday 1pm, Thursday 12pm<br>CS 31, CS 32, MATH 32A" data-trigger="hover" data-html="true" data-placement="left">Raymond Cothern</p>
+                    <script>
+                      $(function(){
+                        $( "#3-4-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-4-5" class="CS31_1 CS32_1 CSM51A_1 MATH32A_1 MATH32B_1 MATH61_1" data-title="Siddhant Khemka" data-content="Thursday 1pm, Thursday 12pm<br>CS 31, CS 32, CS M51A, MATH 32A, MATH 32B, MATH 61" data-trigger="hover" data-html="true" data-placement="left">Siddhant Khemka</p>
+                    <script>
+                      $(function(){
+                        $( "#3-4-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="3-5-1" class="MAE101_1 MAE103_1 MAE105D_1 MAE131A_1 MAE156A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Adam Stromlund" data-content="Friday 1pm, Friday 12pm<br>MAE 101, MAE 103, MAE 105D, MAE 131A, MAE 156A, MATH 31A, MATH 31B, MATH 32A, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Adam Stromlund</p>
+                    <script>
+                      $(function(){
+                        $( "#3-5-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-5-2" class="MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Ahmed Alragabi" data-content="Friday 1pm, Friday 12pm<br>MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Ahmed Alragabi</p>
+                    <script>
+                      $(function(){
+                        $( "#3-5-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-5-3" class="EE102_1 EE110_1 EE113_1 EE115A_1 EEM16_1" data-title="Xing Luo" data-content="Friday 1pm, Friday 12pm<br>EE 102, EE 110, EE 113, EE 115A, EE M16" data-trigger="hover" data-html="true" data-placement="left">Xing Luo</p>
+                    <script>
+                      $(function(){
+                        $( "#3-5-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-5-4" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 CHEM30B_1 CHEME100_1 CHEME102A_1 MATH32A_1 MATH32B_1 MSE104_1" data-title="Jing-Yao Chen" data-content="Friday 1pm, Friday 12pm<br>CHEM 20A, CHEM 20B, CHEM 30A, CHEM 30B, CHEME 100, CHEME 102A, MATH 32A, MATH 32B, MSE 104" data-trigger="hover" data-html="true" data-placement="left">Jing-Yao Chen</p>
+                    <script>
+                      $(function(){
+                        $( "#3-5-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="3-5-5" class="EE10_1 EE102_1 EE113_1 EE131A_1 EE2_1 EE3_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Shadi Mohagheghi" data-content="Friday 1pm, Friday 12pm<br>EE 10, EE 102, EE 113, EE 131A, EE 2, EE 3, MATH 31A, MATH 31B, MATH 32A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Shadi Mohagheghi</p>
+                    <script>
+                      $(function(){
+                        $( "#3-5-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+            </tr>
+          
+            <tr>
+              <td>1pm</td>
+              
+                <td>
+                  
+                    <p id="4-1-1" class="CS31_1 CS32_1 CS33_1 EE3_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS4AL_1" data-title="Alex Cai" data-content="Monday 2pm, Monday 1pm<br>CS 31, CS 32, CS 33, EE 3, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B, PHYSICS 4AL" data-trigger="hover" data-html="true" data-placement="left">Alex Cai</p>
+                    <script>
+                      $(function(){
+                        $( "#4-1-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-1-2" class="CEE101_1 MATH31A_1 MATH31B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Andy Luu" data-content="Monday 12pm, Monday 1pm<br>CEE 101, MATH 31A, MATH 31B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Andy Luu</p>
+                    <script>
+                      $(function(){
+                        $( "#4-1-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-1-3" class="CS31_1 CS32_1 CS33_1 EE10_1 MATH31A_1 MATH31B_1" data-title="Kevin Ren" data-content="Monday 12pm, Monday 1pm<br>CS 31, CS 32, CS 33, EE 10, MATH 31A, MATH 31B" data-trigger="hover" data-html="true" data-placement="left">Kevin Ren</p>
+                    <script>
+                      $(function(){
+                        $( "#4-1-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-1-4" class="CHEM153A_1 CHEM30AL_1 CHEM30BL_1 CHEM30C_1 MATH33B_1" data-title="Mina Souliman" data-content="Monday 12pm, Monday 1pm<br>CHEM 153A, CHEM 30AL, CHEM 30BL, CHEM 30C, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Mina Souliman</p>
+                    <script>
+                      $(function(){
+                        $( "#4-1-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-1-5" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Nikhil Patel" data-content="Monday 2pm, Monday 1pm<br>CHEM 20A, CHEM 20B, CHEM 30A, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Nikhil Patel</p>
+                    <script>
+                      $(function(){
+                        $( "#4-1-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-1-6" class="CS31_1 CS32_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 MATH61_1 PHYSICS1A_1 PHYSICS1B_1 STATS100A_1" data-title="Yingjun Shen" data-content="Monday 12pm, Monday 1pm<br>CS 31, CS 32, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, MATH 61, PHYSICS 1A, PHYSICS 1B, STATS 100A" data-trigger="hover" data-html="true" data-placement="left">Yingjun Shen</p>
+                    <script>
+                      $(function(){
+                        $( "#4-1-6" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-1-7" class="CHEM30A_1 MATH31A_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Samuel Bray" data-content="Monday 2pm, Monday 1pm<br>CHEM 30A, MATH 31A, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Samuel Bray</p>
+                    <script>
+                      $(function(){
+                        $( "#4-1-7" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="4-2-1" class="EE10_1 EE101_1 EE102_1 EE110_1 EE2_1 EEM16_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Andrew Lin" data-content="Tuesday 1pm, Tuesday 12pm<br>EE 10, EE 101, EE 102, EE 110, EE 2, EE M16, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Andrew Lin</p>
+                    <script>
+                      $(function(){
+                        $( "#4-2-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-2-2" class="CHEM20B_1 CHEM20L_1 CHEM30A_1 CHEM30B_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Brandon Chang" data-content="Tuesday 2pm, Tuesday 1pm<br>CHEM 20B, CHEM 20L, CHEM 30A, CHEM 30B, MATH 31B, MATH 32A, MATH 32B, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Brandon Chang</p>
+                    <script>
+                      $(function(){
+                        $( "#4-2-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-2-3" class="CEE101_1 CEE120_1 CEE135A_1 CEE135B_1 CEE142_1 CEE15_1 CEE150_1 CEE153_1 CS31_1 MAE182A_1 MSE104_1 PHYSICS1A_1" data-title="Maayan Cogan" data-content="Tuesday 1pm, Tuesday 12pm<br>CEE 101, CEE 120, CEE 135A, CEE 135B, CEE 142, CEE 15, CEE 150, CEE 153, CS 31, MAE 182A, MSE 104, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Maayan Cogan</p>
+                    <script>
+                      $(function(){
+                        $( "#4-2-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-2-4" class="CS31_1 EE10_1 EE101_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Nico Chaves" data-content="Tuesday 1pm, Tuesday 12pm<br>CS 31, EE 10, EE 101, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Nico Chaves</p>
+                    <script>
+                      $(function(){
+                        $( "#4-2-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-2-5" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 CHEM30B_1 CHEME100_1 CHEME102A_1 CHEME102B_1 CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Ryan Flamberg" data-content="Tuesday 2pm, Tuesday 1pm<br>CHEM 20A, CHEM 20B, CHEM 30A, CHEM 30B, CHEME 100, CHEME 102A, CHEME 102B, CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Ryan Flamberg</p>
+                    <script>
+                      $(function(){
+                        $( "#4-2-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-2-6" class="MATH31A_1 MATH31B_1 MATH32A_1 MATH33A_1 PHYSICS1A_1" data-title="Ryan Li" data-content="Wednesday 10am, Tuesday 1pm<br>MATH 31A, MATH 31B, MATH 32A, MATH 33A, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Ryan Li</p>
+                    <script>
+                      $(function(){
+                        $( "#4-2-6" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-2-7" class="CHEM30A_1 CHEM30B_1 CS31_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1" data-title="Tuan Trinh" data-content="Tuesday 1pm, Tuesday 12pm<br>CHEM 30A, CHEM 30B, CS 31, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Tuan Trinh</p>
+                    <script>
+                      $(function(){
+                        $( "#4-2-7" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="4-3-1" class="" data-title="Benjamin Morris" data-content="Wednesday 1pm, Wednesday 12pm<br>" data-trigger="hover" data-html="true" data-placement="left">Benjamin Morris</p>
+                    <script>
+                      $(function(){
+                        $( "#4-3-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-3-2" class="MAE101_1 MAE105A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Elliot Plant" data-content="Wednesday 1pm, Wednesday 12pm<br>MAE 101, MAE 105A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Elliot Plant</p>
+                    <script>
+                      $(function(){
+                        $( "#4-3-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-3-3" class="CEE101_1 CEE103_1 CEE108_1 CEE15_1 ENGR110_1 MATH31A_1 MATH31B_1 PHYSICS1A_1" data-title="Kevin Sand" data-content="Wednesday 1pm, Wednesday 12pm<br>CEE 101, CEE 103, CEE 108, CEE 15, ENGR 110, MATH 31A, MATH 31B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Kevin Sand</p>
+                    <script>
+                      $(function(){
+                        $( "#4-3-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-3-4" class="LS2_1" data-title="Phuong Nguyen" data-content="Wednesday 1pm, Wednesday 2pm<br>LS 2" data-trigger="hover" data-html="true" data-placement="left">Phuong Nguyen</p>
+                    <script>
+                      $(function(){
+                        $( "#4-3-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-3-5" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Sameed Siddiqui" data-content="Wednesday 1pm, Wednesday 2pm<br>CHEM 20A, CHEM 20B, CHEM 30A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Sameed Siddiqui</p>
+                    <script>
+                      $(function(){
+                        $( "#4-3-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-3-6" class="CHEM20A_1 CHEM20B_1 CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="William Strickfaden" data-content="Wednesday 1pm, Wednesday 12pm<br>CHEM 20A, CHEM 20B, CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 33A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">William Strickfaden</p>
+                    <script>
+                      $(function(){
+                        $( "#4-3-6" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="4-4-1" class="CHEM30A_1 CHEM30AL_1 CHEM30B_1 CS31_1 CS32_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Alborz Feizi" data-content="Thursday 1pm, Thursday 12pm<br>CHEM 30A, CHEM 30AL, CHEM 30B, CS 31, CS 32, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Alborz Feizi</p>
+                    <script>
+                      $(function(){
+                        $( "#4-4-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-4-2" class="CS31_1 MAE101_1 MAE105A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Jonathan Balcewicz" data-content="Thursday 1pm, Thursday 12pm<br>CS 31, MAE 101, MAE 105A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Jonathan Balcewicz</p>
+                    <script>
+                      $(function(){
+                        $( "#4-4-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-4-3" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 PHYSICS1A_1" data-title="Michael Cheng" data-content="Thursday 2pm, Thursday 1pm<br>CHEM 20A, CHEM 20B, CHEM 30A, CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 32B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Michael Cheng</p>
+                    <script>
+                      $(function(){
+                        $( "#4-4-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-4-4" class="CS31_1 CS32_1 MATH32A_1" data-title="Raymond Cothern" data-content="Thursday 1pm, Thursday 12pm<br>CS 31, CS 32, MATH 32A" data-trigger="hover" data-html="true" data-placement="left">Raymond Cothern</p>
+                    <script>
+                      $(function(){
+                        $( "#4-4-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-4-5" class="CS31_1 CS32_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Roger Ho" data-content="Thursday 2pm, Thursday 1pm<br>CS 31, CS 32, MATH 31A, MATH 31B, MATH 32A, MATH 33A, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Roger Ho</p>
+                    <script>
+                      $(function(){
+                        $( "#4-4-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-4-6" class="CS31_1 CS32_1 CSM51A_1 MATH32A_1 MATH32B_1 MATH61_1" data-title="Siddhant Khemka" data-content="Thursday 1pm, Thursday 12pm<br>CS 31, CS 32, CS M51A, MATH 32A, MATH 32B, MATH 61" data-trigger="hover" data-html="true" data-placement="left">Siddhant Khemka</p>
+                    <script>
+                      $(function(){
+                        $( "#4-4-6" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="4-5-1" class="MAE101_1 MAE103_1 MAE105D_1 MAE131A_1 MAE156A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Adam Stromlund" data-content="Friday 1pm, Friday 12pm<br>MAE 101, MAE 103, MAE 105D, MAE 131A, MAE 156A, MATH 31A, MATH 31B, MATH 32A, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Adam Stromlund</p>
+                    <script>
+                      $(function(){
+                        $( "#4-5-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-5-2" class="MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Ahmed Alragabi" data-content="Friday 1pm, Friday 12pm<br>MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Ahmed Alragabi</p>
+                    <script>
+                      $(function(){
+                        $( "#4-5-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-5-3" class="EE102_1 EE110_1 EE113_1 EE115A_1 EEM16_1" data-title="Xing Luo" data-content="Friday 1pm, Friday 12pm<br>EE 102, EE 110, EE 113, EE 115A, EE M16" data-trigger="hover" data-html="true" data-placement="left">Xing Luo</p>
+                    <script>
+                      $(function(){
+                        $( "#4-5-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-5-4" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 CHEM30B_1 CHEME100_1 CHEME102A_1 MATH32A_1 MATH32B_1 MSE104_1" data-title="Jing-Yao Chen" data-content="Friday 1pm, Friday 12pm<br>CHEM 20A, CHEM 20B, CHEM 30A, CHEM 30B, CHEME 100, CHEME 102A, MATH 32A, MATH 32B, MSE 104" data-trigger="hover" data-html="true" data-placement="left">Jing-Yao Chen</p>
+                    <script>
+                      $(function(){
+                        $( "#4-5-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="4-5-5" class="EE10_1 EE102_1 EE113_1 EE131A_1 EE2_1 EE3_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Shadi Mohagheghi" data-content="Friday 1pm, Friday 12pm<br>EE 10, EE 102, EE 113, EE 131A, EE 2, EE 3, MATH 31A, MATH 31B, MATH 32A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Shadi Mohagheghi</p>
+                    <script>
+                      $(function(){
+                        $( "#4-5-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+            </tr>
+          
+            <tr>
+              <td>2pm</td>
+              
+                <td>
+                  
+                    <p id="5-1-1" class="CS31_1 CS32_1 CS33_1 EE3_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS4AL_1" data-title="Alex Cai" data-content="Monday 2pm, Monday 1pm<br>CS 31, CS 32, CS 33, EE 3, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B, PHYSICS 4AL" data-trigger="hover" data-html="true" data-placement="left">Alex Cai</p>
+                    <script>
+                      $(function(){
+                        $( "#5-1-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-1-2" class="CS31_1 MAE101_1 MAE102_1 MAE103_1 MAE105A_1 MAE182A_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 MSE104_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Fangcheng Zhu" data-content="Monday 2pm, Monday 3pm<br>CS 31, MAE 101, MAE 102, MAE 103, MAE 105A, MAE 182A, MATH 32A, MATH 32B, MATH 33A, MATH 33B, MSE 104, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Fangcheng Zhu</p>
+                    <script>
+                      $(function(){
+                        $( "#5-1-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-1-3" class="MATH32A_1 MATH32B_1 MATH33B_1 PHYSICS1A_1" data-title="Yanying Qiu" data-content="Monday 2pm, Monday 3pm<br>MATH 32A, MATH 32B, MATH 33B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Yanying Qiu</p>
+                    <script>
+                      $(function(){
+                        $( "#5-1-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-1-4" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Nikhil Patel" data-content="Monday 2pm, Monday 1pm<br>CHEM 20A, CHEM 20B, CHEM 30A, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Nikhil Patel</p>
+                    <script>
+                      $(function(){
+                        $( "#5-1-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-1-5" class="MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Philip Hong" data-content="Monday 2pm, Monday 3pm<br>MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Philip Hong</p>
+                    <script>
+                      $(function(){
+                        $( "#5-1-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-1-6" class="CHEM30A_1 MATH31A_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Samuel Bray" data-content="Monday 2pm, Monday 1pm<br>CHEM 30A, MATH 31A, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Samuel Bray</p>
+                    <script>
+                      $(function(){
+                        $( "#5-1-6" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="5-2-1" class="MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Asher Katz" data-content="Tuesday 3pm, Tuesday 2pm<br>MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Asher Katz</p>
+                    <script>
+                      $(function(){
+                        $( "#5-2-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-2-2" class="CHEM20B_1 CHEM20L_1 CHEM30A_1 CHEM30B_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Brandon Chang" data-content="Tuesday 2pm, Tuesday 1pm<br>CHEM 20B, CHEM 20L, CHEM 30A, CHEM 30B, MATH 31B, MATH 32A, MATH 32B, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Brandon Chang</p>
+                    <script>
+                      $(function(){
+                        $( "#5-2-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-2-3" class="CHEM20B_1 CHEM30A_1 CHEM30B_1 MATH31A_1 MATH31B_1 MATH32A_1 PHYSICS1A_1 PHYSICS1C_1 STATS10_1 STATS100A_1 STATS13_1" data-title="Daniel Shaffer" data-content="Tuesday 3pm, Tuesday 2pm<br>CHEM 20B, CHEM 30A, CHEM 30B, MATH 31A, MATH 31B, MATH 32A, PHYSICS 1A, PHYSICS 1C, STATS 10, STATS 100A, STATS 13" data-trigger="hover" data-html="true" data-placement="left">Daniel Shaffer</p>
+                    <script>
+                      $(function(){
+                        $( "#5-2-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-2-4" class="MAE105A_1 MAE94_1 MATH31A_1 MATH32A_1 MATH32B_1" data-title="Hunter Jones" data-content="Tuesday 3pm, Tuesday 2pm<br>MAE 105A, MAE 94, MATH 31A, MATH 32A, MATH 32B" data-trigger="hover" data-html="true" data-placement="left">Hunter Jones</p>
+                    <script>
+                      $(function(){
+                        $( "#5-2-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-2-5" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 CHEM30B_1 CHEME100_1 CHEME102A_1 CHEME102B_1 CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Ryan Flamberg" data-content="Tuesday 2pm, Tuesday 1pm<br>CHEM 20A, CHEM 20B, CHEM 30A, CHEM 30B, CHEME 100, CHEME 102A, CHEME 102B, CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Ryan Flamberg</p>
+                    <script>
+                      $(function(){
+                        $( "#5-2-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-2-6" class="MAE101_1 MATH31A_1 MATH31B_1 MATH32B_1 MATH33B_1" data-title="Timothy Sung" data-content="Tuesday 3pm, Tuesday 2pm<br>MAE 101, MATH 31A, MATH 31B, MATH 32B, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Timothy Sung</p>
+                    <script>
+                      $(function(){
+                        $( "#5-2-6" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="5-3-1" class="CS31_1 CS32_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Jeffrey Wang" data-content="Wednesday 2pm, Wednesday 3pm<br>CS 31, CS 32, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Jeffrey Wang</p>
+                    <script>
+                      $(function(){
+                        $( "#5-3-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-3-2" class="CHEM20A_1 CHEM20B_1 CS31_1 MATH32A_1 MATH32B_1 PHYSICS1A_1" data-title="Kevin Luc" data-content="Wednesday 2pm, Wednesday 3pm<br>CHEM 20A, CHEM 20B, CS 31, MATH 32A, MATH 32B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Kevin Luc</p>
+                    <script>
+                      $(function(){
+                        $( "#5-3-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-3-3" class="CS31_1 CS32_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Nathan Fischer" data-content="Wednesday 2pm, Wednesday 3pm<br>CS 31, CS 32, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Nathan Fischer</p>
+                    <script>
+                      $(function(){
+                        $( "#5-3-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-3-4" class="LS2_1" data-title="Phuong Nguyen" data-content="Wednesday 1pm, Wednesday 2pm<br>LS 2" data-trigger="hover" data-html="true" data-placement="left">Phuong Nguyen</p>
+                    <script>
+                      $(function(){
+                        $( "#5-3-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-3-5" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Sameed Siddiqui" data-content="Wednesday 1pm, Wednesday 2pm<br>CHEM 20A, CHEM 20B, CHEM 30A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Sameed Siddiqui</p>
+                    <script>
+                      $(function(){
+                        $( "#5-3-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-3-6" class="CS31_1 CS32_1 CS33_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Sandeep Srinivasan" data-content="Wednesday 2pm, Wednesday 3pm<br>CS 31, CS 32, CS 33, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Sandeep Srinivasan</p>
+                    <script>
+                      $(function(){
+                        $( "#5-3-6" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="5-4-1" class="" data-title="Alli Koivunen" data-content="Thursday 3pm, Thursday 2pm<br>" data-trigger="hover" data-html="true" data-placement="left">Alli Koivunen</p>
+                    <script>
+                      $(function(){
+                        $( "#5-4-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-4-2" class="CS31_1 MAE101_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33B_1 MSE104_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Kai Matsuka" data-content="Thursday 3pm, Thursday 2pm<br>CS 31, MAE 101, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33B, MSE 104, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Kai Matsuka</p>
+                    <script>
+                      $(function(){
+                        $( "#5-4-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-4-3" class="" data-title="Michael Bauer" data-content="Thursday 3pm, Thursday 2pm<br>" data-trigger="hover" data-html="true" data-placement="left">Michael Bauer</p>
+                    <script>
+                      $(function(){
+                        $( "#5-4-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-4-4" class="CHEM20A_1 CHEM20B_1 CHEM30A_1 CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 PHYSICS1A_1" data-title="Michael Cheng" data-content="Thursday 2pm, Thursday 1pm<br>CHEM 20A, CHEM 20B, CHEM 30A, CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 32B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Michael Cheng</p>
+                    <script>
+                      $(function(){
+                        $( "#5-4-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-4-5" class="CS174A_1 CS31_1 CS32_1 EE10_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33B_1 PHYSICS1A_1" data-title="Phillip Woytowitz" data-content="Thursday 3pm, Thursday 2pm<br>CS 174A, CS 31, CS 32, EE 10, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Phillip Woytowitz</p>
+                    <script>
+                      $(function(){
+                        $( "#5-4-5" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-4-6" class="CS31_1 CS32_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Roger Ho" data-content="Thursday 2pm, Thursday 1pm<br>CS 31, CS 32, MATH 31A, MATH 31B, MATH 32A, MATH 33A, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Roger Ho</p>
+                    <script>
+                      $(function(){
+                        $( "#5-4-6" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="5-5-1" class="CS31_1 CS32_1 CS33_1 EE2_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH61_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1 PHYSICS4AL_1" data-title="Arjun Lakshmipathy" data-content="Friday 2pm, Friday 3pm<br>CS 31, CS 32, CS 33, EE 2, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 61, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C, PHYSICS 4AL" data-trigger="hover" data-html="true" data-placement="left">Arjun Lakshmipathy</p>
+                    <script>
+                      $(function(){
+                        $( "#5-5-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-5-2" class="CS31_1 CS32_1 CS33_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1 STATS10_1" data-title="Hannah  Jin" data-content="Friday 2pm, Friday 3pm<br>CS 31, CS 32, CS 33, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C, STATS 10" data-trigger="hover" data-html="true" data-placement="left">Hannah  Jin</p>
+                    <script>
+                      $(function(){
+                        $( "#5-5-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-5-3" class="CHEM20B_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Ryan Smolkin" data-content="Friday 2pm, Friday 3pm<br>CHEM 20B, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Ryan Smolkin</p>
+                    <script>
+                      $(function(){
+                        $( "#5-5-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="5-5-4" class="CHEM153A_1 CHEM20L_1 CHEM30A_1 CHEM30AL_1 CHEM30B_1 CS31_1 MATH115A_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1" data-title="Zhaoyuan Xi" data-content="Friday 2pm, Friday 3pm<br>CHEM 153A, CHEM 20L, CHEM 30A, CHEM 30AL, CHEM 30B, CS 31, MATH 115A, MATH 32A, MATH 32B, MATH 33A, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Zhaoyuan Xi</p>
+                    <script>
+                      $(function(){
+                        $( "#5-5-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+            </tr>
+          
+            <tr>
+              <td>3pm</td>
+              
+                <td>
+                  
+                    <p id="6-1-1" class="CS31_1 MAE101_1 MAE102_1 MAE103_1 MAE105A_1 MAE182A_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 MSE104_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Fangcheng Zhu" data-content="Monday 2pm, Monday 3pm<br>CS 31, MAE 101, MAE 102, MAE 103, MAE 105A, MAE 182A, MATH 32A, MATH 32B, MATH 33A, MATH 33B, MSE 104, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Fangcheng Zhu</p>
+                    <script>
+                      $(function(){
+                        $( "#6-1-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-1-2" class="MATH32A_1 MATH32B_1 MATH33B_1 PHYSICS1A_1" data-title="Yanying Qiu" data-content="Monday 2pm, Monday 3pm<br>MATH 32A, MATH 32B, MATH 33B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Yanying Qiu</p>
+                    <script>
+                      $(function(){
+                        $( "#6-1-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-1-3" class="MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Philip Hong" data-content="Monday 2pm, Monday 3pm<br>MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Philip Hong</p>
+                    <script>
+                      $(function(){
+                        $( "#6-1-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-1-4" class="CS31_1 CS32_1 CS33_1 MATH31A_1 MATH31B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Roger Lau" data-content="Monday 3pm, Monday 4pm<br>CS 31, CS 32, CS 33, MATH 31A, MATH 31B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Roger Lau</p>
+                    <script>
+                      $(function(){
+                        $( "#6-1-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="6-2-1" class="MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Asher Katz" data-content="Tuesday 3pm, Tuesday 2pm<br>MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Asher Katz</p>
+                    <script>
+                      $(function(){
+                        $( "#6-2-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-2-2" class="CHEM20B_1 CHEM30A_1 CHEM30B_1 MATH31A_1 MATH31B_1 MATH32A_1 PHYSICS1A_1 PHYSICS1C_1 STATS10_1 STATS100A_1 STATS13_1" data-title="Daniel Shaffer" data-content="Tuesday 3pm, Tuesday 2pm<br>CHEM 20B, CHEM 30A, CHEM 30B, MATH 31A, MATH 31B, MATH 32A, PHYSICS 1A, PHYSICS 1C, STATS 10, STATS 100A, STATS 13" data-trigger="hover" data-html="true" data-placement="left">Daniel Shaffer</p>
+                    <script>
+                      $(function(){
+                        $( "#6-2-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-2-3" class="MAE105A_1 MAE94_1 MATH31A_1 MATH32A_1 MATH32B_1" data-title="Hunter Jones" data-content="Tuesday 3pm, Tuesday 2pm<br>MAE 105A, MAE 94, MATH 31A, MATH 32A, MATH 32B" data-trigger="hover" data-html="true" data-placement="left">Hunter Jones</p>
+                    <script>
+                      $(function(){
+                        $( "#6-2-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-2-4" class="CS31_1 CS32_1 MATH31B_1 MATH32A_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Justin Wei" data-content="Tuesday 3pm, Tuesday 4pm<br>CS 31, CS 32, MATH 31B, MATH 32A, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Justin Wei</p>
+                    <script>
+                      $(function(){
+                        $( "#6-2-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-2-5" class="MAE101_1 MATH31A_1 MATH31B_1 MATH32B_1 MATH33B_1" data-title="Timothy Sung" data-content="Tuesday 3pm, Tuesday 2pm<br>MAE 101, MATH 31A, MATH 31B, MATH 32B, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Timothy Sung</p>
+                    <script>
+                      $(function(){
+                        $( "#6-2-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="6-3-1" class="CS31_1 CS32_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Jeffrey Wang" data-content="Wednesday 2pm, Wednesday 3pm<br>CS 31, CS 32, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Jeffrey Wang</p>
+                    <script>
+                      $(function(){
+                        $( "#6-3-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-3-2" class="CHEM20A_1 CHEM20B_1 CS31_1 MATH32A_1 MATH32B_1 PHYSICS1A_1" data-title="Kevin Luc" data-content="Wednesday 2pm, Wednesday 3pm<br>CHEM 20A, CHEM 20B, CS 31, MATH 32A, MATH 32B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Kevin Luc</p>
+                    <script>
+                      $(function(){
+                        $( "#6-3-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-3-3" class="CS31_1 CS32_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Nathan Fischer" data-content="Wednesday 2pm, Wednesday 3pm<br>CS 31, CS 32, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Nathan Fischer</p>
+                    <script>
+                      $(function(){
+                        $( "#6-3-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-3-4" class="CS31_1 CS32_1 CS33_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Sandeep Srinivasan" data-content="Wednesday 2pm, Wednesday 3pm<br>CS 31, CS 32, CS 33, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Sandeep Srinivasan</p>
+                    <script>
+                      $(function(){
+                        $( "#6-3-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="6-4-1" class="" data-title="Alli Koivunen" data-content="Thursday 3pm, Thursday 2pm<br>" data-trigger="hover" data-html="true" data-placement="left">Alli Koivunen</p>
+                    <script>
+                      $(function(){
+                        $( "#6-4-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-4-2" class="CS31_1 MAE101_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33B_1 MSE104_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Kai Matsuka" data-content="Thursday 3pm, Thursday 2pm<br>CS 31, MAE 101, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33B, MSE 104, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Kai Matsuka</p>
+                    <script>
+                      $(function(){
+                        $( "#6-4-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-4-3" class="" data-title="Michael Bauer" data-content="Thursday 3pm, Thursday 2pm<br>" data-trigger="hover" data-html="true" data-placement="left">Michael Bauer</p>
+                    <script>
+                      $(function(){
+                        $( "#6-4-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-4-4" class="CS174A_1 CS31_1 CS32_1 EE10_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33B_1 PHYSICS1A_1" data-title="Phillip Woytowitz" data-content="Thursday 3pm, Thursday 2pm<br>CS 174A, CS 31, CS 32, EE 10, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Phillip Woytowitz</p>
+                    <script>
+                      $(function(){
+                        $( "#6-4-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-4-5" class="CS31_1 CS32_1 CS33_1 CS35L_1 MATH32A_1 MATH32B_1" data-title="Sagar  Patel" data-content="Thursday 3pm, Thursday 4pm<br>CS 31, CS 32, CS 33, CS 35L, MATH 32A, MATH 32B" data-trigger="hover" data-html="true" data-placement="left">Sagar  Patel</p>
+                    <script>
+                      $(function(){
+                        $( "#6-4-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="6-5-1" class="CS31_1 CS32_1 CS33_1 EE2_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH61_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1 PHYSICS4AL_1" data-title="Arjun Lakshmipathy" data-content="Friday 2pm, Friday 3pm<br>CS 31, CS 32, CS 33, EE 2, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 61, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C, PHYSICS 4AL" data-trigger="hover" data-html="true" data-placement="left">Arjun Lakshmipathy</p>
+                    <script>
+                      $(function(){
+                        $( "#6-5-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-5-2" class="CS31_1 CS32_1 CS33_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1 STATS10_1" data-title="Hannah  Jin" data-content="Friday 2pm, Friday 3pm<br>CS 31, CS 32, CS 33, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C, STATS 10" data-trigger="hover" data-html="true" data-placement="left">Hannah  Jin</p>
+                    <script>
+                      $(function(){
+                        $( "#6-5-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-5-3" class="CHEM20B_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Ryan Smolkin" data-content="Friday 2pm, Friday 3pm<br>CHEM 20B, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Ryan Smolkin</p>
+                    <script>
+                      $(function(){
+                        $( "#6-5-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="6-5-4" class="CHEM153A_1 CHEM20L_1 CHEM30A_1 CHEM30AL_1 CHEM30B_1 CS31_1 MATH115A_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1" data-title="Zhaoyuan Xi" data-content="Friday 2pm, Friday 3pm<br>CHEM 153A, CHEM 20L, CHEM 30A, CHEM 30AL, CHEM 30B, CS 31, MATH 115A, MATH 32A, MATH 32B, MATH 33A, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Zhaoyuan Xi</p>
+                    <script>
+                      $(function(){
+                        $( "#6-5-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+            </tr>
+          
+            <tr>
+              <td>4pm</td>
+              
+                <td>
+                  
+                    <p id="7-1-1" class="CEE101_1 CEE108_1 MAE101_1 MAE156A_1 MATH31A_1 MATH31B_1" data-title="Alireza Haji Fathaliyan" data-content="Monday 4pm, Monday 5pm<br>CEE 101, CEE 108, MAE 101, MAE 156A, MATH 31A, MATH 31B" data-trigger="hover" data-html="true" data-placement="left">Alireza Haji Fathaliyan</p>
+                    <script>
+                      $(function(){
+                        $( "#7-1-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-1-2" class="LS2_1 MAE101_1 MATH33A_1" data-title="Mohamed Elhafsi" data-content="Monday 4pm, Monday 5pm<br>LS 2, MAE 101, MATH 33A" data-trigger="hover" data-html="true" data-placement="left">Mohamed Elhafsi</p>
+                    <script>
+                      $(function(){
+                        $( "#7-1-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-1-3" class="CEE101_1 CEE103_1 CEE108_1 MAE103_1 MAE182A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1" data-title="Andrew Kennedy" data-content="Monday 4pm, Monday 5pm<br>CEE 101, CEE 103, CEE 108, MAE 103, MAE 182A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Andrew Kennedy</p>
+                    <script>
+                      $(function(){
+                        $( "#7-1-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-1-4" class="LS2_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Pratik Mishra" data-content="Monday 4pm, Monday 5pm<br>LS 2, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Pratik Mishra</p>
+                    <script>
+                      $(function(){
+                        $( "#7-1-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-1-5" class="CS31_1 CS32_1 CS33_1 MATH31A_1 MATH31B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Roger Lau" data-content="Monday 3pm, Monday 4pm<br>CS 31, CS 32, CS 33, MATH 31A, MATH 31B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Roger Lau</p>
+                    <script>
+                      $(function(){
+                        $( "#7-1-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="7-2-1" class="CS31_1 CS32_1" data-title="Benjamin Young" data-content="Tuesday 4pm, Tuesday 5pm<br>CS 31, CS 32" data-trigger="hover" data-html="true" data-placement="left">Benjamin Young</p>
+                    <script>
+                      $(function(){
+                        $( "#7-2-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-2-2" class="CS31_1 CS32_1 MATH31B_1 MATH32A_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Justin Wei" data-content="Tuesday 3pm, Tuesday 4pm<br>CS 31, CS 32, MATH 31B, MATH 32A, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Justin Wei</p>
+                    <script>
+                      $(function(){
+                        $( "#7-2-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-2-3" class="CS31_1 CS32_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Ran Gross" data-content="Tuesday 4pm, Tuesday 5pm<br>CS 31, CS 32, MATH 31A, MATH 31B, MATH 32A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Ran Gross</p>
+                    <script>
+                      $(function(){
+                        $( "#7-2-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-2-4" class="CS31_1 CS32_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Tong Mu" data-content="Tuesday 4pm, Tuesday 5pm<br>CS 31, CS 32, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Tong Mu</p>
+                    <script>
+                      $(function(){
+                        $( "#7-2-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-2-5" class="" data-title="Yeon Joon Jin" data-content="Tuesday 4pm, Tuesday 5pm<br>" data-trigger="hover" data-html="true" data-placement="left">Yeon Joon Jin</p>
+                    <script>
+                      $(function(){
+                        $( "#7-2-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="7-3-1" class="CHEM20A_1 CHEM20B_1 CHEM20L_1 MAE101_1 MAE102_1 MAE103_1 MAE182A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Denon Wong" data-content="Wednesday 4pm, Wednesday 5pm<br>CHEM 20A, CHEM 20B, CHEM 20L, MAE 101, MAE 102, MAE 103, MAE 182A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Denon Wong</p>
+                    <script>
+                      $(function(){
+                        $( "#7-3-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-3-2" class="CSM51A_1 EE1_1 EE10_1 EE101_1 EE2_1 EE3_1 EEM16_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS110A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Derrick Chu" data-content="Wednesday 4pm, Wednesday 5pm<br>CS M51A, EE 1, EE 10, EE 101, EE 2, EE 3, EE M16, MATH 32B, MATH 33A, MATH 33B, PHYSICS 110A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Derrick Chu</p>
+                    <script>
+                      $(function(){
+                        $( "#7-3-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-3-3" class="EE10_1 EE110_1 EE2_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1" data-title="Maryam  Zolghadr" data-content="Wednesday 4pm, Wednesday 5pm<br>EE 10, EE 110, EE 2, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Maryam  Zolghadr</p>
+                    <script>
+                      $(function(){
+                        $( "#7-3-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-3-4" class="CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Matthew Miller" data-content="Wednesday 4pm, Wednesday 5pm<br>CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Matthew Miller</p>
+                    <script>
+                      $(function(){
+                        $( "#7-3-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="7-4-1" class="CS31_1 CS32_1 CS33_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 MATH61_1" data-title="Alexander Sanciangco" data-content="Thursday 5pm, Thursday 4pm<br>CS 31, CS 32, CS 33, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, MATH 61" data-trigger="hover" data-html="true" data-placement="left">Alexander Sanciangco</p>
+                    <script>
+                      $(function(){
+                        $( "#7-4-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-4-2" class="MAE101_1 MAE105D_1 MAE156A_1 MATH31A_1 MATH31B_1 STATS10_1" data-title="Arian Ghazari" data-content="Thursday 5pm, Thursday 4pm<br>MAE 101, MAE 105D, MAE 156A, MATH 31A, MATH 31B, STATS 10" data-trigger="hover" data-html="true" data-placement="left">Arian Ghazari</p>
+                    <script>
+                      $(function(){
+                        $( "#7-4-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-4-3" class="CHEM20A_1 CHEM30A_1 MATH31A_1 MATH31B_1 PHYSICS1A_1" data-title="Eun Bin Lee" data-content="Thursday 5pm, Thursday 4pm<br>CHEM 20A, CHEM 30A, MATH 31A, MATH 31B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Eun Bin Lee</p>
+                    <script>
+                      $(function(){
+                        $( "#7-4-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-4-4" class="CS31_1 CS32_1 CS33_1 CS35L_1 MATH32A_1 MATH32B_1" data-title="Sagar  Patel" data-content="Thursday 3pm, Thursday 4pm<br>CS 31, CS 32, CS 33, CS 35L, MATH 32A, MATH 32B" data-trigger="hover" data-html="true" data-placement="left">Sagar  Patel</p>
+                    <script>
+                      $(function(){
+                        $( "#7-4-4" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-4-5" class="CS31_1 EE10_1 EE102_1 EE110_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1" data-title="Tianrui Zhang" data-content="Thursday 5pm, Thursday 4pm<br>CS 31, EE 10, EE 102, EE 110, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A" data-trigger="hover" data-html="true" data-placement="left">Tianrui Zhang</p>
+                    <script>
+                      $(function(){
+                        $( "#7-4-5" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="7-5-1" class="CHEM20A_1 CHEM20B_1 CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 PHYSICS1B_1" data-title="Ashutosh Shiledar" data-content="Friday 5pm, Friday 4pm<br>CHEM 20A, CHEM 20B, CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 32B, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Ashutosh Shiledar</p>
+                    <script>
+                      $(function(){
+                        $( "#7-5-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-5-2" class="CS31_1 CS32_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Dillon Zhi" data-content="Friday 5pm, Friday 4pm<br>CS 31, CS 32, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Dillon Zhi</p>
+                    <script>
+                      $(function(){
+                        $( "#7-5-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-5-3" class="CHEM20A_1 CHEM20B_1 CHEM20L_1 CHEM30A_1 CHEM30AL_1 MATH31A_1 MATH31B_1 MATH32A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Justin Ong" data-content="Friday 5pm, Friday 4pm<br>CHEM 20A, CHEM 20B, CHEM 20L, CHEM 30A, CHEM 30AL, MATH 31A, MATH 31B, MATH 32A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Justin Ong</p>
+                    <script>
+                      $(function(){
+                        $( "#7-5-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="7-5-4" class="CHEM20A_1 CS31_1 CS32_1 EE1_1 EE10_1 EE102_1 EE103_1 EE110_1 EE2_1 EE3_1 EEM16_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS4AL_1 PHYSICS4BL_1" data-title="Xin Li" data-content="Friday 5pm, Friday 4pm<br>CHEM 20A, CS 31, CS 32, EE 1, EE 10, EE 102, EE 103, EE 110, EE 2, EE 3, EE M16, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 4AL, PHYSICS 4BL" data-trigger="hover" data-html="true" data-placement="left">Xin Li</p>
+                    <script>
+                      $(function(){
+                        $( "#7-5-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+            </tr>
+          
+            <tr>
+              <td>5pm</td>
+              
+                <td>
+                  
+                    <p id="8-1-1" class="CEE101_1 CEE108_1 MAE101_1 MAE156A_1 MATH31A_1 MATH31B_1" data-title="Alireza Haji Fathaliyan" data-content="Monday 4pm, Monday 5pm<br>CEE 101, CEE 108, MAE 101, MAE 156A, MATH 31A, MATH 31B" data-trigger="hover" data-html="true" data-placement="left">Alireza Haji Fathaliyan</p>
+                    <script>
+                      $(function(){
+                        $( "#8-1-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-1-2" class="LS2_1 MAE101_1 MATH33A_1" data-title="Mohamed Elhafsi" data-content="Monday 4pm, Monday 5pm<br>LS 2, MAE 101, MATH 33A" data-trigger="hover" data-html="true" data-placement="left">Mohamed Elhafsi</p>
+                    <script>
+                      $(function(){
+                        $( "#8-1-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-1-3" class="CEE101_1 CEE103_1 CEE108_1 MAE103_1 MAE182A_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1" data-title="Andrew Kennedy" data-content="Monday 4pm, Monday 5pm<br>CEE 101, CEE 103, CEE 108, MAE 103, MAE 182A, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Andrew Kennedy</p>
+                    <script>
+                      $(function(){
+                        $( "#8-1-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-1-4" class="LS2_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Pratik Mishra" data-content="Monday 4pm, Monday 5pm<br>LS 2, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Pratik Mishra</p>
+                    <script>
+                      $(function(){
+                        $( "#8-1-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="8-2-1" class="CS31_1 CS32_1" data-title="Benjamin Young" data-content="Tuesday 4pm, Tuesday 5pm<br>CS 31, CS 32" data-trigger="hover" data-html="true" data-placement="left">Benjamin Young</p>
+                    <script>
+                      $(function(){
+                        $( "#8-2-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-2-2" class="CS31_1 CS32_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Ran Gross" data-content="Tuesday 4pm, Tuesday 5pm<br>CS 31, CS 32, MATH 31A, MATH 31B, MATH 32A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Ran Gross</p>
+                    <script>
+                      $(function(){
+                        $( "#8-2-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-2-3" class="CS31_1 CS32_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Tong Mu" data-content="Tuesday 4pm, Tuesday 5pm<br>CS 31, CS 32, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Tong Mu</p>
+                    <script>
+                      $(function(){
+                        $( "#8-2-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-2-4" class="" data-title="Yeon Joon Jin" data-content="Tuesday 4pm, Tuesday 5pm<br>" data-trigger="hover" data-html="true" data-placement="left">Yeon Joon Jin</p>
+                    <script>
+                      $(function(){
+                        $( "#8-2-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="8-3-1" class="CHEM20A_1 CHEM20B_1 CHEM20L_1 MAE101_1 MAE102_1 MAE103_1 MAE182A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Denon Wong" data-content="Wednesday 4pm, Wednesday 5pm<br>CHEM 20A, CHEM 20B, CHEM 20L, MAE 101, MAE 102, MAE 103, MAE 182A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Denon Wong</p>
+                    <script>
+                      $(function(){
+                        $( "#8-3-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-3-2" class="CSM51A_1 EE1_1 EE10_1 EE101_1 EE2_1 EE3_1 EEM16_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS110A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Derrick Chu" data-content="Wednesday 4pm, Wednesday 5pm<br>CS M51A, EE 1, EE 10, EE 101, EE 2, EE 3, EE M16, MATH 32B, MATH 33A, MATH 33B, PHYSICS 110A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Derrick Chu</p>
+                    <script>
+                      $(function(){
+                        $( "#8-3-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-3-3" class="EE10_1 EE110_1 EE2_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1" data-title="Maryam  Zolghadr" data-content="Wednesday 4pm, Wednesday 5pm<br>EE 10, EE 110, EE 2, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B" data-trigger="hover" data-html="true" data-placement="left">Maryam  Zolghadr</p>
+                    <script>
+                      $(function(){
+                        $( "#8-3-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-3-4" class="CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Matthew Miller" data-content="Wednesday 4pm, Wednesday 5pm<br>CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Matthew Miller</p>
+                    <script>
+                      $(function(){
+                        $( "#8-3-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="8-4-1" class="CS31_1 CS32_1 CS33_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 MATH61_1" data-title="Alexander Sanciangco" data-content="Thursday 5pm, Thursday 4pm<br>CS 31, CS 32, CS 33, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, MATH 61" data-trigger="hover" data-html="true" data-placement="left">Alexander Sanciangco</p>
+                    <script>
+                      $(function(){
+                        $( "#8-4-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-4-2" class="MAE101_1 MAE105D_1 MAE156A_1 MATH31A_1 MATH31B_1 STATS10_1" data-title="Arian Ghazari" data-content="Thursday 5pm, Thursday 4pm<br>MAE 101, MAE 105D, MAE 156A, MATH 31A, MATH 31B, STATS 10" data-trigger="hover" data-html="true" data-placement="left">Arian Ghazari</p>
+                    <script>
+                      $(function(){
+                        $( "#8-4-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-4-3" class="CHEM20A_1 CHEM30A_1 MATH31A_1 MATH31B_1 PHYSICS1A_1" data-title="Eun Bin Lee" data-content="Thursday 5pm, Thursday 4pm<br>CHEM 20A, CHEM 30A, MATH 31A, MATH 31B, PHYSICS 1A" data-trigger="hover" data-html="true" data-placement="left">Eun Bin Lee</p>
+                    <script>
+                      $(function(){
+                        $( "#8-4-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-4-4" class="CS31_1 EE10_1 EE102_1 EE110_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1" data-title="Tianrui Zhang" data-content="Thursday 5pm, Thursday 4pm<br>CS 31, EE 10, EE 102, EE 110, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A" data-trigger="hover" data-html="true" data-placement="left">Tianrui Zhang</p>
+                    <script>
+                      $(function(){
+                        $( "#8-4-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+                <td>
+                  
+                    <p id="8-5-1" class="CHEM20A_1 CHEM20B_1 CS31_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 PHYSICS1B_1" data-title="Ashutosh Shiledar" data-content="Friday 5pm, Friday 4pm<br>CHEM 20A, CHEM 20B, CS 31, MATH 31A, MATH 31B, MATH 32A, MATH 32B, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Ashutosh Shiledar</p>
+                    <script>
+                      $(function(){
+                        $( "#8-5-1" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-5-2" class="CS31_1 CS32_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1" data-title="Dillon Zhi" data-content="Friday 5pm, Friday 4pm<br>CS 31, CS 32, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B" data-trigger="hover" data-html="true" data-placement="left">Dillon Zhi</p>
+                    <script>
+                      $(function(){
+                        $( "#8-5-2" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-5-3" class="CHEM20A_1 CHEM20B_1 CHEM20L_1 CHEM30A_1 CHEM30AL_1 MATH31A_1 MATH31B_1 MATH32A_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS1C_1" data-title="Justin Ong" data-content="Friday 5pm, Friday 4pm<br>CHEM 20A, CHEM 20B, CHEM 20L, CHEM 30A, CHEM 30AL, MATH 31A, MATH 31B, MATH 32A, PHYSICS 1A, PHYSICS 1B, PHYSICS 1C" data-trigger="hover" data-html="true" data-placement="left">Justin Ong</p>
+                    <script>
+                      $(function(){
+                        $( "#8-5-3" ).popover();
+                      });
+                    </script>
+                  
+                    <p id="8-5-4" class="CHEM20A_1 CS31_1 CS32_1 EE1_1 EE10_1 EE102_1 EE103_1 EE110_1 EE2_1 EE3_1 EEM16_1 MATH31A_1 MATH31B_1 MATH32A_1 MATH32B_1 MATH33A_1 MATH33B_1 PHYSICS1A_1 PHYSICS1B_1 PHYSICS4AL_1 PHYSICS4BL_1" data-title="Xin Li" data-content="Friday 5pm, Friday 4pm<br>CHEM 20A, CS 31, CS 32, EE 1, EE 10, EE 102, EE 103, EE 110, EE 2, EE 3, EE M16, MATH 31A, MATH 31B, MATH 32A, MATH 32B, MATH 33A, MATH 33B, PHYSICS 1A, PHYSICS 1B, PHYSICS 4AL, PHYSICS 4BL" data-trigger="hover" data-html="true" data-placement="left">Xin Li</p>
+                    <script>
+                      $(function(){
+                        $( "#8-5-4" ).popover();
+                      });
+                    </script>
+                  
+                </td>
+              
+            </tr>
+          
+          </tbody>
+        </table>
+      </div>
+    </div>
+{% endblock %}
