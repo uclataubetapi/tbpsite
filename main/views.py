@@ -355,7 +355,7 @@ def create_zipfile(filenames):
             z.writestr(zipfile.ZipInfo('resumes/{}/'.format(major)), "")
         for profile, resume in filenames:
             date_string = datetime.datetime.fromtimestamp(os.path.getmtime(resume)).strftime('%Y%m')
-            path = 'resumes/{}/{}_{}{}'.format(profile.get_major_display(),
+            path = 'resumes/{}/{} {}{}'.format(profile.get_major_display(),
                                                    profile.user.first_name, profile.user.last_name,
                                                    os.path.splitext(resume)[1])
             z.write(resume, path)
