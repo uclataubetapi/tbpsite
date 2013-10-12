@@ -1,5 +1,7 @@
 import re
 
+import itertools
+
 from django.contrib.auth.decorators import login_required
 from django.template import TemplateDoesNotExist
 
@@ -22,13 +24,13 @@ def schedule(request):
     tutors = []
     for hour, hour_name in HOUR_CHOICES:
         tutors_for_hour = []
-        tutoringObjs = [ t for t in Tutoring.current.all() ] + [ t for t in ForeignTutoring.current.all() ]
+        tutoring_objs = [t for t in Tutoring.current.all()] + [t for t in ForeignTutoring.current.all()]
         for day, day_name in DAY_CHOICES:
             if Settings.objects.display_tutoring() or (request.user.is_authenticated and request.user.is_staff):
                 tutors_for_hour.append(
-                        sorted( [ t for t in tutoringObjs 
-                                  if ( t.hour_1 == hour and t.day_1 == day ) or (t.hour_2 == hour and t.day_2 == day ) ],
-                                key=lambda t: str( t.profile ) ) )
+                    sorted([t for t in tutoring_objs
+                            if (t.hour_1 == hour and t.day_1 == day) or (t.hour_2 == hour and t.day_2 == day)],
+                           key=lambda t: str(t.profile)))
             else:
                 tutors_for_hour.append(None)
         tutors.append((hour_name, tutors_for_hour))
@@ -47,6 +49,24 @@ def schedule(request):
             
     return render(request, 'schedule.html', {'term': term, 'classes': classes, 'tutors': tutors,
                                              'display': request.user.is_staff or Settings.objects.display_tutoring()})
+
+
+@login_required()
+def classes(request):
+    term = Settings.objects.term()
+    tutors = []
+    for hour, hour_name in HOUR_CHOICES:
+        tutors_for_hour = []
+        tutoring_objs = [t for t in Tutoring.current.all()] + [t for t in ForeignTutoring.current.all()]
+        for day, day_name in DAY_CHOICES:
+            tutors_for_hour.append(
+                sorted(t for t in tutoring_objs
+                       if (t.hour_1 == hour and t.day_1 ==day) or (t.hour_2 ==hour and t.day_2 == day)) +
+                sorted(itertools.chain.from_iterable(t.profile.classes.all() for t in tutoring_objs
+                                                     if (t.hour_1 == hour and t.day_1 == day) or (t.hour_2 == hour and t.day_2 == day))))
+        tutors.append((hour_name, tutors_for_hour))
+
+    return render(request, 'classes.html', {'term': term, 'tutors': tutors})
 
 
 @login_required()
