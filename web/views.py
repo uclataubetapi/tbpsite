@@ -13,7 +13,8 @@ emcc = MyTemplateView.as_view(template_name='emcc.html')
 fe = MyTemplateView.as_view(template_name='fe.html')
 home = MyTemplateView.as_view(template_name='home.html', 
                               additional={'upcoming_events': [event for event in Event.objects.filter(
-                                  dropdown=True, end__gt=datetime.datetime.today) if event.event_type != Event.SOCIAL]})
+                                  dropdown=True, end__gt=datetime.datetime.today) if event.event_type != Event.SOCIAL],
+                                          'display': Settings.objects.display_tutoring()})
 programs = MyTemplateView.as_view(template_name='programs.html')
 requirements = MyTemplateView.as_view(template_name='requirements.html')
 tutoring = MyTemplateView.as_view(template_name='tutoring.html')
