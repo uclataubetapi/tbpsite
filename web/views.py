@@ -1,4 +1,4 @@
-import operator
+import datetime
 import re
 
 from common import MyTemplateView
@@ -12,9 +12,8 @@ contact = MyTemplateView.as_view(template_name='contact.html')
 emcc = MyTemplateView.as_view(template_name='emcc.html')
 fe = MyTemplateView.as_view(template_name='fe.html')
 home = MyTemplateView.as_view(template_name='home.html', 
-                              additional={'upcomingEvents': sorted(Event.objects.filter(dropdown=True),
-                                                                   key=operator.attrgetter('start')),
-                                          'display': Settings.objects.display_tutoring()})
+                              additional={'upcoming_events': [event for event in Event.objects.filter(
+                                  dropdown=True, end__gt=datetime.datetime.today) if event.event_type != Event.SOCIAL]})
 programs = MyTemplateView.as_view(template_name='programs.html')
 requirements = MyTemplateView.as_view(template_name='requirements.html')
 tutoring = MyTemplateView.as_view(template_name='tutoring.html')
