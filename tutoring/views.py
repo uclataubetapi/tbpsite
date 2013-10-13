@@ -1,26 +1,27 @@
+import os
+import itertools
 import re
 
-import itertools
-
 from django.contrib.auth.decorators import login_required
-from django.template import TemplateDoesNotExist
+from django.template import TemplateDoesNotExist, Context, Template
 
-from main.models import Settings, Profile
-from tutoring.models import Tutoring, ForeignTutoring, Class, HOUR_CHOICES, DAY_CHOICES
 from common import render
+from main.models import Settings, Profile
+from tbpsite.settings import BASE_DIR
+from tutoring.models import Tutoring, ForeignTutoring, Class, HOUR_CHOICES, DAY_CHOICES
 
 number = re.compile(r'\d+')
 numbers = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen']
 
 
 def schedule(request):
+    term = Settings.objects.term()
     try:
         if Settings.objects.display_tutoring():
-            return render(request, 'cached_schedule.html')
+            return render(request, 'schedule.html', {'schedule': 'cached_schedule_snippet.html', 'term': term})
     except TemplateDoesNotExist:
         pass
 
-    term = Settings.objects.term()
     tutors = []
     for hour, hour_name in HOUR_CHOICES:
         tutors_for_hour = []
@@ -46,8 +47,14 @@ def schedule(request):
                                                                             c.course_number).groups()))]
         if courses:
             classes.append((department, courses, 'collapse{}'.format(number)))
-            
-    return render(request, 'schedule.html', {'term': term, 'classes': classes, 'tutors': tutors,
+
+    if Settings.objects.display_tutoring():
+        t = Template(open(os.path.join(BASE_DIR, 'templates', 'schedule_snippet.html')).read())
+        c = Context({'term': term, 'classes': classes, 'tutors': tutors, 'display': True})
+        open(os.path.join(BASE_DIR, 'cached_templates', 'cached_schedule_snippet.html'), 'w').write(t.render(c))
+        return render(request, 'schedule.html', {'schedule': 'cached_schedule_snippet.html', 'term': term})
+    return render(request, 'schedule.html', {'schedule': 'schedule_snippet.html', 'term': term, 'classes': classes,
+                                             'tutors': tutors,
                                              'display': request.user.is_staff or Settings.objects.display_tutoring()})
 
 
