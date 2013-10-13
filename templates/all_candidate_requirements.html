@@ -23,7 +23,7 @@
   </thead>
   <tbody>
     {% for candidate in candidate_list %}
-    <tr>
+    <tr{% if candidate.complete%} class="success"{% endif %}>
       <td>{{ candidate }}</td>
       <td>{% if candidate.bent_polish %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
       <td>{% if candidate.candidate_quiz %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
