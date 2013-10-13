@@ -59,6 +59,7 @@ urlpatterns += patterns('event.views',
 
 urlpatterns += patterns('',
     url(r'^schedule/$', 'tutoring.views.schedule'),
+    url(r'^refresh/$', 'tutoring.views.refresh'),
     url(r'^classes/$', 'tutoring.views.classes'),
     url(r'^expanded_schedule/$', 'tutoring.views.expanded_schedule'),
     url(r'^tutoring/feedback/$', 'tutoring.views.feedback'),
