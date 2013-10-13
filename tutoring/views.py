@@ -16,11 +16,11 @@ numbers = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine
 
 def schedule(request):
     term = Settings.objects.term()
-    try:
-        if Settings.objects.display_tutoring():
+    if Settings.objects.display_tutoring():
+        try:
             return render(request, 'schedule.html', {'schedule': 'cached_schedule_snippet.html', 'term': term})
-    except TemplateDoesNotExist:
-        pass
+        except TemplateDoesNotExist:
+            pass
 
     tutors = []
     for hour, hour_name in HOUR_CHOICES:
