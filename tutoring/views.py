@@ -66,7 +66,7 @@ def schedule(request):
                 tutors_for_hour.append(
                     sorted([t for t in tutoring_objs
                             if (t.hour_1 == hour and t.day_1 == day) or (t.hour_2 == hour and t.day_2 == day)],
-                           key=lambda t: t.__unicode__))
+                           key=lambda t: t.__unicode__()))
             else:
                 tutors_for_hour.append(None)
         tutors.append((hour_name, tutors_for_hour))
