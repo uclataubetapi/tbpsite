@@ -363,10 +363,12 @@ class ActiveMember(Member):
 
     EMCC = '0'
     TUTORING = '1'
-    COMMITTEE = '2'
+    HOUSE_LEADER = '2'
+    COMMITTEE = '3'
     REQUIREMENT_CHOICES = (
         (EMCC, 'EMCC'),
         (TUTORING, 'Tutoring'),
+        (HOUSE_LEADER, 'House Leader'),
         # TODO: comment as necessary
         (COMMITTEE, 'Rube Goldberg Committee'),
     )
