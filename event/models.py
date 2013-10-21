@@ -8,11 +8,12 @@ from points import house_social_points
 
 class Event(models.Model):
     SOCIAL = '0'
+    HOUSE = '3'
     EVENT_TYPE_CHOICES = (
         (SOCIAL, 'Social'),
         ('1', 'Project'),
         ('2', 'Mentorship'),
-        ('3', 'House'),
+        (HOUSE, 'House'),
         ('4', 'Infosession'),
     )
 

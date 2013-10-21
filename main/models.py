@@ -254,7 +254,8 @@ class Member(models.Model):
 
     def social_count(self):
         from event.models import Event
-        return Event.objects.filter(attendees=self.profile, term=self.term, event_type=0).count()
+        return (Event.current.filter(attendees=self.profile, term=self.term, event_type=Event.SOCIAL).count() +
+                Event.current.filter(attendees=self.profile, term=self.term, event_type=Event.HOUSE).count())
 
     # REQUIREMENTS
     def tutoring_complete(self):
