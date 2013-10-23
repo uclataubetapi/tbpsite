@@ -135,6 +135,7 @@ def profile_view(request):
         ('Middle Name', profile.middle_name),
         ('Last Name', user.last_name),
         ('Nickname', profile.nickname),
+        ('House', profile.house),
         ('Gender', profile.get_gender_display()),
         ('Birthday', profile.birthday),
         ('Phone Number', profile.phone_number),
