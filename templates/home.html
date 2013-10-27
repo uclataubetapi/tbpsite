@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load cache %}
+{% cache 600 home %}
 {% block content %}
   <style>
     .carousel-caption
@@ -89,3 +91,4 @@
   </div>
 
 {% endblock %}
+{% endcache %}
