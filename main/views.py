@@ -394,8 +394,13 @@ class FileView(View):
         except IOError:
             raise Http404
 
-        response = HttpResponse(FileWrapper(f), content_type='application/pdf')
-        response['Content-Disposition'] = 'filename={}.pdf'.format(self.field)
+        path, ext = os.path.splitext(obj.path)
+        content_type = {'.pdf': 'application/pdf', '.doc': 'application/msword', 
+                '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}[ext]
+        filename = 'filename={}{}'.format(self.field, ext)
+
+        response = HttpResponse(FileWrapper(f), content_type=content_type)
+        response['Content-Disposition'] = filename
         return response
 
     def get_object(self, request, id):
