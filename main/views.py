@@ -37,7 +37,8 @@ MAJOR_MAPPING = {
 
 
 def update_professor_interview_and_resume(candidate):
-    if candidate.resume() and candidate.professor_interview and datetime.datetime.today() < Settings.objects.term().due_date:
+    if candidate.resume() and candidate.professor_interview and (Settings.objects.term().due_date is None or
+            datetime.datetime.today() < Settings.objects.term().due_date):
         candidate.professor_interview_and_resume = True
         candidate.save()
 
