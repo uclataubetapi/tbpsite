@@ -319,6 +319,7 @@ class Candidate(Member):
             ('Tutoring', self.tutoring_complete()),
             ('Bent Polish', self.bent_polish),
             ('Candidate Quiz', self.candidate_quiz),
+            ('Candidate Meet and Greet', self.candidate_meet_and_greet),
             ('Signature Book', self.signature_book),
             ('Community Service', self.community_service_complete()),
             ('Initiation Fee', self.initiation_fee),
@@ -327,6 +328,9 @@ class Candidate(Member):
             ('Resume', self.resume()),
             ('Professor Interview', self.professor_interview),
         )
+
+    def requirement_count(self):
+        return len([None for _, requirement in self.requirements() if requirement])
 
     # POINTS
     professor_interview_on_time = models.BooleanField(default=False)
