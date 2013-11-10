@@ -396,7 +396,7 @@ class FileView(View):
             raise Http404
 
         path, ext = os.path.splitext(obj.path)
-        content_type = {'.pdf': 'application/pdf', '.doc': 'application/msword', 
+        content_type = {'.pdf': 'application/pdf', '.doc': 'application/msword', '.jpg': 'image/jpeg',
                 '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}[ext]
         filename = 'filename={}{}'.format(self.field, ext)
 
