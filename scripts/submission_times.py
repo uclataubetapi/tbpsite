@@ -20,7 +20,7 @@ for c in Candidate.objects.all():
         print "Missing professor interview: %s" % c
     elif os.path.getmtime(c.professor_interview.file.name) > due_date_seconds:
         print "Late professor interview: %s (%s)" % (c, datetime.datetime.fromtimestamp(os.path.getmtime(c.professor_interview.file.name)))
-    if not c.profile.resume_pdf and not c.profile.resume_word:
+    if not c.resume():
         print "Missing resume: %s" % c
     elif os.path.getmtime(c.resume().file.name) > due_date_seconds:
         print "Late resume: %s (%s)" % (c, datetime.datetime.fromtimestamp(os.path.getmtime(c.resume().file.name)))
