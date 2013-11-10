@@ -24,7 +24,7 @@
   </thead>
   <tbody>
     {% for candidate in candidate_list %}
-    <tr{% if candidate.complete%} class="success"{% endif %}>
+    <tr class={% if candidate.complete%}"success"{% elif candidate.requirement_count > 5.5 %}"warning"{% else %}"danger"{% endif %}>
       <td>{{ candidate }}</td>
       <td>{{ candidate.requirement_count }}</td>
       <td>{% if candidate.bent_polish %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
