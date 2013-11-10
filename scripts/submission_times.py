@@ -16,7 +16,11 @@ print "Due date is %s" % due_date
 due_date_seconds = time.mktime(due_date.timetuple())
 
 for c in Candidate.objects.all():
-    if c.professor_interview and os.path.getmtime(c.professor_interview.file.name) > due_date_seconds:
+    if not c.professor_interview:
+        print "Missing professor interview: %s" % c
+    elif os.path.getmtime(c.professor_interview.file.name) > due_date_seconds:
         print "Late professor interview: %s (%s)" % (c, datetime.datetime.fromtimestamp(os.path.getmtime(c.professor_interview.file.name)))
-    if c.resume() and os.path.getmtime(c.resume().file.name) > due_date_seconds:
+    if not c.profile.resume_pdf and not c.profile.resume_word:
+        print "Missing resume: %s" % c
+    elif os.path.getmtime(c.resume().file.name) > due_date_seconds:
         print "Late resume: %s (%s)" % (c, datetime.datetime.fromtimestamp(os.path.getmtime(c.resume().file.name)))
