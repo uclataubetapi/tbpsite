@@ -397,7 +397,7 @@ class FileView(View):
 
         path, ext = os.path.splitext(obj.path)
         content_type = {'.pdf': 'application/pdf', '.doc': 'application/msword', '.jpg': 'image/jpeg',
-                '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}[ext]
+                '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}[ext.lower()]
         filename = 'filename={}{}'.format(self.field, ext)
 
         response = HttpResponse(FileWrapper(f), content_type=content_type)
