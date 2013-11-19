@@ -16,15 +16,15 @@ BENT_POLISH_POINTS = 2
 
 QUIZ_FIRST_TRY_POINTS = 2
 QUIZ_POINTS = {
-    tuple(range(80, 90)): 5,
-    tuple(range(90, 100)): 10,
-    tuple(range(100, 101)): 15,
+    #tuple(range(80, 90)): 5,
+    #tuple(range(90, 100)): 10,
+    #tuple(range(100, 101)): 15,
 }
 
 HOUSE_SOCIAL_POINTS = {
-    tuple(range(50, 70)): 1,
-    tuple(range(70, 100)): 2,
-    tuple(range(100, 101)): 3,
+    #tuple(range(50, 70)): 1,
+    #tuple(range(70, 100)): 2,
+    #tuple(range(100, 101)): 3,
 }
 
 FIRST = '1'
@@ -46,14 +46,21 @@ DOCUMENT_POINTS = {
 
 
 def quiz_points(score):
-    for bracket, points in QUIZ_POINTS.iteritems():
-        if score in bracket:
-            return points
-    return 0
-
+    if score < 80:
+        return 0
+    elif score < 90:
+        return 5
+    elif score < 100:
+        return 10
+    
+    return 15
 
 def house_social_points(score):
-    for bracket, points in HOUSE_SOCIAL_POINTS.iteritems():
-        if score in bracket:
-            return points
-    return 0
+    if score < 50:
+        return 0
+    elif score < 70:
+        return 1
+    elif score < 100:
+        return 2
+    
+    return 3
