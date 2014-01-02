@@ -5,6 +5,8 @@ from django import forms
 from main.models import Settings, TermManager
 from points import *
 
+from datetime import datetime
+
 DAY_CHOICES = (
     ('0', 'Monday'),
     ('1', 'Tuesday'),
@@ -107,7 +109,7 @@ class Tutoring(BaseTutoring):
     frozen = models.BooleanField(default=False)
 
     is_tutoring = models.BooleanField(default=False)
-    last_start = models.DateTimeField(auto_now=False, auto_now_add=False)
+    last_start = models.DateTimeField(auto_now=False, auto_now_add=False, default=lambda: datetime.datetime.now()-datetime.timedelta(days=1) )
 
     class Meta:
         ordering = ('-term', 'profile')
