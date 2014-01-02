@@ -5,7 +5,7 @@ from django import forms
 from main.models import Settings, TermManager
 from points import *
 
-from datetime import datetime
+import datetime
 
 DAY_CHOICES = (
     ('0', 'Monday'),

@@ -1,5 +1,5 @@
 import os, re
-from datetime import datetime
+import datetime
 
 from django import forms
 from django.core.files.storage import FileSystemStorage
