@@ -81,7 +81,13 @@ class Term(models.Model):
         return '{} {}'.format(self.get_quarter_display(), self.year)
 
     def get_week(self):
-        return (datetime.date.today()-self.start_date).days /7 + 1
+        week = (datetime.date.today()-self.start_date).days /7 + 1
+        if week < 3:
+            return 3
+        elif week > 9:
+            return 9
+        return week
+
 
 class SettingsManager(models.Manager):
     def settings(self):
