@@ -123,8 +123,8 @@ def tutoring_logging(request):
     error = None
 
     td = (datetime.datetime.now() - tutoring.last_start).seconds
-    hours = td / 3600
-    if (td / 60) % 60 >= 45:
+    hours = td // 3600
+    if (td // 60) % 60 >= 45:
         hours += 1
 
     if request.method == "POST":
