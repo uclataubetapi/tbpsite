@@ -128,6 +128,7 @@ def tutoring_logging(request):
         if 'sign_in' in request.POST:
             tutoring.is_tutoring = True
             tutoring.last_start = datetime.datetime.now()
+            hours = 0
 
         elif 'sign_out' in request.POST:
             h = hours
