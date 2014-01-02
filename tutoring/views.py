@@ -39,13 +39,10 @@ def get_tutors():
         tutors_for_hour = []
         tutoring_objs = [t for t in Tutoring.current.all()] + [t for t in ForeignTutoring.current.all()]
         for day, day_name in DAY_CHOICES:
-            if Settings.objects.display_tutoring() or (request.user.is_authenticated and request.user.is_staff):
-                tutors_for_hour.append(
-                    sorted([t for t in tutoring_objs
-                            if (t.hour_1 == hour and t.day_1 == day) or (t.hour_2 == hour and t.day_2 == day)],
-                           key=lambda t: t.__unicode__()))
-            else:
-                tutors_for_hour.append(None)
+            tutors_for_hour.append(
+                sorted([t for t in tutoring_objs
+                        if (t.hour_1 == hour and t.day_1 == day) or (t.hour_2 == hour and t.day_2 == day)],
+                       key=lambda t: t.__unicode__()))
         tutors.append((hour_name, tutors_for_hour))
     return tutors
 
