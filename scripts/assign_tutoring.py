@@ -9,12 +9,12 @@ setup_environ( settings )
 
 from tutoring.models import Tutoring, DAY_CHOICES, HOUR_CHOICES
 
-MAX_TUTORS_PER_HOUR = 7 
-MIN_TUTORS_PER_HOUR = 5 # Want this
-ENFORCED_MIN_TUTORS_PER_HOUR = 2 # Enforce this
+MAX_TUTORS_PER_HOUR = 5 
+MIN_TUTORS_PER_HOUR = 2 # Want this
+ENFORCED_MIN_TUTORS_PER_HOUR = 1 # Enforce this
 
 TUTORING_START = 10 # 10AM
-TUTORING_END = 18 # 6 PM
+TUTORING_END = 17 # 6 PM
 
 tutoringHours = {}
 for d in DAY_CHOICES:
