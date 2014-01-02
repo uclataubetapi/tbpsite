@@ -18,8 +18,8 @@
     <tr>
       <td>{{ member }}</td>
       <td>{{ member.get_requirement_choice_display }}</td>
-      <td>{% if member.requirement %}<i class="icon-ok"></i>{% endif %}</td>
-      <td>{% if member.social_complete %}<i class="icon-ok"></i>{% endif %}</td>
+      <td>{% if member.requirement %}<span class="glyphicon glyphicon-ok"/>{% endif %}</td>
+        <td>{% if member.social_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
     </tr>
     {% endfor %}
   </tbody>

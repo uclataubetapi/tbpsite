@@ -147,13 +147,13 @@ def tutoring_logging(request):
                     h -= makeup_e #hours not logged! TODO: email member coord?
                 if makeup_t > 0:
                     for i in range(3, week):
-                        week_obj = getattr(tutoring, 'Week'+str(i))
+                        week_obj = getattr(tutoring, 'week_'+str(i))
                         while week_obj.complete() and h > 0:
                             week_obj.hours += 1
                             h -= 1
                             week_obj.no_makeup = False
                         week_obj.save()
-                cur_week = getattr(tutoring, 'Week'+str(week))
+                cur_week = getattr(tutoring, 'week_'+str(week))
                 cur_week.hours += h
                 cur_week.tutees += tutees
                 cur_week.save()

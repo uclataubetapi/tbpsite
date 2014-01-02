@@ -379,7 +379,7 @@ class ActiveMember(Member):
     EMCC = '0'
     TUTORING = '1'
     HOUSE_LEADER = '2'
-    RG = '3'
+    COMMITTEE = '3'
     POKER = '4'
     REQUIREMENT_CHOICES = (
         (EMCC, 'EMCC'),
@@ -387,7 +387,7 @@ class ActiveMember(Member):
         # (HOUSE_LEADER, 'House Leader'),
         (POKER, 'Poker Tournament Committee'),
         # TODO: comment as necessary
-        (RG, 'Rube Goldberg Committee'),
+        (COMMITTEE, 'Rube Goldberg Committee'),
     )
     requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
     requirement_complete = models.BooleanField(default=False)
