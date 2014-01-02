@@ -7,13 +7,14 @@
 <div class="row">
     {% if error %}
         <p class="has-error">{{ error }}</p>
-    {% else %}
+    {% elif isTutoring %}
         <p>You've tutored {{ hours }} hours since you've signed in (For your convenience, we round up at the 40 minute mark. However, fractional hours are not counted)</p>
     {% endif %}
 
     {% if isTutoring %}
-        <p> You've tutored </p>
+        <p>
         <form class="form-inline" method="post">
+            {% csrf_token %}
             Number of Tutees: <input type="number" name="tutees"/>
             Subjects Tutored: <input type="text" name="classes"/> <!-- FIX THIS UGH -->
             How much of this time is makeup?
@@ -21,12 +22,16 @@
             <li>For a previous week: <input type="number" name="makeup_tutoring" min="0" value="0"/> </li>
             <li>For an event I missed: <input type="number" name="makeup_event" min="0" value="0"/> </li>
             </ul>
-            <button type="submit" class="btn btn-default" name="sign_out">Sign out of Tutoring</button>
+            <button type="submit" class="btn btn-primary" name="sign_out">Sign out of Tutoring</button>
         </form>
     {% else %}
+        <p>
         <form class="form-inline" method="post">
-            <button type="submit" class="btn btn-default" name="sign_in">Sign in to Tutoring</button>
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" name="sign_in">Sign in to Tutoring</button>
 
         </form>
     {% endif %}
-</div>
+  </div>
+
+{% endblock %}

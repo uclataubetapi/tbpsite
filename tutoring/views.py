@@ -122,7 +122,7 @@ def tutoring_logging(request):
     tutoring = get_object_or_404(Tutoring, profile=request.user.profile, term=c_term)
     error = None
 
-    td = (datetime.datetime.now - tutoring.last_start).seconds
+    td = (datetime.datetime.now() - tutoring.last_start).seconds
     hours = td / 3600
     if (td / 60) % 60 >= 45:
         hours += 1
@@ -130,7 +130,7 @@ def tutoring_logging(request):
     if request.method == "POST":
         if 'sign_in' in request.POST:
             tutoring.is_tutoring = True
-            tutoring.last_start = datetime.datetime.now
+            tutoring.last_start = datetime.datetime.now()
 
         elif 'sign_out' in request.POST:
             h = hours
@@ -167,4 +167,4 @@ def tutoring_logging(request):
                 error = 'You forgot to sign out of your last tutoring session. Please contact the tutoring chair to have those hours logged'
 
     tutoring.save()
-    return render(request, 'tutoring_logging.html', {'error': error, 'isTutoring': tutoring.isTutoring, 'hours': hours, })
+    return render(request, 'tutoring_logging.html', {'error': error, 'isTutoring': tutoring.is_tutoring, 'hours': hours, })
