@@ -1,5 +1,5 @@
 import os, re
-from datetime import datetime
+import datetime
 
 from django import forms
 from django.core.files.storage import FileSystemStorage
@@ -81,7 +81,13 @@ class Term(models.Model):
         return '{} {}'.format(self.get_quarter_display(), self.year)
 
     def get_week(self):
-        return (datetime.date.today()-self.start_date).days /7 + 1
+        week = (datetime.date.today()-self.start_date).days /7 + 1
+        if week < 3:
+            return 3
+        elif week > 9:
+            return 9
+        return week
+
 
 class SettingsManager(models.Manager):
     def settings(self):
@@ -373,13 +379,15 @@ class ActiveMember(Member):
     EMCC = '0'
     TUTORING = '1'
     HOUSE_LEADER = '2'
-    COMMITTEE = '3'
+    RG = '3'
+    POKER = '4'
     REQUIREMENT_CHOICES = (
         (EMCC, 'EMCC'),
         (TUTORING, 'Tutoring'),
-        (HOUSE_LEADER, 'House Leader'),
+        # (HOUSE_LEADER, 'House Leader'),
+        (POKER, 'Poker Tournament Committee'),
         # TODO: comment as necessary
-        (COMMITTEE, 'Rube Goldberg Committee'),
+        (RG, 'Rube Goldberg Committee'),
     )
     requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
     requirement_complete = models.BooleanField(default=False)
