@@ -134,14 +134,15 @@ def tutoring_logging(request):
 
         elif 'sign_out' in request.POST:
             h = hours
-            tutees = request.POST['tutees']
-            makeup_t = request.POST['makeup_tutoring']
-            makeup_e = request.POST['makeup_event']
+            tutees = int(request.POST['tutees'])
+            makeup_t = int(request.POST['makeup_tutoring'])
+            makeup_e = int(request.POST['makeup_event'])
             #TODO: get classes tutored
 
             if (makeup_t + makeup_e) > hours:
                 error = 'Hmm please check your math. According to our records, you have tutored approximately ' + str(
                     hours) + 'hours this session (we round up after 40 minutes).'
+                #error = 'apparently, '+str(makeup_t)+' + ' +str(makeup_e) + ' > ' + str(hours)
             else:
                 tutoring.is_tutoring = False
                 week = c_term.get_week()
@@ -165,6 +166,7 @@ def tutoring_logging(request):
         if tutoring.is_tutoring:
             if tutoring.last_start.date() != datetime.datetime.now().date():  #midnight passed :P
                 error = 'You forgot to sign out of your last tutoring session. Please contact the tutoring chair to have those hours logged'
+                tutoring.is_tutoring = False
 
     tutoring.save()
     return render(request, 'tutoring_logging.html', {'error': error, 'isTutoring': tutoring.is_tutoring, 'hours': hours, })
