@@ -1,5 +1,6 @@
 from django.db import models
 from django.forms import ModelForm
+from django import forms
 
 from main.models import Settings, TermManager
 from points import *
@@ -12,14 +13,14 @@ DAY_CHOICES = (
     ('4', 'Friday'),
 )
 HOUR_CHOICES = (
-    ('0', '10am'),
+    #('0', '10am'),
     ('1', '11am'),
     ('2', '12pm'),
     ('3', '1pm'),
     ('4', '2pm'),
     ('5', '3pm'),
     ('6', '4pm'),
-    ('7', '5pm'),
+    #('7', '5pm'),
 )
 TWO_HOUR_CHOICES = (
     ('0', '10am-12pm'),
@@ -105,6 +106,9 @@ class Tutoring(BaseTutoring):
 
     frozen = models.BooleanField(default=False)
 
+    is_tutoring = models.BooleanField(default=False)
+    last_start = models.DateTimeField(auto_now=False, auto_now_add=False)
+
     class Meta:
         ordering = ('-term', 'profile')
         unique_together = ('profile', 'term')
@@ -142,6 +146,7 @@ class Tutoring(BaseTutoring):
         return cls.objects.create(profile=profile, term=term, **tutoring_weeks)
 
 
+
 class WeekManager(models.Manager):
     def get_query_set(self):
         if not Settings.objects.display_all_terms():
@@ -154,6 +159,7 @@ class WeekManager(models.Manager):
 class Week(models.Model):
     hours = models.IntegerField(default=0)
     tutees = models.IntegerField(default=0)
+    classes = models.ManyToManyField('Class', blank=True, null=True)
     no_makeup = models.BooleanField(default=True)
 
     objects = WeekManager()
@@ -262,3 +268,4 @@ class TutoringPreferencesForm(ModelForm):
     class Meta:
         model = Tutoring
         fields = ['best_day', 'best_hour', 'second_best_day', 'second_best_hour', 'third_best_day', 'third_best_hour']
+

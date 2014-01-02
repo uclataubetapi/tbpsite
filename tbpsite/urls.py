@@ -62,6 +62,7 @@ urlpatterns += patterns('',
     url(r'^classes/$', 'tutoring.views.classes'),
     url(r'^expanded_schedule/$', 'tutoring.views.expanded_schedule'),
     url(r'^tutoring/feedback/$', 'tutoring.views.feedback'),
+    url(r'^tutoring/log_hours/$', 'tutoring.views.tutoring_logging'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

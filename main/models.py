@@ -1,4 +1,5 @@
 import os, re
+from datetime import datetime
 
 from django import forms
 from django.core.files.storage import FileSystemStorage
@@ -79,6 +80,8 @@ class Term(models.Model):
     def __unicode__(self):
         return '{} {}'.format(self.get_quarter_display(), self.year)
 
+    def get_week(self):
+        return (datetime.date.today()-self.start_date).days /7 + 1
 
 class SettingsManager(models.Manager):
     def settings(self):

@@ -2,9 +2,12 @@ import os
 import itertools
 import re
 
+from datetime import datetime
+
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.template import TemplateDoesNotExist, Context, Template
+from django.shortcuts import get_object_or_404
 
 from common import render
 from main.models import Settings, Profile
@@ -112,3 +115,56 @@ def expanded_schedule(request):
                                              'display': request.user.is_staff or Settings.objects.display_tutoring()})
 def feedback(request):
     return render(request, 'tutoring_feedback.html')
+
+@login_required()
+def tutoring_logging(request):
+    c_term = Settings.objects.term()
+    tutoring = get_object_or_404(Tutoring, profile=request.user.profile, term=c_term)
+    error = None
+
+    td = (datetime.datetime.now - tutoring.last_start).seconds
+    hours = td / 3600
+    if (td / 60) % 60 >= 45:
+        hours += 1
+
+    if request.method == "POST":
+        if 'sign_in' in request.POST:
+            tutoring.is_tutoring = True
+            tutoring.last_start = datetime.datetime.now
+
+        elif 'sign_out' in request.POST:
+            h = hours
+            tutees = request.POST['tutees']
+            makeup_t = request.POST['makeup_tutoring']
+            makeup_e = request.POST['makeup_event']
+            #TODO: get classes tutored
+
+            if (makeup_t + makeup_e) > hours:
+                error = 'Hmm please check your math. According to our records, you have tutored approximately ' + str(
+                    hours) + 'hours this session (we round up after 40 minutes).'
+            else:
+                tutoring.is_tutoring = False
+                week = c_term.get_week()
+                if makeup_e > 0:
+                    h -= makeup_e #hours not logged! TODO: email member coord?
+                if makeup_t > 0:
+                    for i in range(3, week):
+                        week_obj = getattr(tutoring, 'Week'+str(i))
+                        while week_obj.complete() and h > 0:
+                            week_obj.hours += 1
+                            h -= 1
+                            week_obj.no_makeup = False
+                        week_obj.save()
+                cur_week = getattr(tutoring, 'Week'+str(week))
+                cur_week.hours += h
+                cur_week.tutees += tutees
+                cur_week.save()
+                #TODO: add classes
+
+    else:
+        if tutoring.is_tutoring:
+            if tutoring.last_start.date() != datetime.datetime.now().date():  #midnight passed :P
+                error = 'You forgot to sign out of your last tutoring session. Please contact the tutoring chair to have those hours logged'
+
+    tutoring.save()
+    return render(request, 'tutoring_logging.html', {'error': error, 'isTutoring': tutoring.isTutoring, 'hours': hours, })
