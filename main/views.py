@@ -16,6 +16,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.views.generic.base import View
 from django.utils.decorators import method_decorator
+from django.db.models import Q
 
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES,\
     LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm,\
@@ -309,7 +310,13 @@ def requirements(request):
 
 @staff_member_required
 def candidates(request):
-    return render(request, 'all_candidate_requirements.html', {'candidate_list': Candidate.current.order_by('profile')})
+    terms_list = Term.objects.filter(Q(quarter='1') | Q(quarter='3'))
+
+    if request.method == "POST":
+        term_id = int(request.POST['term'])
+        term = Term.objects.get(id=term_id)
+        return render(request, 'all_candidate_requirements.html', {'candidate_list': Candidate.objects.filter(term=term), 'terms': terms_list})
+    return render(request, 'all_candidate_requirements.html', {'candidate_list': Candidate.current.order_by('profile'), 'terms': terms_list})
 
 
 @staff_member_required

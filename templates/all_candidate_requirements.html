@@ -4,43 +4,62 @@
 
 {% block content %}
 <h1>Candidates</h1>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Count</th>
-      <th>Bent Polish</th>
-      <th>Candidate Quiz</th>
-      <th>Candidate Meet and Greet</th>
-      <th>Social Event</th>
-      <th>Signature Book</th>
-      <th>Community Service</th>
-      <th>Initation Fee</th>
-      <th>Tutoring</th>
-      <th>Engineering Futures</th>
-      <th>Resume Submission</th>
-      <th>Professor Interview</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for candidate in candidate_list %}
-    <tr class={% if candidate.complete%}"success"{% elif candidate.requirement_count > 5.5 %}"warning"{% else %}"danger"{% endif %}>
-      <td>{{ candidate }}</td>
-      <td>{{ candidate.requirement_count }}</td>
-      <td>{% if candidate.bent_polish %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.candidate_quiz %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.candidate_meet_and_greet %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.social_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}({{ candidate.social_count }})</td>
-      <td>{% if candidate.signature_book %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.community_service_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.initiation_fee %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.tutoring_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.engineering_futures %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.resume %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-      <td>{% if candidate.professor_interview %}<a href="{% url 'main.views.interview' candidate.id %}"><span class="glyphicon glyphicon-ok"></span></a>{% endif %}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+          <form role="form" method="post">
+            {% csrf_token %}
+                <select name="term">
+                    {% for t in terms %}
+                    <option value="{{ t.id }}">{{ t }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary" name="submit">Change Term</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Count</th>
+            <th>Bent Polish</th>
+            <th>Candidate Quiz</th>
+            <th>Candidate Meet and Greet</th>
+            <th>Social Event</th>
+            <th>Signature Book</th>
+            <th>Community Service</th>
+            <th>Initation Fee</th>
+            <th>Tutoring</th>
+            <th>Engineering Futures</th>
+            <th>Resume Submission</th>
+            <th>Professor Interview</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for candidate in candidate_list %}
+        <tr class={% if candidate.complete %}"success"{% elif candidate.requirement_count > 5.5 %}"warning"{% else %}"danger"{% endif %}>
+        <td>{{ candidate }}</td>
+        <td>{{ candidate.requirement_count }}</td>
+        <td>{% if candidate.bent_polish %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        <td>{% if candidate.candidate_quiz %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        <td>{% if candidate.candidate_meet_and_greet %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        <td>{% if candidate.social_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}({{ candidate.social_count }})
+        </td>
+        <td>{% if candidate.signature_book %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        <td>{% if candidate.community_service_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        <td>{% if candidate.initiation_fee %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        <td>{% if candidate.tutoring_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        <td>{% if candidate.engineering_futures %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        <td>{% if candidate.resume %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        <td>{% if candidate.professor_interview %}<a href="{% url 'main.views.interview' candidate.id %}"><span
+            class="glyphicon glyphicon-ok"></span></a>{% endif %}
+        </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
