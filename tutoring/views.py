@@ -113,7 +113,7 @@ def expanded_schedule(request):
 def feedback(request):
     return render(request, 'tutoring_feedback.html')
 
-@login_required(login_url=login)
+@login_required(login_url='/login')
 def tutoring_logging(request):
     c_term = Settings.objects.term()
     tutoring = get_object_or_404(Tutoring, profile=request.user.profile, term=c_term)
@@ -130,6 +130,7 @@ def tutoring_logging(request):
             tutoring.is_tutoring = True
             tutoring.last_start = datetime.datetime.now()
             hours = 0
+            classes = Class.objects.filter(display=True)
 
         elif 'sign_out' in request.POST:
             h = hours
