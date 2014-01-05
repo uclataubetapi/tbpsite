@@ -314,7 +314,7 @@ def candidates(request):
 
 @staff_member_required
 def active_members(request):
-    terms_list = sorted(Term.objects.filter(year >= 2013))
+    terms_list = Term.objects.all()
 
     if request.method == "POST":
         term_id = int(request.POST['term'])
