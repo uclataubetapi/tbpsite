@@ -20,11 +20,11 @@
             </div>
             <div class="form-group">
                 Subjects Tutored:
-                <div style="height:200px; overflow-y:scroll">
+                <div style="height:200px; width:300px; overflow-y:scroll; border-style:solid; border-width: 1px; padding: 10px; margin:3px">
                 {% for class in classes %}
                     {% if class.display %}
-                    <input type="checkbox" name="subjects" id="choice{{ forloop.counter }}" value="{{ class.id }}">
-                    <label for="choice{{ forloop.counter }}">{{ choice.department }} {{ choice.course_number }}</label>
+                    <input type="checkbox" name="subjects" id="class{{ forloop.counter }}" value="{{ class.id }}">
+                    <label for="class{{ forloop.counter }}">{{ class.department }} {{ class.course_number }}</label><br/>
                     {% endif %}
                 {% endfor %}
                 </div>
@@ -32,8 +32,8 @@
             <div class="form-group">
               How much of this time is makeup?
                   <ul>
-                <li>For a previous week: <input type="number" name="makeup_tutoring" min="0" value="0"/> </li>
-                <li>For an event I missed: <input type="number" name="makeup_event" min="0" value="0"/> </li>
+                <li style="padding: 3px">For a previous week: <input type="number" name="makeup_tutoring" min="0" value="0"/> </li>
+                <li styld="padding: 3px">For an event I missed: <input type="number" name="makeup_event" min="0" value="0"/> </li>
               </ul>
             </ul>
             </div>
