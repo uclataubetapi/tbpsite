@@ -36,6 +36,9 @@
             <ul class="dropdown-menu">
               <li><a href="{% url 'tutoring.views.schedule' %}">Schedule</a></li>
               <li><a href="{% url 'tutoring.views.feedback' %}">Feedback</a></li>
+              {% if user.is_authenticated %}
+              <li><a href="{% url 'tutoring.views.tutoring_logging %}">Log Hours</a></li>
+              {% endif %}
             </ul>
             </li>
             <li class="dropdown">
