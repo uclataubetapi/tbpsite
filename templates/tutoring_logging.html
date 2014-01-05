@@ -19,7 +19,15 @@
                 Number of Tutees: <input type="number" name="tutees" min="0" value="0"/>
             </div>
             <div class="form-group">
-                Subjects Tutored: <input type="text" name="classes"/> <!-- FIX THIS UGH -->
+                Subjects Tutored:
+                <div style="height:200px; overflow-y:scroll">
+                {% for class in classes %}
+                    {% if class.display %}
+                    <input type="checkbox" name="subjects" id="choice{{ forloop.counter }}" value="{{ class.id }}">
+                    <label for="choice{{ forloop.counter }}">{{ choice.department }} {{ choice.course_number }}</label>
+                    {% endif %}
+                {% endfor %}
+                </div>
             </div>
             <div class="form-group">
               How much of this time is makeup?
