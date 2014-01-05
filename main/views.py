@@ -314,7 +314,14 @@ def candidates(request):
 
 @staff_member_required
 def active_members(request):
-    return render(request, 'active_members.html', {'member_list': ActiveMember.current.order_by('profile')})
+    terms_list = sorted(Term.objects.filter(year >= 2013))
+
+    if request.method == "POST":
+        term_id = int(request.POST['term'])
+        term = Term.objects.get(id=term_id)
+        return render(request, 'active_members.html', {'member_list': ActiveMember.objects.filter(term=term), 'terms': terms_list})
+
+    return render(request, 'active_members.html', {'member_list': ActiveMember.current.order_by('profile'), 'terms': terms_list})
 
 
 @staff_member_required

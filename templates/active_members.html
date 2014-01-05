@@ -4,25 +4,40 @@
 
 {% block content %}
 <h1>Distinguished Active Members</h1>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Requirement</th>
-      <th>Requirement Complete</th>
-      <th>Social Event</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for member in member_list %}
-    <tr>
-      <td>{{ member }}</td>
-      <td>{{ member.get_requirement_choice_display }}</td>
-      <td>{% if member.requirement %}<span class="glyphicon glyphicon-ok"/>{% endif %}</td>
-        <td>{% if member.social_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <form role="form" method="post">
+                <select name="term">
+                    {% for t in terms %}
+                    <option value="{{ t.id }}">{{ t.quarter }} {{ t.year }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary" name="submit">Change Term</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Requirement</th>
+              <th>Requirement Complete</th>
+              <th>Social Event</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for member in member_list %}
+            <tr>
+              <td>{{ member }}</td>
+              <td>{{ member.get_requirement_choice_display }}</td>
+              <td>{% if member.requirement %}<span class="glyphicon glyphicon-ok"/>{% endif %}</td>
+                <td>{% if member.social_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
