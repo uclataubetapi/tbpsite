@@ -113,7 +113,7 @@ def expanded_schedule(request):
 def feedback(request):
     return render(request, 'tutoring_feedback.html')
 
-@login_required()
+@login_required(login_url=login)
 def tutoring_logging(request):
     c_term = Settings.objects.term()
     tutoring = get_object_or_404(Tutoring, profile=request.user.profile, term=c_term)
@@ -136,11 +136,11 @@ def tutoring_logging(request):
             tutees = int(request.POST['tutees'])
             makeup_t = int(request.POST['makeup_tutoring'])
             makeup_e = int(request.POST['makeup_event'])
-            #TODO: get classes tutored
+            class_ids = request.POST.getlist('subjects')
 
             if (makeup_t + makeup_e) > hours:
                 error = 'Hmm please check your math. According to our records, you have tutored approximately ' + str(
-                    hours) + 'hours this session (we round up after 40 minutes).'
+                    hours) + 'hours this session (we round up after 45 minutes).'
                 #error = 'apparently, '+str(makeup_t)+' + ' +str(makeup_e) + ' > ' + str(hours)
             else:
                 tutoring.is_tutoring = False
@@ -159,7 +159,9 @@ def tutoring_logging(request):
                 cur_week.hours += h
                 cur_week.tutees += tutees
                 cur_week.save()
-                #TODO: add classes
+                for s in class_ids:
+                    s = int(s)
+                    cur_week.classes.add(Class.objects.get(id=s))
 
     else:
         if tutoring.is_tutoring:
