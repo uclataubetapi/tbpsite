@@ -119,6 +119,7 @@ def tutoring_logging(request):
     tutoring = get_object_or_404(Tutoring, profile=request.user.profile, term=c_term)
     error = None
     classes = None
+    confirm = False
 
     td = (datetime.datetime.now() - tutoring.last_start).seconds
     hours = td // 3600
@@ -131,6 +132,7 @@ def tutoring_logging(request):
             tutoring.last_start = datetime.datetime.now()
             hours = 0
             classes = Class.objects.filter(display=True)
+            confirm = True
 
         elif 'sign_out' in request.POST:
             h = hours
@@ -163,6 +165,7 @@ def tutoring_logging(request):
                 for s in class_ids:
                     s = int(s)
                     cur_week.classes.add(Class.objects.get(id=s))
+                confirm = True
 
     else:
         if tutoring.is_tutoring:
@@ -173,4 +176,4 @@ def tutoring_logging(request):
                 classes = Class.objects.filter(display=True)
 
     tutoring.save()
-    return render(request, 'tutoring_logging.html', {'error': error, 'isTutoring': tutoring.is_tutoring, 'hours': hours, 'classes': classes})
+    return render(request, 'tutoring_logging.html', {'error': error, 'isTutoring': tutoring.is_tutoring, 'hours': hours, 'classes': classes, 'confirm': confirm})

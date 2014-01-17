@@ -8,47 +8,58 @@
   <div class="col-md-12">
     {% if error %}
         <p class="text-danger">{{ error }}</p>
-    {% elif isTutoring %}
-        <p>You've tutored {{ hours }} hours since you've signed in (For your convenience, we round up at the 45 minute mark. However, fractional hours are not counted)</p>
-    {% endif %}
-
-    {% if isTutoring %}
-        <form role="form" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                Number of Tutees: <input type="number" name="tutees" min="0" value="0"/>
-            </div>
-            <div class="form-group">
-                Subjects Tutored:
-                <div style="height:200px; width:300px; overflow-y:scroll; border-style:solid; border-width: 1px; padding: 10px; margin:3px">
-                {% for class in classes %}
-                    {% if class.display %}
-                    <input type="checkbox" name="subjects" id="class{{ forloop.counter }}" value="{{ class.id }}">
-                    <label for="class{{ forloop.counter }}">{{ class.department }} {{ class.course_number }}</label><br/>
-                    {% endif %}
-                {% endfor %}
-                </div>
-            </div>
-            <div class="form-group">
-              How much of this time is makeup?
-                  <ul>
-                <li style="padding: 3px">For a previous week: <input type="number" name="makeup_tutoring" min="0" value="0"/> </li>
-                <li styld="padding: 3px">For an event I missed: <input type="number" name="makeup_event" min="0" value="0"/> </li>
-              </ul>
-            </ul>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary" name="sign_out">Sign out of Tutoring</button>
-            </div>
-        </form>
-    {% else %}
+    {% elif confirm %}
+        {% if isTutoring %}
         <p>
-        <form role="form" method="post">
-            {% csrf_token %}
-            <div class="form group">
-                <button type="submit" class="btn btn-primary" name="sign_in">Sign in to Tutoring</button>
-            </div>
-        </form>
+            Thanks for signing in to tutoring! Please remember to come back whenever your hours end to sign out!
+        </p>
+        {% else %}
+        <p>
+            Thanks for logging your tutoring! Just to confirm, we've logged {{ hours }} hours for you in this last session
+            (please remember that we round up your last hour at the 45 minute mark). If you feel there has been an error, please
+            email <a href="mailto:webmaster@tbp.seas.ucla.edu">webmaster@tbp.seas.ucla.edu</a> to get it cleared up.
+        </p>
+    {% else %}
+        <p>You've tutored {{ hours }} hours since you've signed in (For your convenience, we round up at the 45 minute mark. However, fractional hours are not counted)</p>
+        {% if isTutoring %}
+            <form role="form" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    Number of Tutees: <input type="number" name="tutees" min="0" value="0"/>
+                </div>
+                <div class="form-group">
+                    Subjects Tutored:
+                    <div style="height:200px; width:300px; overflow-y:scroll; border-style:solid; border-width: 1px; padding: 10px; margin:3px">
+                    {% for class in classes %}
+                        {% if class.display %}
+                        <input type="checkbox" name="subjects" id="class{{ forloop.counter }}" value="{{ class.id }}">
+                        <label for="class{{ forloop.counter }}">{{ class.department }} {{ class.course_number }}</label><br/>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group">
+                  How much of this time is makeup?
+                      <ul>
+                    <li style="padding: 3px">For a previous week: <input type="number" name="makeup_tutoring" min="0" value="0"/> </li>
+                    <li styld="padding: 3px">For an event I missed: <input type="number" name="makeup_event" min="0" value="0"/> </li>
+                  </ul>
+                </ul>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" name="sign_out">Sign out of Tutoring</button>
+                </div>
+            </form>
+        {% else %}
+            <p>
+            <form role="form" method="post">
+                {% csrf_token %}
+                <div class="form group">
+                    <button type="submit" class="btn btn-primary" name="sign_in">Sign in to Tutoring</button>
+                </div>
+            </form>
+        {% endif %}
+
     {% endif %}
   </div>
 </div>
