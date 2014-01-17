@@ -18,10 +18,11 @@
             Thanks for logging your tutoring! Just to confirm, we've logged {{ hours }} hours for you in this last session
             (please remember that we round up your last hour at the 45 minute mark). If you feel there has been an error, please
             email <a href="mailto:webmaster@tbp.seas.ucla.edu">webmaster@tbp.seas.ucla.edu</a> to get it cleared up.
-        </p>
+       </p>
+        {% endif %}
     {% else %}
-        <p>You've tutored {{ hours }} hours since you've signed in (For your convenience, we round up at the 45 minute mark. However, fractional hours are not counted)</p>
         {% if isTutoring %}
+            <p>You've tutored {{ hours }} hours since you've signed in (For your convenience, we round up at the 45 minute mark. However, fractional hours are not counted)</p>
             <form role="form" method="post">
                 {% csrf_token %}
                 <div class="form-group">
@@ -47,7 +48,7 @@
                 </ul>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary" name="sign_out">Sign out of Tutoring</button>
+                    <button type="submit" class="btn btn-primary btn-lg" name="sign_out">Sign out of Tutoring</button>
                 </div>
             </form>
         {% else %}
@@ -55,7 +56,7 @@
             <form role="form" method="post">
                 {% csrf_token %}
                 <div class="form group">
-                    <button type="submit" class="btn btn-primary" name="sign_in">Sign in to Tutoring</button>
+                    <button type="submit" class="btn btn-primary btn-lg" name="sign_in">Sign in to Tutoring</button>
                 </div>
             </form>
         {% endif %}
