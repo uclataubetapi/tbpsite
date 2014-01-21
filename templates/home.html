@@ -60,7 +60,8 @@
       <h2>UCLA Tau Beta Pi</h2>
       <h4>Announcements</h4>
       {% if user.is_authenticated %}
-        <a href="{% url 'tutoring.views.tutoring_logging' %}" class="btn btn-large btn-primary">Log Tutoring Hours Here</a>
+      <a href="{% url 'tutoring.views.tutoring_logging' %}" class="btn btn-large btn-primary">Log Tutoring Hours Here</a> 
+      <br/>
       {% endif %}
       {% if display %}<a href="{% url 'tutoring.views.schedule' %}" class="btn btn-large btn-primary">The Tutoring Schedule is Up!</a>{% endif %}
       <h4>Upcoming Events</h4>

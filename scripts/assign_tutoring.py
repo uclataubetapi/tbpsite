@@ -14,7 +14,7 @@ MIN_TUTORS_PER_HOUR = 2 # Want this
 ENFORCED_MIN_TUTORS_PER_HOUR = 1 # Enforce this
 
 TUTORING_START = 10 # 10AM
-TUTORING_END = 17 # 6 PM
+TUTORING_END = 16 # 1 hr before 5pm
 
 tutoringHours = {}
 for d in DAY_CHOICES:

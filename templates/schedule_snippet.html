@@ -11,9 +11,15 @@
 <h1>TBP {{ term }} Tutoring Schedule</h1>
 {% if not display %}
   <p>Check back later!</p>
-{% else %}
+  {% else %}
   <div class="row">
-    <div class="col-lg-2">
+    <div class="col-md-12">
+      <p>Tutoring is in Boelter 6266</p>
+      <br/>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
       <div class="panel-group" id="accordion">
         {% for item in classes %}
           <div class="panel panel-default">
@@ -33,7 +39,7 @@
         {% endfor %}
       </div>
     </div>
-    <div class="col-lg-10">
+    <div class="col-md-10">
       <table class="table table-striped">
         <tbody>
         <tr>
