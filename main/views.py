@@ -258,9 +258,9 @@ def add(request):
 @login_required(login_url=login)
 def requirements(request):
     profile = request.user.profile
-    term = Settings.objects.term()
 
     if profile.position == Profile.CANDIDATE:
+        term = Settings.objects.term()
         candidate = profile.candidate
 
         if request.method == "POST":
@@ -275,6 +275,7 @@ def requirements(request):
         return render_profile_page(request, 'candidate_requirements.html', {'term': term, 'form': form})
                 
     else:
+        term = Settings.objects.signup_term()
         if request.method == "POST":
             member = ActiveMember(profile=profile, term=term)
             member_form = MemberForm(request.POST, instance=member)

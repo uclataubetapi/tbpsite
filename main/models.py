@@ -96,6 +96,9 @@ class SettingsManager(models.Manager):
     def term(self):
         return self.settings().term
 
+    def signup_term(self):
+        return self.settings().signup_term
+
     def display_all_terms(self):
         return self.settings().display_all_terms
 
@@ -110,7 +113,8 @@ class SettingsManager(models.Manager):
 
 
 class Settings(models.Model):
-    term = models.ForeignKey('Term', blank=True, null=True)
+    term = models.ForeignKey('Term', blank=True, null=True, related_name='current')
+    signup_term = models.ForeignKey('Term', blank=True, null=True, related_name='signup')
     display_all_terms = models.BooleanField(default=False)
     display_tutoring = models.BooleanField(default=False)
     registration_code = models.CharField(max_length=10, default='')
@@ -563,3 +567,4 @@ class ShirtForm(ModelForm):
     class Meta:
         model = Candidate
         fields = ['shirt_size']
+

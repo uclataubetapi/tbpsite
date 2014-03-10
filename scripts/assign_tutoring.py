@@ -14,7 +14,7 @@ MIN_TUTORS_PER_HOUR = 2 # Want this
 ENFORCED_MIN_TUTORS_PER_HOUR = 1 # Enforce this
 
 TUTORING_START = 10 # 10AM
-TUTORING_END = 17 # 6 PM
+TUTORING_END = 16 # 6 PM
 
 tutoringHours = {}
 for d in DAY_CHOICES:
@@ -116,7 +116,11 @@ def assignIfNecessary():
                     if tutorCount and tutorCount + len( tutoringHours[ ( day, slot ) ] ) <= assignCount:
                         hoursAssigned = True
                         for t in tutorObjs:
+#                            import pdb; pdb.set_trace()
                             tutoringObjs.remove( t )
+#                            print tutoringHours
+ #                           print "\n"
+  #                          print "{}{}".format("day : ", day) + "{}{}".format(", slot : ", slot) + "{}{}".format(", t : ", t)
                             tutoringHours[ ( day, slot ) ].append( t )
                             tutoringHours[ ( day, slot + 1 ) ].append( t )
 
