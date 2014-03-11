@@ -116,7 +116,11 @@ def assignIfNecessary():
                     if tutorCount and tutorCount + len( tutoringHours[ ( day, slot ) ] ) <= assignCount:
                         hoursAssigned = True
                         for t in tutorObjs:
+#                            import pdb; pdb.set_trace()
                             tutoringObjs.remove( t )
+#                            print tutoringHours
+ #                           print "\n"
+  #                          print "{}{}".format("day : ", day) + "{}{}".format(", slot : ", slot) + "{}{}".format(", t : ", t)
                             tutoringHours[ ( day, slot ) ].append( t )
                             tutoringHours[ ( day, slot + 1 ) ].append( t )
 

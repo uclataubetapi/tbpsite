@@ -153,9 +153,10 @@ def tutoring_logging(request):
                 if makeup_t > 0:
                     for i in range(3, week):
                         week_obj = getattr(tutoring, 'week_'+str(i))
-                        while week_obj.complete() and h > 0:
+                        while (not week_obj.complete()) and makeup_t > 0:
                             week_obj.hours += 1
                             h -= 1
+                            makeup_t -=1;
                             week_obj.no_makeup = False
                         week_obj.save()
                 cur_week = getattr(tutoring, 'week_'+str(week))
