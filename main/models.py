@@ -383,15 +383,19 @@ class ActiveMember(Member):
     EMCC = '0'
     TUTORING = '1'
     HOUSE_LEADER = '2'
-    COMMITTEE = '3'
+    COMMITTEE = '3' #RG
     POKER = '4'
+    CBR = '5'
+    ACAD_OUTREACH = '6'
     REQUIREMENT_CHOICES = (
         (EMCC, 'EMCC'),
         (TUTORING, 'Tutoring'),
-        # (HOUSE_LEADER, 'House Leader'),
-        (POKER, 'Poker Tournament Committee'),
+        (HOUSE_LEADER, 'House Leader'),
+        # (POKER, 'Poker Tournament Committee'),
         # TODO: comment as necessary
-        (COMMITTEE, 'Rube Goldberg Committee'),
+        # (COMMITTEE, 'Rube Goldberg Committee'),
+        (CBR, 'Cardboard Boat Race Committee'),
+        (ACAD_OUTREACH, 'Academic Outreach Committee'),
     )
     requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
     requirement_complete = models.BooleanField(default=False)
