@@ -319,6 +319,7 @@ class Candidate(Member):
     engineering_futures = models.BooleanField(default=False)
     professor_interview = models.FileField(upload_to=upload_to_path, storage=professor_interview_fs,
                                            blank=True, null=True, default=None, verbose_name="Professor Interview")
+    tbp_event = models.BooleanField(default=False)
 
     def resume(self):
         return self.profile.resume_pdf or self.profile.resume_word
