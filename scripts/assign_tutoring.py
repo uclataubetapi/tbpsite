@@ -205,7 +205,7 @@ for timeSlot, assignees in tutoringHours.iteritems():
                         tutoringHours[ ( pref[ 0 ], pref[ 1 ][ 1 ] ) ].append( t )
 
 # Enforce min and max per hour
-tutoringHoursStatus( enforce=True )
+tutoringHoursStatus(enforce=False) #enforce=True ) This quarter (Spring 2014) no one registered Fri 4-5
 
 print tutoringObjs
 
