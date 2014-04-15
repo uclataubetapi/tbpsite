@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Sponsor TBP - CAE{% endblock %} 
+
+{% block content %}
+
+<h1>Sponsor Tau Beta Pi</h1> 
+
+<p>Thank you so much for considering being a part of the success of the Tau Beta Pi CA Epsilon chapter! We are extremely grateful for any and all donations. Your help and support means we can continue to plan fantastic events for UCLA students, give back to our community, and help students connect with great companies like yours. We appreciate all the time and energy you generously provide to help our organization reach its full potential. </p>
+<br>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+  <input type="hidden" name="cmd" value="_s-xclick">
+  <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----MIIHZwYJKoZIhvcNAQcEoIIHWDCCB1QCAQExggEwMIIBLAIBADCBlDCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20CAQAwDQYJKoZIhvcNAQEBBQAEgYBXo5EFQLEl0tuL664LcwdT1PBmUbZ6QCGeu66J4Wx9mTNkWU9boCkHbNPbegWGqjhsdsYTrKSQwwQlMqmRdd5JxrL+JQ+ai1AMpWfFX8vJviib0NjwpKZJxF3dNgobibYL9PIthVsk29a+J0XUQ9sfPAWMSL2dgWrENX3zJ4JtQzELMAkGBSsOAwIaBQAwgeQGCSqGSIb3DQEHATAUBggqhkiG9w0DBwQI3FWWxlyk6uiAgcBRhkcahAC9J9x3B5aKb20PgUCGs0HUw1KalJd8qgrtT/2VUxhwygmxNTqEBHXog0xxG5Q9Q6RTQZuJw6W3b12p2l/+iyOLTznDUqJi+uO+DtF9QJJ7pMVPV/SzqGrEQXzS/boCD4PAAjbaG+zxeFEfbOluQxQm9WoVENaDesMRiboWv+x3AsB7LNUJmYkfxb50j2g5CZhu+4mF07hdR6f6tOyJOvh80jva4cIrIlLroa0puiIt0mUXFfHV7uI3fi6gggOHMIIDgzCCAuygAwIBAgIBADANBgkqhkiG9w0BAQUFADCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20wHhcNMDQwMjEzMTAxMzE1WhcNMzUwMjEzMTAxMzE1WjCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMFHTt38RMxLXJyO2SmS+Ndl72T7oKJ4u4uw+6awntALWh03PewmIJuzbALScsTS4sZoS1fKciBGoh11gIfHzylvkdNe/hJl66/RGqrj5rFb08sAABNTzDTiqqNpJeBsYs/c2aiGozptX2RlnBktH+SUNpAajW724Nv2Wvhif6sFAgMBAAGjge4wgeswHQYDVR0OBBYEFJaffLvGbxe9WT9S1wob7BDWZJRrMIG7BgNVHSMEgbMwgbCAFJaffLvGbxe9WT9S1wob7BDWZJRroYGUpIGRMIGOMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0ExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC1BheVBhbCBJbmMuMRMwEQYDVQQLFApsaXZlX2NlcnRzMREwDwYDVQQDFAhsaXZlX2FwaTEcMBoGCSqGSIb3DQEJARYNcmVAcGF5cGFsLmNvbYIBADAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUAA4GBAIFfOlaagFrl71+jq6OKidbWFSE+Q4FqROvdgIONth+8kSK//Y/4ihuE4Ymvzn5ceE3S/iBSQQMjyvb+s2TWbQYDwcp129OPIbD9epdr4tJOUNiSojw7BHwYRiPh58S1xGlFgHFXwrEBb3dgNbMUa+u4qectsMAXpVHnD9wIyfmHMYIBmjCCAZYCAQEwgZQwgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tAgEAMAkGBSsOAwIaBQCgXTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xNDA0MDQwNjE4MjRaMCMGCSqGSIb3DQEJBDEWBBS+wHgJvwBYwtOf5wSRHtO/Fx/toTANBgkqhkiG9w0BAQEFAASBgGvwEDQ5tXtNoLapduJEbMM1LnGmTN/H9cezixPZXHnrd408HmMjLhI/Hs2u3OcF/IINt+CH/yip/HxVoVPw+n1RdX/4AqkJZkua2Wxcx1ylrYj5rheX6ShKNOZth+OvBie07ve3anWxSoi5vkJQuA5hWa0ep+B3r0tjtpTSqRGX-----END PKCS7-----
+  ">
+  <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+  <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+
+{% endblock %}
