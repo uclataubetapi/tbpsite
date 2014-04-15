@@ -18,7 +18,7 @@ home = MyTemplateView.as_view(template_name='home.html',
 programs = MyTemplateView.as_view(template_name='programs.html')
 requirements = MyTemplateView.as_view(template_name='requirements.html')
 tutoring = MyTemplateView.as_view(template_name='tutoring.html')
-corporate_sponsor = MyTemplateView.as_view(template_name='corporate_sponsor')
+sponsor = MyTemplateView.as_view(template_name='sponsor.html')
 donate = MyTemplateView.as_view(template_name='donate.html')
 
 def get_faculty_by_dept():

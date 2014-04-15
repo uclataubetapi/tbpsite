@@ -328,6 +328,9 @@ class Candidate(Member):
     def community_service_complete(self):
         return self.community_service >= MIN_COMMUNITY_SERVICE
 
+    def tbp_event_complete(self): 
+        return self.professor_interview or self.tbp_event
+
     def requirements(self):
         return (
             ('Tutoring', self.tutoring_complete()),
@@ -340,7 +343,7 @@ class Candidate(Member):
             ('Engineering Futures', self.engineering_futures),
             ('Social', self.social_complete()),
             ('Resume', self.resume()),
-            ('Professor Interview', self.professor_interview),
+            ('TBP event', self.tbp_event_complete(self)),
         )
 
     def requirement_count(self):
