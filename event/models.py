@@ -19,7 +19,7 @@ class Event(models.Model):
 
     term = models.ForeignKey('main.Term', default=Settings.objects.term)
     name = models.CharField(max_length=40)
-    url = models.CharField(max_length=20)
+    url = models.CharField(max_length=20, unique=True)
     description = models.TextField(max_length=1000)
     start = models.DateTimeField()
     end = models.DateTimeField()
