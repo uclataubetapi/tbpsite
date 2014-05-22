@@ -15,6 +15,7 @@ class Event(models.Model):
         ('2', 'Mentorship'),
         (HOUSE, 'House'),
         ('4', 'Infosession'),
+        ('5', 'Acadmic Outreach'),
     )
 
     term = models.ForeignKey('main.Term', default=Settings.objects.term)
@@ -77,3 +78,11 @@ class Event(models.Model):
             return 0
         percentage = len(total_members) * 100 / len(total_attendees)
         return house_social_points(percentage)
+
+    def save(self, *args, **kwargs):
+        if self.event_type == '2' or self.event_type == '5':
+            for profile in self.attendees.filter(position=Profile.CANDIDATE):
+                profile.candidate.tbp_event = True
+                profile.candidate.save()
+                profile.save()
+        super(Event, self).save(*args, **kwargs)

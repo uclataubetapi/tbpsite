@@ -343,7 +343,7 @@ class Candidate(Member):
             ('Engineering Futures', self.engineering_futures),
             ('Social', self.social_complete()),
             ('Resume', self.resume()),
-            ('TBP event', self.tbp_event_complete(self)),
+            ('TBP event', self.tbp_event_complete()),
         )
 
     def requirement_count(self):
@@ -361,8 +361,17 @@ class Candidate(Member):
                     COMMUNITY_SERVICE_POINTS * (count - MIN_COMMUNITY_SERVICE))
         return COMMUNITY_SERVICE_POINTS * count
 
+    #not used anymore, added TBP event!
     def professor_interview_on_time_points(self):
         return ON_TIME_POINTS if self.professor_interview_on_time else 0
+
+    def tbp_event_points(self):
+        if self.tbp_event:
+            from event.models import Event
+            count = Event.objects.filter(attendees=self.profile, term=self.term).count()
+            return TBP_EVENT_POINTS + (count-1)*EXTRA_TBP_EVENT_POINTS
+        else:
+            return ON_TIME_POINTS if self.professor_interview_on_time else 0
 
     def resume_on_time_points(self):
         return ON_TIME_POINTS if self.resume_on_time else 0
@@ -376,7 +385,7 @@ class Candidate(Member):
     def points(self):
         return sum((
             super(Candidate, self).points(), self.community_service_points(),
-            self.professor_interview_on_time_points(), self.resume_on_time_points(), self.bent_polish_points(),
+            self.tbp_event_points(), self.resume_on_time_points(), self.bent_polish_points(),
             self.quiz_first_try_points(), quiz_points(self.candidate_quiz), self.other,
         ))
 
@@ -407,6 +416,13 @@ class ActiveMember(Member):
     class Meta(Member.Meta):
         unique_together = ('profile', 'term')
 
+    def event_count(self):
+        from event.models import Event
+        return Event.objects.filter(attendees=self.profile, term=self.term).count()
+    
+    def event_complete(self):
+        return self.event_count() >= MIN_SOCIALS
+    
     def requirement(self):
         if self.requirement_choice in (ActiveMember.EMCC, ActiveMember.COMMITTEE):
             return self.requirement_complete

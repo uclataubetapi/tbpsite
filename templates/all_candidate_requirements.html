@@ -35,7 +35,7 @@
             <th>Tutoring</th>
             <th>Engineering Futures</th>
             <th>Resume Submission</th>
-            <th>Professor Interview</th>
+            <th>TBP Event/Interview</th>
         </tr>
         </thead>
         <tbody>
@@ -54,7 +54,7 @@
         <td>{% if candidate.tutoring_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
         <td>{% if candidate.engineering_futures %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
         <td>{% if candidate.resume %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-        <td>{% if candidate.professor_interview %}<a href="{% url 'main.views.interview' candidate.id %}"><span
+        <td>{% if candidate.tbp_event_complete %}<a href="{% url 'main.views.interview' candidate.id %}"><span
             class="glyphicon glyphicon-ok"></span></a>{% endif %}
         </td>
         </tr>
