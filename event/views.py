@@ -4,6 +4,7 @@ from django.shortcuts import redirect, get_object_or_404
 
 from common import render
 from event.models import Event
+from main.models import Settings
 
 
 def events(request): 
@@ -11,7 +12,7 @@ def events(request):
     return render(request, 'events.html', 
                   {'upcoming_events': [event for event in Event.objects.filter(end__gt=today).order_by('end')
                                        if event.event_type != Event.SOCIAL or request.user.is_authenticated()],
-                   'past_events': [event for event in Event.objects.filter(end__lte=today).order_by('-end')
+                   'past_events': [event for event in Event.objects.filter(end__lte=today, term=Settings.objects.term()).order_by('-end')
                                    if event.event_type != Event.SOCIAL or request.user.is_authenticated()]})
 
 

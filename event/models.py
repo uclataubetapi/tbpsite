@@ -15,7 +15,7 @@ class Event(models.Model):
         ('2', 'Mentorship'),
         (HOUSE, 'House'),
         ('4', 'Infosession'),
-        ('5', 'Acadmic Outreach'),
+        ('5', 'Academic Outreach'),
     )
 
     term = models.ForeignKey('main.Term', default=Settings.objects.term)
