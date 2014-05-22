@@ -316,7 +316,11 @@ class Candidate(Member):
                                                null=True, default=None, verbose_name="Community Service Proof")
     community_service = models.IntegerField(default=0)
     initiation_fee = models.BooleanField(default=False)
+    
+    #required events
     engineering_futures = models.BooleanField(default=False)
+    candidate_sorting = models.BooleanField(default =False)
+
     professor_interview = models.FileField(upload_to=upload_to_path, storage=professor_interview_fs,
                                            blank=True, null=True, default=None, verbose_name="Professor Interview")
     tbp_event = models.BooleanField(default=False)
