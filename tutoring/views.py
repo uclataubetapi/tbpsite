@@ -18,6 +18,11 @@ numbers = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine
 
 
 def get_classes():
+    """
+
+
+    :return:
+    """
     classes = []
     for department, number in zip(Class.DEPT_CHOICES, numbers):
         department, _ = department
@@ -33,6 +38,11 @@ def get_classes():
 
 
 def get_tutors():
+    """
+
+
+    :return:
+    """
     tutors = []
     for hour, hour_name in TUTORING_HOUR_CHOICES:
         tutors_for_hour = []
@@ -47,6 +57,11 @@ def get_tutors():
 
 
 def schedule(request):
+    """
+
+    :param request:
+    :return:
+    """
     term = Settings.objects.term()
     if Settings.objects.display_tutoring():
         try:
@@ -61,6 +76,11 @@ def schedule(request):
 
 @login_required()
 def classes(request):
+    """
+
+    :param request:
+    :return:
+    """
     term = Settings.objects.term()
     tutors = []
     for hour, hour_name in TUTORING_HOUR_CHOICES:
@@ -79,6 +99,11 @@ def classes(request):
 
 @login_required()
 def expanded_schedule(request):
+    """
+
+    :param request:
+    :return:
+    """
     term = Settings.objects.term()
     tutors = []
     for hour, hour_name in TUTORING_HOUR_CHOICES:
@@ -114,6 +139,11 @@ def feedback(request):
 
 @login_required(login_url='/login')
 def tutoring_logging(request):
+    """
+
+    :param request:
+    :return:
+    """
     c_term = Settings.objects.term()
     tutoring = get_object_or_404(Tutoring, profile=request.user.profile, term=c_term)
     error = None

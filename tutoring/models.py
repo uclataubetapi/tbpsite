@@ -49,12 +49,27 @@ class BaseTutoring(models.Model):
         abstract = True
 
     def get_classes(self):
+        """
+
+
+        :raise NotImplementedError:
+        """
         raise NotImplementedError
 
     def display_classes(self):
+        """
+
+
+        :return:
+        """
         return ', '.join(c.__unicode__() for c in self.get_classes() if c.display)
 
     def get_class_ids(self):
+        """
+
+
+        :return:
+        """
         return ' '.join(c.department + c.course_number + '_1' for c in self.get_classes() if c.display)
 
 
@@ -98,19 +113,50 @@ class Tutoring(BaseTutoring):
         return self.profile.user.get_full_name()
 
     def get_classes(self):
+        """
+
+
+        :return:
+        """
         return self.profile.classes.all()
 
     def get_weeks(self):
+        """
+
+
+        :return:
+        """
         return [self.week_3, self.week_4, self.week_5, self.week_6, self.week_7, self.week_8, self.week_9]
 
     def complete(self):
+        """
+
+
+        :return:
+        """
         return all(week.complete() for week in self.get_weeks())
 
     def points(self):
+        """
+
+
+        :return:
+        """
         return sum(week.points() for week in self.get_weeks())
 
     def preferences(self, two_hour=False):
+        """
+
+        :param two_hour:
+        :return:
+        """
+
         def logical_hours(hour_choice):
+            """
+
+            :param hour_choice:
+            :return:
+            """
             if two_hour:
                 return int(hour_choice) + 10, int(hour_choice) + 11
 
@@ -122,12 +168,23 @@ class Tutoring(BaseTutoring):
 
     @classmethod
     def with_weeks(cls, profile, term):
+        """
+
+        :param profile:
+        :param term:
+        :return:
+        """
         tutoring_weeks = {'week_{}'.format(d): globals()['Week{}'.format(d)].objects.create() for d in range(3, 10)}
         return cls.objects.create(profile=profile, term=term, **tutoring_weeks)
 
 
 class WeekManager(models.Manager):
     def get_query_set(self):
+        """
+
+
+        :return:
+        """
         if not Settings.objects.display_all_terms():
             term = Settings.objects.term()
             if term:
@@ -152,9 +209,19 @@ class Week(models.Model):
         return self.profile().__unicode__()
 
     def complete(self):
+        """
+
+
+        :return:
+        """
         return self.hours >= MIN_TUTORING_HOURS
 
     def points(self):
+        """
+
+
+        :return:
+        """
         count = self.hours
         points = 0
         if count > MIN_TUTORING_HOURS:
