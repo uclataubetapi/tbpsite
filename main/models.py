@@ -348,6 +348,7 @@ class Candidate(Member):
             ('Social', self.social_complete()),
             ('Resume', self.resume()),
             ('TBP event', self.tbp_event_complete()),
+            ('Candidate Sorting', self.candidate_sorting),
         )
 
     def requirement_count(self):

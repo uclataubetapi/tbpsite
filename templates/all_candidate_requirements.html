@@ -26,6 +26,7 @@
             <th>Name</th>
             <th>Count</th>
             <th>Bent Polish</th>
+            <th>Sorting</th>
             <th>Candidate Quiz</th>
             <th>Candidate Meet and Greet</th>
             <th>Social Event</th>
@@ -44,6 +45,7 @@
         <td>{{ candidate }}</td>
         <td>{{ candidate.requirement_count }}</td>
         <td>{% if candidate.bent_polish %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        <td>{% if candidate.candidate_sorting %}<span class="glyphicon glyphicon-ok"><span>{% endif %}</td>
         <td>{% if candidate.candidate_quiz %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
         <td>{% if candidate.candidate_meet_and_greet %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
         <td>{% if candidate.social_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}({{ candidate.social_count }})
