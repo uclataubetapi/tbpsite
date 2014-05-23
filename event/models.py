@@ -3,7 +3,6 @@ import datetime
 from django.db import models
 
 from main.models import TermManager, Settings, Candidate, Profile
-from points import house_social_points
 
 
 class Event(models.Model):
