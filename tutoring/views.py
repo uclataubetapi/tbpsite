@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.template import TemplateDoesNotExist, Context, Template
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
 
 from common import render
 from main.models import Settings, Profile
@@ -149,7 +150,11 @@ def tutoring_logging(request):
                 tutoring.is_tutoring = False
                 week = c_term.get_week()
                 if makeup_e > 0:
-                    h -= makeup_e #hours not logged! TODO: email member coord?
+                    h -= makeup_e #hours not logged!
+                    send_mail('Make up Tutoring Hours!', 
+                            'Hi! '+tutoring.profile+' indicated they tutored '+makeup_e+' hours to make up for an event. Please check this out!', 
+                            'webmaster@tbp.seas.ucla.edu', ['webmaster@tbp.seas.ucla.edu'], fail_silently=True)
+
                 if makeup_t > 0:
                     for i in range(3, week):
                         week_obj = getattr(tutoring, 'week_'+str(i))

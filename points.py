@@ -1,7 +1,7 @@
 TUTORING_POINTS = 2 #per week
 MIN_TUTORING_HOURS = 2 #per week
 EXTRA_TUTORING_POINTS = 2 #per hour
-MAX_TUTORING_HOURS = 4 # not sure what this is used for, says Rachel
+MAX_TUTORING_HOURS = 4 
 
 COMMUNITY_SERVICE_POINTS = 6 
 MIN_COMMUNITY_SERVICE = 1
@@ -20,17 +20,6 @@ INTERVIEW_ON_TIME_POINTS = 4
 BENT_POLISH_POINTS = 2
 
 QUIZ_FIRST_TRY_POINTS = 2
-QUIZ_POINTS = {
-    #tuple(range(80, 90)): 4,
-    #tuple(range(90, 100)): 6,
-    #tuple(range(100, 120)): 8,
-}
-
-HOUSE_SOCIAL_POINTS = {
-    #tuple(range(50, 70)): 1,
-    #tuple(range(70, 100)): 2,
-    #tuple(range(100, 101)): 3,
-}
 
 REQUIRED_EVENT_POINTS = 2 #candidate sorting, meet and greet, EF
 
@@ -45,9 +34,9 @@ PLACE_CHOICES = (
     (FOURTH, '4th'),
 )
 DOCUMENT_POINTS = {
-    FIRST: 6,
-    SECOND: 4,
-    THIRD: 2,
+    FIRST: 3,
+    SECOND: 2,
+    THIRD: 1,
     FOURTH: 0,
 }
 
@@ -62,12 +51,3 @@ def quiz_points(score):
     
     return 8
 
-def house_social_points(score):
-    if score < 50:
-        return 0
-    elif score < 70:
-        return 1
-    elif score < 100:
-        return 2
-    
-    return 3

@@ -47,6 +47,7 @@ HOUR_CHOICES = (
     ('5', '3pm-5pm'),
 )
 
+#default save locations for files
 resume_pdf_fs = FileSystemStorage(location='/media/resumes_pdf')
 resume_word_fs = FileSystemStorage(location='/media/resumes_word')
 professor_interview_fs = FileSystemStorage(location='/media/professor_interviews')
@@ -56,6 +57,7 @@ def validateRe( regex, value, msg ):
     if not re.match( regex, value ):
         raise ValidationError( msg )
 
+#renaming files that are uploaded
 def upload_to_path(instance, filename):
     return '{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
 
@@ -177,11 +179,11 @@ class HousePoints(models.Model):
                 list(ActiveMember.objects.select_related().filter(profile__house=self.house, term=self.term)))
 
     def professor_interview_and_resume_points(self):
-        return DOCUMENT_POINTS[self.professor_interview_and_resume] * len(self.member_list())
+        candidates = list(Candidate.objects.select_related().filter(profile__house=self.house, term=self.term))
+        return DOCUMENT_POINTS[self.professor_interview_and_resume] * len(candidates)
 
     def points(self):
         return sum([sum(member.points() for member in self.member_list()),
-                    sum(social.points(self.house) for social in self.social_list()),
                     self.professor_interview_and_resume_points(), self.other])
 
 
@@ -421,23 +423,24 @@ class ActiveMember(Member):
     class Meta(Member.Meta):
         unique_together = ('profile', 'term')
 
-    def event_count(self):
+    def social_count(self):
         from event.models import Event
         return Event.objects.filter(attendees=self.profile, term=self.term).count()
     
-    def event_complete(self):
-        return self.event_count() >= MIN_SOCIALS
-    
     def requirement(self):
-        if self.requirement_choice in (ActiveMember.EMCC, ActiveMember.COMMITTEE):
-            return self.requirement_complete
-        return self.tutoring.complete() if self.tutoring else False
+        #allow for override in requirement
+        return self.requirement_complete or (self.tutoring.complete() if self.tutoring else False)
 
     def requirements(self):
         return (
             (self.get_requirement_choice_display(), self.requirement()),
-            ('Social', self.social_complete()),
+            ('Events', self.social_complete()),
         )
+    def points(self):
+        if self.profile.user.is_staff:
+            return 0
+        else:
+            return super(ActiveMember, self).points()
 
 
 class Officer(models.Model):
