@@ -1,64 +1,27 @@
-import os, re
+import os
+import re
 import datetime
 
-from django import forms
-from django.core.files.storage import FileSystemStorage
-from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.db import models
-from django.forms import ModelForm
 from django.core.exceptions import ValidationError
+
+from constants import MAJOR_CHOICES, DEPT_CHOICES, resume_word_fs, resume_pdf_fs, community_service_fs, \
+    professor_interview_fs
 
 from points import *
 
-MAJOR_CHOICES = (
-    ('0', 'Aerospace Engineering'),
-    ('1', 'Bioengineering'),
-    ('2', 'Chemical Engineering'),
-    ('3', 'Civil Engineering'),
-    ('4', 'Computer Science'),
-    ('5', 'Computer Science and Engineering'),
-    ('6', 'Electrical Engineering'),
-    ('7', 'Materials Engineering'),
-    ('8', 'Mechanical Engineering'),
-)
-DEPT_CHOICES = (
-    ('0', 'Bioengineering'),
-    ('1', 'Chemical Engineering'),
-    ('2', 'Civil and Environmental Engineering'),
-    ('3', 'Computer Science'),
-    ('4', 'Electrical Engineering'),
-    ('5', 'Mechanical and Aerospace Engineering'),
-    ('6', 'Materials Science and Engineering'),
-)
-DAY_CHOICES = (
-    ('0', 'Monday'),
-    ('1', 'Tuesday'),
-    ('2', 'Wednesday'),
-    ('3', 'Thursday'),
-    ('4', 'Friday'),
-)
-HOUR_CHOICES = (
-    ('0', '10am-12pm'),
-    ('1', '11am-1pm'),
-    ('2', '12pm-2pm'),
-    ('3', '1pm-3pm'),
-    ('4', '2pm-4pm'),
-    ('5', '3pm-5pm'),
-)
 
-#default save locations for files
-resume_pdf_fs = FileSystemStorage(location='/media/resumes_pdf')
-resume_word_fs = FileSystemStorage(location='/media/resumes_word')
-professor_interview_fs = FileSystemStorage(location='/media/professor_interviews')
-community_service_fs = FileSystemStorage(location='/media/community_service_proof')
+def validate_re(regex, value, msg):
+    if not re.match(regex, value):
+        raise ValidationError(msg)
 
-def validateRe( regex, value, msg ):
-    if not re.match( regex, value ):
-        raise ValidationError( msg )
 
 #renaming files that are uploaded
 def upload_to_path(instance, filename):
+    """
+    Rename files that are uploaded
+    """
     return '{}{}'.format(str(instance).replace(' ', '_'), os.path.splitext(filename)[1])
 
 
@@ -83,7 +46,7 @@ class Term(models.Model):
         return '{} {}'.format(self.get_quarter_display(), self.year)
 
     def get_week(self):
-        week = (datetime.date.today()-self.start_date).days /7 + 1
+        week = (datetime.date.today() - self.start_date).days / 7 + 1
         if week < 3:
             return 3
         elif week > 9:
@@ -172,6 +135,7 @@ class HousePoints(models.Model):
 
     def social_list(self):
         from event.models import Event
+
         return Event.objects.select_related().filter(term=self.term)
 
     def member_list(self):
@@ -199,7 +163,8 @@ class Profile(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='M')
     birthday = models.DateField(null=True, verbose_name="Birthday (mm/dd/yyyy)")
     phone_number = models.CharField(max_length=25, verbose_name="Phone Number (xxx-xxx-xxxx)",
-            validators=[ lambda v: validateRe( r'^\d{3}-\d{3}-\d{4}$', v, 'Please enter a valid phone number' ) ] )
+                                    validators=[lambda v: validate_re(r'^\d{3}-\d{3}-\d{4}$', v,
+                                                                      'Please enter a valid phone number')])
     CANDIDATE = '0'
     MEMBER = '1'
     POSITION_CHOICES = (
@@ -223,7 +188,7 @@ class Profile(models.Model):
 
     def __unicode__(self):
         if self.nickname:
-            return '%s %s' % ( self.nickname, self.user.last_name )
+            return '%s %s' % (self.nickname, self.user.last_name)
         name = self.user.get_full_name()
         return name if name else self.user.get_username()
 
@@ -242,7 +207,7 @@ class Profile(models.Model):
 
     def dump(self):
         return ','.join(field for field in [self.user.first_name, self.middle_name, self.user.last_name,
-                                            self.user.email,  self.nickname, 
+                                            self.user.email, self.nickname,
                                             self.house.__unicode__() if self.house else '', self.gender,
                                             self.birthday.strftime('%x') if self.birthday else '', self.phone_number,
                                             self.get_major_display(),
@@ -270,6 +235,7 @@ class Member(models.Model):
 
     def social_count(self):
         from event.models import Event
+
         return (Event.current.filter(attendees=self.profile, term=self.term, event_type=Event.SOCIAL).count() +
                 Event.current.filter(attendees=self.profile, term=self.term, event_type=Event.HOUSE).count())
 
@@ -318,10 +284,10 @@ class Candidate(Member):
                                                null=True, default=None, verbose_name="Community Service Proof")
     community_service = models.IntegerField(default=0)
     initiation_fee = models.BooleanField(default=False)
-    
+
     #required events
     engineering_futures = models.BooleanField(default=False)
-    candidate_sorting = models.BooleanField(default =False)
+    candidate_sorting = models.BooleanField(default=False)
 
     professor_interview = models.FileField(upload_to=upload_to_path, storage=professor_interview_fs,
                                            blank=True, null=True, default=None, verbose_name="Professor Interview")
@@ -334,7 +300,7 @@ class Candidate(Member):
     def community_service_complete(self):
         return self.community_service >= MIN_COMMUNITY_SERVICE
 
-    def tbp_event_complete(self): 
+    def tbp_event_complete(self):
         return self.professor_interview or self.tbp_event
 
     def requirements(self):
@@ -375,8 +341,9 @@ class Candidate(Member):
     def tbp_event_points(self):
         if self.tbp_event:
             from event.models import Event
+
             count = Event.objects.filter(attendees=self.profile, term=self.term).count()
-            return TBP_EVENT_POINTS + (count-1)*EXTRA_TBP_EVENT_POINTS
+            return TBP_EVENT_POINTS + (count - 1) * EXTRA_TBP_EVENT_POINTS
         else:
             return ON_TIME_POINTS if self.professor_interview_on_time else 0
 
@@ -403,7 +370,7 @@ class ActiveMember(Member):
     EMCC = '0'
     TUTORING = '1'
     HOUSE_LEADER = '2'
-    COMMITTEE = '3' #RG
+    COMMITTEE = '3'  # RG
     POKER = '4'
     CBR = '5'
     ACAD_OUTREACH = '6'
@@ -425,8 +392,9 @@ class ActiveMember(Member):
 
     def social_count(self):
         from event.models import Event
+
         return Event.objects.filter(attendees=self.profile, term=self.term).count()
-    
+
     def requirement(self):
         #allow for override in requirement
         return self.requirement_complete or (self.tutoring.complete() if self.tutoring else False)
@@ -436,6 +404,7 @@ class ActiveMember(Member):
             (self.get_requirement_choice_display(), self.requirement()),
             ('Events', self.social_complete()),
         )
+
     def points(self):
         if self.profile.user.is_staff:
             return 0
@@ -472,131 +441,3 @@ class Faculty(models.Model):
 
     class Meta:
         verbose_name_plural = "Faculty Members"
-
-
-class UserForm(ModelForm):
-
-    def check_password(self, password):
-        raise NotImplementedError
-
-    def clean(self):
-        cleaned_data = super(UserForm, self).clean()
-
-        current_password, username, new_password, confirm_password = map(
-            cleaned_data.get, ('current_password', 'username', 'new_password', 'confirm_password'))
-
-        if any([username != self.instance.get_username(), new_password, confirm_password]) and not current_password:
-            self._errors['current_password'] = self.error_class(["Current password required."])
-
-        if current_password and not self.check_password(current_password):
-            self._errors['current_password'] = self.error_class(["Incorrect password."])
-
-        if username != self.instance.get_username() and User.objects.filter(username=username).count():
-            self._errors['username'] = self.error_class(["Username has already been taken."])
-
-        if new_password != confirm_password:
-            self._errors['confirm_password'] = self.error_class(["Passwords do not match."])
-
-        return cleaned_data
-
-
-class UserAccountForm(UserForm):
-    current_password = forms.CharField(widget=forms.widgets.PasswordInput, required=True, label="Current Password")
-    username = forms.CharField(required=False)
-    new_password = forms.CharField(widget=forms.widgets.PasswordInput, required=False, label="New Password")
-    confirm_password = forms.CharField(widget=forms.widgets.PasswordInput, required=False, label="Confirm Password")
-
-    class Meta:
-        model = User
-        fields = ['current_password', 'username', 'new_password', 'confirm_password']
-
-    def check_password(self, password):
-        return self.instance.check_password(password)
-
-
-class RegisterForm(UserForm):
-    current_password = forms.CharField(widget=forms.widgets.PasswordInput, label="Registration Code")
-    username = forms.CharField()
-    new_password = forms.CharField(widget=forms.widgets.PasswordInput, label="New Password")
-    confirm_password = forms.CharField(widget=forms.widgets.PasswordInput, label="Confirm Password")
-
-    class Meta:
-        model = User
-        fields = ['current_password', 'username', 'new_password', 'confirm_password']
-
-    def check_password(self, password):
-        return password == Settings.objects.get_registration_code()
-
-
-class UserPersonalForm(ModelForm):
-    # TODO: change to email field
-    email = forms.CharField(required=True)
-    first_name = forms.CharField(required=True, label="Legal First Name")
-    middle_name = forms.CharField(required=False, label="Middle Name (if applicable)")
-    last_name = forms.CharField(required=True, label="Last Name")
-
-    class Meta:
-        model = User
-        fields = ['email', 'first_name', 'middle_name', 'last_name']
-
-
-class ProfileForm(ModelForm):
-    birthday = forms.DateField(label="Birthday (mm/dd/yyyy)", widget=forms.DateInput)
-    graduation_quarter = forms.ChoiceField(choices=Term.QUARTER_CHOICES, label="Graduation Quarter")
-    graduation_year = forms.IntegerField(label="Graduation Year")
-
-    class Meta:
-        model = Profile
-        fields = ['nickname', 'gender', 'birthday', 'phone_number', 'major',
-                  'graduation_quarter', 'graduation_year', 'resume_pdf', 'resume_word']
-        widgets = {
-            'gender': forms.widgets.RadioSelect
-        }
-
-
-class FirstProfileForm(ModelForm):
-    graduation_quarter = forms.ChoiceField(choices=Term.QUARTER_CHOICES, label="Graduation Quarter")
-    graduation_year = forms.IntegerField(label="Graduation Year")
-
-    class Meta:
-        model = Profile
-        fields = ['nickname', 'gender', 'birthday', 'phone_number', 'major', 'graduation_quarter', 'graduation_year']
-        widgets = {
-            'gender': forms.widgets.RadioSelect
-        }
-
-
-class LoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.widgets.PasswordInput)
-
-    def clean(self):
-        cleaned_data = super(LoginForm, self).clean()
-        user = authenticate(username=cleaned_data.get('username'), password=cleaned_data.get('password'))
-        if user is None:
-            self._errors['password'] = self.error_class(["Incorrect password."])
-        else:
-            cleaned_data['user'] = user
-        return cleaned_data
-
-
-class CandidateForm(ModelForm):
-
-    class Meta:
-        model = Candidate
-        fields = ['professor_interview', 'community_service_proof']
-
-
-class MemberForm(ModelForm):
-
-    class Meta:
-        model = ActiveMember
-        fields = ['requirement_choice']
-
-
-class ShirtForm(ModelForm):
-
-    class Meta:
-        model = Candidate
-        fields = ['shirt_size']
-

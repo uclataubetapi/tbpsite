@@ -2,7 +2,7 @@ import datetime
 
 from django.db import models
 
-from main.models import TermManager, Settings, Candidate, Profile
+from main.models import TermManager, Settings, Profile
 
 
 class Event(models.Model):

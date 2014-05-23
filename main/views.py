@@ -18,8 +18,9 @@ from django.views.generic.base import View
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 
-from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES,\
-    LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm,\
+from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES
+from main.forms import LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, \
+    MemberForm, ShirtForm, \
     FirstProfileForm
 from tutoring.models import Tutoring, Class, TutoringPreferencesForm
 from common import render
@@ -39,7 +40,7 @@ MAJOR_MAPPING = {
 
 def update_professor_interview_and_resume(candidate):
     if candidate.resume() and candidate.professor_interview and (Settings.objects.term().due_date is None or
-            datetime.date.today() <= Settings.objects.term().due_date):
+                                                                 datetime.date.today() <= Settings.objects.term().due_date):
         candidate.professor_interview_and_resume = True
         candidate.save()
 
@@ -128,7 +129,7 @@ def profile_view(request):
                             ActiveMember.objects.get(profile=profile, term=Settings.objects.term).requirements())
         except ActiveMember.DoesNotExist:
             requirements = None
-        details = ((active.term, 'Completed' if active.completed else 'In Progress') 
+        details = ((active.term, 'Completed' if active.completed else 'In Progress')
                    for active in ActiveMember.objects.filter(profile=profile))
 
     fields = (
@@ -233,7 +234,7 @@ def add(request):
             cnums = request.POST.get('cnum')
 
             cnums = cnums.strip()
-            if not re.match( r'^[A-Z]*[1-9][0-9]*[A-Z]*(,\s*[A-Z]*[1-9][0-9]*[A-Z]*)*$', cnums ):
+            if not re.match(r'^[A-Z]*[1-9][0-9]*[A-Z]*(,\s*[A-Z]*[1-9][0-9]*[A-Z]*)*$', cnums):
                 error = 'Invalid format for course number. Please use the format in the provided examples.'
             else:
                 for cnum in cnums.split(','):
@@ -251,12 +252,13 @@ def add(request):
 
         else:
             raise ValidationError
-    
-    return render_profile_page(request, 'add.html', 
-            {'error': error, 'departments': departments, 'classes': profile.classes.all()})
+
+    return render_profile_page(request, 'add.html',
+                               {'error': error, 'departments': departments, 'classes': profile.classes.all()})
+
 
 @login_required(login_url=login)
-def requirements(request):
+def requirements_view(request):
     profile = request.user.profile
 
     if profile.position == Profile.CANDIDATE:
@@ -273,7 +275,7 @@ def requirements(request):
             form = CandidateForm()
 
         return render_profile_page(request, 'candidate_requirements.html', {'term': term, 'form': form})
-                
+
     else:
         term = Settings.objects.signup_term()
         if request.method == "POST":
@@ -316,8 +318,10 @@ def candidates(request):
     if request.method == "POST":
         term_id = int(request.POST['term'])
         term = Term.objects.get(id=term_id)
-        return render(request, 'all_candidate_requirements.html', {'candidate_list': Candidate.objects.filter(term=term), 'terms': terms_list})
-    return render(request, 'all_candidate_requirements.html', {'candidate_list': Candidate.current.order_by('profile'), 'terms': terms_list})
+        return render(request, 'all_candidate_requirements.html',
+                      {'candidate_list': Candidate.objects.filter(term=term), 'terms': terms_list})
+    return render(request, 'all_candidate_requirements.html',
+                  {'candidate_list': Candidate.current.order_by('profile'), 'terms': terms_list})
 
 
 @staff_member_required
@@ -327,9 +331,11 @@ def active_members(request):
     if request.method == "POST":
         term_id = int(request.POST['term'])
         term = Term.objects.get(id=term_id)
-        return render(request, 'active_members.html', {'member_list': ActiveMember.objects.filter(term=term), 'terms': terms_list})
+        return render(request, 'active_members.html',
+                      {'member_list': ActiveMember.objects.filter(term=term), 'terms': terms_list})
 
-    return render(request, 'active_members.html', {'member_list': ActiveMember.current.order_by('profile'), 'terms': terms_list})
+    return render(request, 'active_members.html',
+                  {'member_list': ActiveMember.current.order_by('profile'), 'terms': terms_list})
 
 
 @staff_member_required
@@ -349,6 +355,7 @@ def pending_community_service(request):
 @staff_member_required
 def tutoring_hours(request):
     return render(request, 'tutoring_hours.html', {'tutoring_list': Tutoring.current.order_by('profile')})
+
 
 @staff_member_required
 def downloads(request):
@@ -371,10 +378,9 @@ def create_zipfile(filenames):
         for _, major in MAJOR_CHOICES:
             z.writestr(zipfile.ZipInfo('resumes/{}/'.format(major)), "")
         for profile, resume in filenames:
-            date_string = datetime.datetime.fromtimestamp(os.path.getmtime(resume)).strftime('%Y%m')
             path = 'resumes/{}/{} {}{}'.format(profile.get_major_display(),
-                                                   profile.user.first_name, profile.user.last_name,
-                                                   os.path.splitext(resume)[1])
+                                               profile.user.first_name, profile.user.last_name,
+                                               os.path.splitext(resume)[1])
             z.write(resume, path)
 
     response = HttpResponse(buffer.getvalue(), content_type='application/x-zip-compressed')
@@ -395,7 +401,6 @@ def resumes_word(request):
 
 
 class FileView(View):
-
     field = ''
 
     @method_decorator(login_required(login_url=login))
@@ -412,7 +417,7 @@ class FileView(View):
 
         path, ext = os.path.splitext(obj.path)
         content_type = {'.pdf': 'application/pdf', '.doc': 'application/msword', '.jpg': 'image/jpeg',
-                '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}[ext.lower()]
+                        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}[ext.lower()]
         filename = 'filename={}{}'.format(self.field, ext)
 
         response = HttpResponse(FileWrapper(f), content_type=content_type)
@@ -424,7 +429,6 @@ class FileView(View):
 
 
 class ProfileFileView(FileView):
-
     def get_object(self, request, id):
         if not id:
             return getattr(request.user.profile, self.field)
@@ -435,7 +439,6 @@ class ProfileFileView(FileView):
 
 
 class CandidateFileView(FileView):
-
     def get_object(self, request, id):
         if not id:
             return getattr(get_object_or_404(Candidate, profile=request.user.profile), self.field)
@@ -443,6 +446,7 @@ class CandidateFileView(FileView):
             if not request.user.is_staff:
                 raise Http404
             return getattr(get_object_or_404(Candidate, id=id), self.field)
+
 
 resume_pdf = ProfileFileView.as_view(field='resume_pdf')
 resume_word = ProfileFileView.as_view(field='resume_word')

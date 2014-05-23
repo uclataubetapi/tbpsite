@@ -1,19 +1,17 @@
-import os
 import itertools
 import re
-
 import datetime
 
-from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from django.template import TemplateDoesNotExist, Context, Template
+from django.template import TemplateDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 
 from common import render
 from main.models import Settings, Profile
-from tbpsite.settings import BASE_DIR
-from tutoring.models import Tutoring, ForeignTutoring, Class, HOUR_CHOICES, DAY_CHOICES
+from tutoring.models import Tutoring, ForeignTutoring, Class
+from constants import TUTORING_HOUR_CHOICES, TUTORING_DAY_CHOICES
+
 
 number = re.compile(r'\d+')
 numbers = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen']
@@ -36,10 +34,10 @@ def get_classes():
 
 def get_tutors():
     tutors = []
-    for hour, hour_name in HOUR_CHOICES:
+    for hour, hour_name in TUTORING_HOUR_CHOICES:
         tutors_for_hour = []
         tutoring_objs = [t for t in Tutoring.current.all()] + [t for t in ForeignTutoring.current.all()]
-        for day, day_name in DAY_CHOICES:
+        for day, day_name in TUTORING_DAY_CHOICES:
             tutors_for_hour.append(
                 sorted([t for t in tutoring_objs
                         if (t.hour_1 == hour and t.day_1 == day) or (t.hour_2 == hour and t.day_2 == day)],
@@ -65,13 +63,13 @@ def schedule(request):
 def classes(request):
     term = Settings.objects.term()
     tutors = []
-    for hour, hour_name in HOUR_CHOICES:
+    for hour, hour_name in TUTORING_HOUR_CHOICES:
         tutors_for_hour = []
         tutoring_objs = [t for t in Tutoring.current.all()] + [t for t in ForeignTutoring.current.all()]
-        for day, day_name in DAY_CHOICES:
+        for day, day_name in TUTORING_DAY_CHOICES:
             tutors_for_hour.append(
                 sorted(t for t in tutoring_objs
-                       if (t.hour_1 == hour and t.day_1 ==day) or (t.hour_2 ==hour and t.day_2 == day)) +
+                       if (t.hour_1 == hour and t.day_1 == day) or (t.hour_2 == hour and t.day_2 == day)) +
                 sorted(itertools.chain.from_iterable(t.profile.classes.all() for t in tutoring_objs
                                                      if (t.hour_1 == hour and t.day_1 == day) or (t.hour_2 == hour and t.day_2 == day))))
         tutors.append((hour_name, tutors_for_hour))
@@ -83,9 +81,9 @@ def classes(request):
 def expanded_schedule(request):
     term = Settings.objects.term()
     tutors = []
-    for hour, hour_name in HOUR_CHOICES:
+    for hour, hour_name in TUTORING_HOUR_CHOICES:
         tutors_for_hour = []
-        for day, day_name in DAY_CHOICES:
+        for day, day_name in TUTORING_DAY_CHOICES:
             if Settings.objects.display_tutoring() or (request.user.is_authenticated and request.user.is_staff):
                 tutors_for_hour.append(['{} {}'.format(1, tutor) for tutor in Tutoring.current.filter(best_hour=hour, best_day=day)] +
                                        ['{} {}'.format(1, tutor) for tutor in Tutoring.current.filter(best_hour=str(int(hour)-1), best_day=day)] +
@@ -145,15 +143,14 @@ def tutoring_logging(request):
             if (makeup_t + makeup_e) > hours:
                 error = 'Hmm please check your math. According to our records, you have tutored approximately ' + str(
                     hours) + 'hours this session (we round up after 45 minutes).'
-                #error = 'apparently, '+str(makeup_t)+' + ' +str(makeup_e) + ' > ' + str(hours)
             else:
                 tutoring.is_tutoring = False
                 week = c_term.get_week()
                 if makeup_e > 0:
-                    h -= makeup_e #hours not logged!
+                    h -= makeup_e # hours not logged!
                     send_mail('Make up Tutoring Hours!', 
-                            'Hi! '+tutoring.profile+' indicated they tutored '+makeup_e+' hours to make up for an event. Please check this out!', 
-                            'webmaster@tbp.seas.ucla.edu', ['webmaster@tbp.seas.ucla.edu'], fail_silently=True)
+                              'Hi! {} indicated they tutored {} hours to make up for an event. Please check this out!'.format(tutoring.profile, makeup_e),
+                              'webmaster@tbp.seas.ucla.edu', ['webmaster@tbp.seas.ucla.edu'], fail_silently=True)
 
                 if makeup_t > 0:
                     for i in range(3, week):
@@ -161,7 +158,7 @@ def tutoring_logging(request):
                         while (not week_obj.complete()) and makeup_t > 0:
                             week_obj.hours += 1
                             h -= 1
-                            makeup_t -=1;
+                            makeup_t -= 1
                             week_obj.no_makeup = False
                         week_obj.save()
                 cur_week = getattr(tutoring, 'week_'+str(week))

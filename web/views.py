@@ -14,7 +14,7 @@ fe = MyTemplateView.as_view(template_name='fe.html')
 home = MyTemplateView.as_view(template_name='home.html', 
                               additional={'upcoming_events': [event for event in Event.objects.filter(
                                   dropdown=True, end__gt=datetime.datetime.today) if event.event_type != Event.SOCIAL],
-                                          'display': Settings.objects.display_tutoring()})
+                                  'display': Settings.objects.display_tutoring()})
 programs = MyTemplateView.as_view(template_name='programs.html')
 requirements = MyTemplateView.as_view(template_name='requirements.html')
 tutoring = MyTemplateView.as_view(template_name='tutoring.html')
@@ -40,8 +40,10 @@ def get_officers():
     position_re = re.compile(r'Club Liaison (\([^)]*\))')
     positions = []
     liaisons = []
+    liaison_alias = ''
+
     for position in Officer.objects.all():
-        liaisonAlias = position.mail_alias
+        liaison_alias = position.mail_alias
         match = position_re.match(position.position)
         if match:
             for officer in position.profile.all():
@@ -50,10 +52,10 @@ def get_officers():
             positions.append((position.position, position.mail_alias, [str(officer) for officer in position.profile.all()]))
 
     positions.append(('Faculty Advisor', None, ['Bill Goodin']))
-    positions.append(('Club Liaison', liaisonAlias, liaisons))
+    positions.append(('Club Liaison', liaison_alias, liaisons))
     return positions
 
 faculty = MyTemplateView.as_view(template_name='faculty.html', 
-                                 additional={'faculty' : get_faculty_by_dept, 'facultyAdvisor': 'Ann R. Karagozian'})
+                                 additional={'faculty': get_faculty_by_dept, 'facultyAdvisor': 'Ann R. Karagozian'})
 officers = MyTemplateView.as_view(template_name='officers.html', 
                                   additional={'term': 'Summer - Fall 2013', 'positions': get_officers})

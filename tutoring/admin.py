@@ -12,9 +12,9 @@ class ClassAdmin(admin.ModelAdmin):
 
 class TutoringAdmin(admin.ModelAdmin):
     fields = ('day_1', 'hour_1', 'day_2', 'hour_2', 'best_day', 'best_hour', 
-            'second_best_day', 'second_best_hour', 'third_best_day', 'third_best_hour', 'frozen')
+              'second_best_day', 'second_best_hour', 'third_best_day', 'third_best_hour', 'frozen')
     list_display = ('__unicode__', 'day_1', 'hour_1', 'day_2', 'hour_2', 'best_day', 'best_hour', 
-            'second_best_day', 'second_best_hour', 'third_best_day', 'third_best_hour', 'frozen')
+                    'second_best_day', 'second_best_hour', 'third_best_day', 'third_best_hour', 'frozen')
     list_editable = ('day_1', 'hour_1', 'day_2', 'hour_2')
     actions = ('import_tutoring_times',)
 

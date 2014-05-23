@@ -1,11 +1,14 @@
-import os.path, sys, time, datetime
+import os.path
+import sys
+import time
+import datetime
 
-sys.path.insert( 0, '..' )
+sys.path.insert(0, '..')
 
 from tbpsite import settings
 from django.core.management import setup_environ
 
-setup_environ( settings )
+setup_environ(settings)
 
 from main.models import Candidate
 

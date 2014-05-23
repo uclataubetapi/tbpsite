@@ -1,38 +1,11 @@
 from django.db import models
 from django.forms import ModelForm
-from django import forms
+from constants import TUTORING_DAY_CHOICES, TUTORING_HOUR_CHOICES, TWO_HOUR_CHOICES
 
 from main.models import Settings, TermManager
 from points import *
 
 import datetime
-
-DAY_CHOICES = (
-    ('0', 'Monday'),
-    ('1', 'Tuesday'),
-    ('2', 'Wednesday'),
-    ('3', 'Thursday'),
-    ('4', 'Friday'),
-)
-HOUR_CHOICES = (
-    ('0', '10am'),
-    ('1', '11am'),
-    ('2', '12pm'),
-    ('3', '1pm'),
-    ('4', '2pm'),
-    ('5', '3pm'),
-    ('6', '4pm'),
-    #('7', '5pm'),
-)
-TWO_HOUR_CHOICES = (
-    ('0', '10am-12pm'),
-    ('1', '11am-1pm'),
-    ('2', '12pm-2pm'),
-    ('3', '1pm-3pm'),
-    ('4', '2pm-4pm'),
-    ('5', '3pm-5pm'),
-    #('6', '4pm-6pm'),
-)
 
 
 class Class(models.Model):
@@ -67,10 +40,10 @@ class Class(models.Model):
 
 class BaseTutoring(models.Model):
     term = models.ForeignKey('main.Term', default=Settings.objects.term)
-    day_1 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
-    hour_1 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
-    day_2 = models.CharField(max_length=1, choices=DAY_CHOICES, default='0')
-    hour_2 = models.CharField(max_length=1, choices=HOUR_CHOICES, default='0')
+    day_1 = models.CharField(max_length=1, choices=TUTORING_DAY_CHOICES, default='0')
+    hour_1 = models.CharField(max_length=1, choices=TUTORING_HOUR_CHOICES, default='0')
+    day_2 = models.CharField(max_length=1, choices=TUTORING_DAY_CHOICES, default='0')
+    hour_2 = models.CharField(max_length=1, choices=TUTORING_HOUR_CHOICES, default='0')
 
     class Meta:
         abstract = True
@@ -82,18 +55,22 @@ class BaseTutoring(models.Model):
         return ', '.join(c.__unicode__() for c in self.get_classes() if c.display)
 
     def get_class_ids(self):
-        return ' '.join(c.department+c.course_number+'_1' for c in self.get_classes() if c.display)
+        return ' '.join(c.department + c.course_number + '_1' for c in self.get_classes() if c.display)
 
 
 class Tutoring(BaseTutoring):
     profile = models.ForeignKey('main.Profile')
 
-    best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Best Day")
+    best_day = models.CharField(max_length=1, choices=TUTORING_DAY_CHOICES, default='0', verbose_name="Best Day")
     best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='0', verbose_name="Best Hour")
-    second_best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Second Best Day")
-    second_best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='2', verbose_name="Second Best Hour")
-    third_best_day = models.CharField(max_length=1, choices=DAY_CHOICES, default='0', verbose_name="Third Best Day")
-    third_best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='4', verbose_name="Third Best Hour")
+    second_best_day = models.CharField(max_length=1, choices=TUTORING_DAY_CHOICES, default='0',
+                                       verbose_name="Second Best Day")
+    second_best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='2',
+                                        verbose_name="Second Best Hour")
+    third_best_day = models.CharField(max_length=1, choices=TUTORING_DAY_CHOICES, default='0',
+                                      verbose_name="Third Best Day")
+    third_best_hour = models.CharField(max_length=1, choices=TWO_HOUR_CHOICES, default='4',
+                                       verbose_name="Third Best Hour")
 
     week_3 = models.OneToOneField('Week3')
     week_4 = models.OneToOneField('Week4')
@@ -109,7 +86,8 @@ class Tutoring(BaseTutoring):
     frozen = models.BooleanField(default=False)
 
     is_tutoring = models.BooleanField(default=False)
-    last_start = models.DateTimeField(auto_now=False, auto_now_add=False, default=lambda: datetime.datetime.now()-datetime.timedelta(days=1) )
+    last_start = models.DateTimeField(auto_now=False, auto_now_add=False,
+                                      default=lambda: datetime.datetime.now() - datetime.timedelta(days=1))
 
     class Meta:
         ordering = ('-term', 'profile')
@@ -131,22 +109,21 @@ class Tutoring(BaseTutoring):
     def points(self):
         return sum(week.points() for week in self.get_weeks())
 
-    def preferences(self, twoHour=False):
-        def logical_hours( hour_choice ):
-            if twoHour:
-                return ( int( hour_choice ) + 10, int( hour_choice ) + 11 )
+    def preferences(self, two_hour=False):
+        def logical_hours(hour_choice):
+            if two_hour:
+                return int(hour_choice) + 10, int(hour_choice) + 11
 
-            return int( hour_choice ) + 10
+            return int(hour_choice) + 10
 
-        return ( ( int( self.best_day ), logical_hours( self.best_hour ) ), 
-                 ( int( self.second_best_day ), logical_hours( self.second_best_hour ) ), 
-                 ( int( self.third_best_day ), logical_hours( self.third_best_hour ) ) )
+        return ((int(self.best_day), logical_hours(self.best_hour)),
+                (int(self.second_best_day), logical_hours(self.second_best_hour)),
+                (int(self.third_best_day), logical_hours(self.third_best_hour)))
 
     @classmethod
     def with_weeks(cls, profile, term):
         tutoring_weeks = {'week_{}'.format(d): globals()['Week{}'.format(d)].objects.create() for d in range(3, 10)}
         return cls.objects.create(profile=profile, term=term, **tutoring_weeks)
-
 
 
 class WeekManager(models.Manager):
@@ -181,7 +158,7 @@ class Week(models.Model):
         count = self.hours
         points = 0
         if count > MIN_TUTORING_HOURS:
-            points += EXTRA_TUTORING_POINTS * min(count - MIN_TUTORING_HOURS, MAX_TUTORING_HOURS-MIN_TUTORING_HOURS)
+            points += EXTRA_TUTORING_POINTS * min(count - MIN_TUTORING_HOURS, MAX_TUTORING_HOURS - MIN_TUTORING_HOURS)
         if self.no_makeup:
             points += TUTORING_POINTS * min(count, MIN_TUTORING_HOURS)
         return points
@@ -266,8 +243,6 @@ class ForeignTutoring(BaseTutoring):
 
 
 class TutoringPreferencesForm(ModelForm):
-
     class Meta:
         model = Tutoring
         fields = ['best_day', 'best_hour', 'second_best_day', 'second_best_hour', 'third_best_day', 'third_best_hour']
-
