@@ -406,7 +406,7 @@ class ActiveMember(Member):
         )
 
     def points(self):
-        if self.profile.user.is_staff:
+        if (self.profile.user.is_staff or self.requirement_choice==self.HOUSE_LEADER):
             return 0
         else:
             return super(ActiveMember, self).points()
