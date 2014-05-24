@@ -46,17 +46,25 @@ def update_professor_interview_and_resume(candidate):
 
 
 def render_profile_page(request, template, template_args=None):
-    if not template_args:
-        template_args = {}
+    """
+    Helper function that looks up the links for the profile tabs
 
-    tabs = [(reverse('main.views.profile_view'), 'Profile'),
+    :param request: The request object used to generate this response.
+    :param template: The full name of a template to use or sequence of template names.
+    :param template_args: Variables to pass to the template
+    :returns: Rendered template
+    """
+    if template_args is None:
+        template_args = {}  # if no template_args were passed, initialize to empty dictionary
+
+    tabs = [(reverse('main.views.profile_view'), 'Profile'),  # tuples of the url for the view and the tab label
             (reverse('main.views.edit'), 'Edit Profile'),
             (reverse('main.views.add'), 'Modify Classes'),
             (reverse('main.views.requirements'), request.user.profile.get_position_display())]
 
-    template_args['profile_tabs'] = tabs
+    template_args['profile_tabs'] = tabs  # add the tab tuples to the variables to pass to the template
 
-    return render(request, template, additional=template_args)
+    return render(request, template, additional=template_args)  # render the template
 
 
 def login(request):
@@ -110,20 +118,22 @@ def account(request):
 
 @login_required(login_url=login)
 def profile_view(request):
-    user = request.user
+    user = request.user  # user object associated with the user requesting the webpage
     try:
-        profile = user.profile
+        profile = user.profile  # lookup profile object associated with the user
     except Profile.DoesNotExist:
-        profile = Profile.objects.create(user=user)
+        profile = Profile.objects.create(user=user)  # if the profile does not exist, create a user
+
+    # If profile isn't complete, redirect to edit profile page
     if not all([user.email, user.first_name, user.last_name, profile.graduation_term and profile.graduation_term.year]):
         return redirect(edit)
 
-    if profile.position == Profile.CANDIDATE:
+    if profile.position == Profile.CANDIDATE:  # if profile belongs to a candidate, grab information about the candidate
         candidate = profile.candidate
-        requirements = ((name, 'Completed' if requirement else 'Not Completed')
+        requirements = ((name, 'Completed' if requirement else 'Not Completed')  # a candidate's requirements
                         for name, requirement in candidate.requirements())
-        details = None
-    else:
+        details = None  # extra profile information
+    else:  # otherwise the profile belongs to an active member
         try:
             requirements = ((name, 'Completed' if requirement else 'Not Completed') for name, requirement in
                             ActiveMember.objects.get(profile=profile, term=Settings.objects.term).requirements())
@@ -132,7 +142,7 @@ def profile_view(request):
         details = ((active.term, 'Completed' if active.completed else 'In Progress')
                    for active in ActiveMember.objects.filter(profile=profile))
 
-    fields = (
+    fields = (  # grab the user/profile information to render
         ('Email', user.email),
         ('First Name', user.first_name),
         ('Middle Name', profile.middle_name),
@@ -146,7 +156,7 @@ def profile_view(request):
         ('Graduation Term', profile.graduation_term),
     )
 
-    return render_profile_page(
+    return render_profile_page(  # render the profile.html template with these variables
         request, 'profile.html', {
             'user': user, 'profile': profile, 'fields': fields,
             'resume_pdf': time.ctime(os.path.getmtime(profile.resume_pdf.path)) if profile.resume_pdf else None,
