@@ -50,25 +50,20 @@ class BaseTutoring(models.Model):
 
     def get_classes(self):
         """
-
-
+        implement in child class
         :raise NotImplementedError:
         """
         raise NotImplementedError
 
     def display_classes(self):
         """
-
-
-        :return:
+        :return:    list of all classes for tutoring object
         """
         return ', '.join(c.__unicode__() for c in self.get_classes() if c.display)
 
     def get_class_ids(self):
         """
-
-
-        :return:
+        :return:    list of class ids for each class
         """
         return ' '.join(c.department + c.course_number + '_1' for c in self.get_classes() if c.display)
 
