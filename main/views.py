@@ -60,7 +60,7 @@ def render_profile_page(request, template, template_args=None):
     tabs = [(reverse('main.views.profile_view'), 'Profile'),  # tuples of the url for the view and the tab label
             (reverse('main.views.edit'), 'Edit Profile'),
             (reverse('main.views.add'), 'Modify Classes'),
-            (reverse('main.views.requirements'), request.user.profile.get_position_display())]
+            (reverse('main.views.requirements_view'), request.user.profile.get_position_display())]
 
     template_args['profile_tabs'] = tabs  # add the tab tuples to the variables to pass to the template
 
