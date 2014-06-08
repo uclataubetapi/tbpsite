@@ -1,3 +1,7 @@
+"""
+This module containts constants specific to the house point system.
+"""
+
 TUTORING_POINTS = 2 #per week
 MIN_TUTORING_HOURS = 2 #per week
 EXTRA_TUTORING_POINTS = 2 #per hour

@@ -71,9 +71,12 @@ class Event(models.Model):
 
 
     def save(self, *args, **kwargs):
+        super(Event, self).save(*args, **kwargs)
+
         if self.event_type == '2' or self.event_type == '5':
             for profile in self.attendees.filter(position=Profile.CANDIDATE):
                 profile.candidate.tbp_event = True
                 profile.candidate.save()
                 profile.save()
-        super(Event, self).save(*args, **kwargs)
+        
+        #super(Event, self).save(*args, **kwargs)

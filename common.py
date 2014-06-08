@@ -1,3 +1,7 @@
+"""
+This module contains utility functions that are used by multiple applications.
+"""
+
 from django.shortcuts import render as django_render
 from django.views.generic.base import TemplateView
 
