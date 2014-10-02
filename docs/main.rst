@@ -1,16 +1,10 @@
 main package
 ============
 
-Subpackages
------------
-
-.. toctree::
-
-    main.migrations
-    main.templatetags
-
-Submodules
-----------
+.. automodule:: main
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 main.admin module
 -----------------
@@ -36,10 +30,10 @@ main.models module
     :undoc-members:
     :show-inheritance:
 
-main.tests module
------------------
+main.templatetags.extras module
+-------------------------------
 
-.. automodule:: main.tests
+.. automodule:: main.templatetags.extras
     :members:
     :undoc-members:
     :show-inheritance:
@@ -48,15 +42,6 @@ main.views module
 -----------------
 
 .. automodule:: main.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: main
     :members:
     :undoc-members:
     :show-inheritance:

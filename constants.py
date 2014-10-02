@@ -1,3 +1,7 @@
+"""
+This module contains constants used by the applications.
+"""
+
 from django.core.files.storage import FileSystemStorage
 
 MAJOR_CHOICES = (

@@ -17,7 +17,6 @@ def validate_re(regex, value, msg):
         raise ValidationError(msg)
 
 
-#renaming files that are uploaded
 def upload_to_path(instance, filename):
     """
     Rename files that are uploaded
@@ -46,6 +45,9 @@ class Term(models.Model):
         return '{} {}'.format(self.get_quarter_display(), self.year)
 
     def get_week(self):
+        """
+        :return: Current week of term
+        """
         week = (datetime.date.today() - self.start_date).days / 7 + 1
         if week < 3:
             return 3
@@ -56,6 +58,9 @@ class Term(models.Model):
 
 class SettingsManager(models.Manager):
     def settings(self):
+        """
+        :return: Singleton Settings object
+        """
         return super(SettingsManager, self).get_or_create(id=1)[0]
 
     def term(self):
@@ -95,6 +100,9 @@ class Settings(models.Model):
 
 class TermManager(models.Manager):
     def get_query_set(self):
+        """
+        :return: Current term if display_all_terms is not set in Settings and term is set, otherwise all terms
+        """
         if not Settings.objects.display_all_terms():
             term = Settings.objects.term()
             if term:
@@ -133,20 +141,24 @@ class HousePoints(models.Model):
     def __unicode__(self):
         return self.house.__unicode__()
 
-    def social_list(self):
-        from event.models import Event
-
-        return Event.objects.select_related().filter(term=self.term)
-
     def member_list(self):
+        """
+        :return: Candidates and members in the house for the term
+        """
         return (list(Candidate.objects.select_related().filter(profile__house=self.house, term=self.term)) +
                 list(ActiveMember.objects.select_related().filter(profile__house=self.house, term=self.term)))
 
     def professor_interview_and_resume_points(self):
-        candidates = list(Candidate.objects.select_related().filter(profile__house=self.house, term=self.term))
-        return DOCUMENT_POINTS[self.professor_interview_and_resume] * len(candidates)
+        """
+        :return: N points for each person depending on the house ranking
+        """
+        return DOCUMENT_POINTS[self.professor_interview_and_resume] * Candidate.objects.select_related().filter(
+            profile__house=self.house, term=self.term).count()
 
     def points(self):
+        """
+        :return: Total number of points for the house, including members
+        """
         return sum([sum(member.points() for member in self.member_list()),
                     self.professor_interview_and_resume_points(), self.other])
 
@@ -193,6 +205,9 @@ class Profile(models.Model):
         return name if name else self.user.get_username()
 
     def current(self):
+        """
+        :return: Requirement object associated with current term
+        """
         if self.position == Profile.CANDIDATE:
             try:
                 self.candidate.tutoring
@@ -206,6 +221,9 @@ class Profile(models.Model):
         return True
 
     def dump(self):
+        """
+        :return: Comma delimited fields of profile
+        """
         return ','.join(field for field in [self.user.first_name, self.middle_name, self.user.last_name,
                                             self.user.email, self.nickname,
                                             self.house.__unicode__() if self.house else '', self.gender,
@@ -417,7 +435,7 @@ class ActiveMember(Member):
         )
 
     def points(self):
-        if (self.profile.user.is_staff or self.requirement_choice==self.HOUSE_LEADER):
+        if self.profile.user.is_staff or self.requirement_choice == self.HOUSE_LEADER:
             return 0
         else:
             return super(ActiveMember, self).points()

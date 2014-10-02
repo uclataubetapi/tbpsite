@@ -1,15 +1,10 @@
 event package
 =============
 
-Subpackages
------------
-
-.. toctree::
-
-    event.migrations
-
-Submodules
-----------
+.. automodule:: event
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 event.admin module
 ------------------
@@ -27,27 +22,10 @@ event.models module
     :undoc-members:
     :show-inheritance:
 
-event.tests module
-------------------
-
-.. automodule:: event.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 event.views module
 ------------------
 
 .. automodule:: event.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: event
     :members:
     :undoc-members:
     :show-inheritance:
