@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from main.models import Settings, Term, Profile, Candidate, ActiveMember
+from main.models import Settings, Term, Profile, Candidate, ActiveMember, PeerTeaching
 
 
 class UserForm(ModelForm):
@@ -129,12 +129,7 @@ class ShirtForm(ModelForm):
         fields = ['shirt_size']
 
 class PeerTeachingForm(ModelForm):
-    TEACHING_CHOICES = (
-        ('0', 'Tutoring'),
-        ('1', 'Academic Outreach')
-    )
-    peer_teaching = forms.ChoiceField(choices=TEACHING_CHOICES, label="Requirement Choice")
     class Meta:
-        model = Candidate
-        fields = ['peer_teaching']
+        model = PeerTeaching
+        fields = ['requirement_choice']
 

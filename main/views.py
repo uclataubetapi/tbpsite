@@ -18,7 +18,7 @@ from django.views.generic.base import View
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 
-from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES
+from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES, PeerTeaching
 from main.forms import LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm, FirstProfileForm, PeerTeachingForm
 from tutoring.models import Tutoring, Class, TutoringPreferencesForm
 from common import render
@@ -167,7 +167,7 @@ def profile_view(request):
 def edit(request):
     user = request.user
     profile = user.profile
-    first_time = hasattr(profile, 'candidate') and profile.candidate.tutoring is None
+    first_time = hasattr(profile, 'candidate') and profile.candidate.peer_teaching is None
 
     if request.method != "POST":
         personal_dict = model_to_dict(user)
@@ -217,10 +217,17 @@ def edit(request):
                 return redirect(profile_view)
             else:
                 candidate = profile.candidate
-                if peer_teaching_form.cleaned_data['peer_teaching'] == '0': #0 for Tutoring
+                candidate.peer_teaching = PeerTeaching.objects.create()
+                if peer_teaching_form.cleaned_data['requirement_choice'] == PeerTeaching.TUTORING:
                     candidate.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
                     tutoring_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
                     tutoring_form.save()
+                    candidate.peer_teaching.tutoring=candidate.tutoring
+                peer_teaching_form = PeerTeachingForm(request.POST, instance=candidate.peer_teaching)
+                    
+                peer_teaching_form.save()
+                    #candidate.peer_teaching.tutoring=candidate.tutoring
+                    
                 shirt_form.save()
                 return redirect(add)
 
