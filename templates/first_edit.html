@@ -10,14 +10,18 @@
       {% csrf_token %}
       <fieldset>
         <p class="help-block">This form will help us collect the information needed to help you start the initiation process.
-          You will also submit your preferred tutoring hours here.
+          You will also submit your peer teaching preference here.
           Completion of this form will confirm your intent to initiate into Tau Beta Pi.</p>
         {% include "form_snippet.html" with form=user_personal_form %}
         {% include "form_snippet.html" with form=profile_form %}
         {% include "form_snippet.html" with form=shirt_form %}
       </fieldset>
       <fieldset>
-        <legend>Tutoring Hour Preferences</legend>
+        <legend>Peer Teaching Preference</legend>
+	{% include "form_snippet.html" with form=peer_teaching_form %}
+	<p class="help-block">Fill out the tutoring preferences below if you're signing up for tutoring.
+	  If you choose Academic Outreach, ______ will contact you
+	</p>
         {% include "form_snippet.html" with form=tutoring_form %}
         <p class="help-block">If you have any extenuating circumstances and cannot tutor during any of the options listed, please email <a href="mailto:webmaster@tbp.seas.ucla.edu">webmaster@tbp.seas.ucla.edu</a>.</p>
         <div class="form-actions">

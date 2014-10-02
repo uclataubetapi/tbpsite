@@ -265,6 +265,15 @@ class Member(models.Model):
     def points(self):
         return sum((self.tutoring_points(), self.social_points(), self.other))
 
+class AcademicOutreach(models.Model):
+    complete = False
+    def isComlete(self):
+        return self.complete
+
+class PeerTeaching(models.Model):
+    complete = False
+    tutoring = None
+    academic_outreach = None
 
 class Candidate(Member):
     profile = models.OneToOneField('Profile')
@@ -275,6 +284,8 @@ class Candidate(Member):
         ('L', 'L'),
         ('XL', 'XL'),
     )
+
+    #peer_teaching = 
     shirt_size = models.CharField(max_length=2, default='M', choices=SHIRT_SIZES, verbose_name="T-Shirt Size")
     bent_polish = models.BooleanField(default=False)
     candidate_quiz = models.IntegerField(default=0)

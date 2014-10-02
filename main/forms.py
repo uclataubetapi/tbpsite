@@ -127,3 +127,14 @@ class ShirtForm(ModelForm):
     class Meta:
         model = Candidate
         fields = ['shirt_size']
+
+class PeerTeachingForm(ModelForm):
+    TEACHING_CHOICES = (
+        ('0', 'Tutoring'),
+        ('1', 'Academic Outreach')
+    )
+    peer_teaching = forms.ChoiceField(choices=TEACHING_CHOICES, label="Requirement Choice")
+    class Meta:
+        model = Candidate
+        fields = ['peer_teaching']
+

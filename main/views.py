@@ -19,9 +19,7 @@ from django.utils.decorators import method_decorator
 from django.db.models import Q
 
 from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES
-from main.forms import LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, \
-    MemberForm, ShirtForm, \
-    FirstProfileForm
+from main.forms import LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm, FirstProfileForm, PeerTeachingForm
 from tutoring.models import Tutoring, Class, TutoringPreferencesForm
 from common import render
 
@@ -46,17 +44,25 @@ def update_professor_interview_and_resume(candidate):
 
 
 def render_profile_page(request, template, template_args=None):
-    if not template_args:
-        template_args = {}
+    """
+    Helper function that looks up the links for the profile tabs
 
-    tabs = [(reverse('main.views.profile_view'), 'Profile'),
+    :param request: The request object used to generate this response.
+    :param template: The full name of a template to use or sequence of template names.
+    :param template_args: Variables to pass to the template
+    :returns: Rendered template
+    """
+    if template_args is None:
+        template_args = {}  # if no template_args were passed, initialize to empty dictionary
+
+    tabs = [(reverse('main.views.profile_view'), 'Profile'),  # tuples of the url for the view and the tab label
             (reverse('main.views.edit'), 'Edit Profile'),
             (reverse('main.views.add'), 'Modify Classes'),
-            (reverse('main.views.requirements'), request.user.profile.get_position_display())]
+            (reverse('main.views.requirements_view'), request.user.profile.get_position_display())]
 
-    template_args['profile_tabs'] = tabs
+    template_args['profile_tabs'] = tabs  # add the tab tuples to the variables to pass to the template
 
-    return render(request, template, additional=template_args)
+    return render(request, template, additional=template_args)  # render the template
 
 
 def login(request):
@@ -110,20 +116,22 @@ def account(request):
 
 @login_required(login_url=login)
 def profile_view(request):
-    user = request.user
+    user = request.user  # user object associated with the user requesting the webpage
     try:
-        profile = user.profile
+        profile = user.profile  # lookup profile object associated with the user
     except Profile.DoesNotExist:
-        profile = Profile.objects.create(user=user)
+        profile = Profile.objects.create(user=user)  # if the profile does not exist, create a user
+
+    # If profile isn't complete, redirect to edit profile page
     if not all([user.email, user.first_name, user.last_name, profile.graduation_term and profile.graduation_term.year]):
         return redirect(edit)
 
-    if profile.position == Profile.CANDIDATE:
+    if profile.position == Profile.CANDIDATE:  # if profile belongs to a candidate, grab information about the candidate
         candidate = profile.candidate
-        requirements = ((name, 'Completed' if requirement else 'Not Completed')
+        requirements = ((name, 'Completed' if requirement else 'Not Completed')  # a candidate's requirements
                         for name, requirement in candidate.requirements())
-        details = None
-    else:
+        details = None  # extra profile information
+    else:  # otherwise the profile belongs to an active member
         try:
             requirements = ((name, 'Completed' if requirement else 'Not Completed') for name, requirement in
                             ActiveMember.objects.get(profile=profile, term=Settings.objects.term).requirements())
@@ -132,7 +140,7 @@ def profile_view(request):
         details = ((active.term, 'Completed' if active.completed else 'In Progress')
                    for active in ActiveMember.objects.filter(profile=profile))
 
-    fields = (
+    fields = (  # grab the user/profile information to render
         ('Email', user.email),
         ('First Name', user.first_name),
         ('Middle Name', profile.middle_name),
@@ -146,7 +154,7 @@ def profile_view(request):
         ('Graduation Term', profile.graduation_term),
     )
 
-    return render_profile_page(
+    return render_profile_page(  # render the profile.html template with these variables
         request, 'profile.html', {
             'user': user, 'profile': profile, 'fields': fields,
             'resume_pdf': time.ctime(os.path.getmtime(profile.resume_pdf.path)) if profile.resume_pdf else None,
@@ -179,7 +187,8 @@ def edit(request):
             profile_form = FirstProfileForm(initial=profile_dict)
             tutoring_form = TutoringPreferencesForm()
             shirt_form = ShirtForm()
-
+            peer_teaching_form = PeerTeachingForm()
+            
     else:
         user_personal_form = UserPersonalForm(request.POST, instance=user)
 
@@ -190,7 +199,8 @@ def edit(request):
             profile_form = FirstProfileForm(request.POST, instance=profile)
             tutoring_form = TutoringPreferencesForm(request.POST)
             shirt_form = ShirtForm(request.POST, instance=profile.candidate)
-            valid_forms = [form.is_valid() for form in (user_personal_form, profile_form, tutoring_form, shirt_form)]
+            peer_teaching_form = PeerTeachingForm(request.POST)
+            valid_forms = [form.is_valid() for form in (user_personal_form, profile_form, tutoring_form, shirt_form, peer_teaching_form)]
 
         if all(valid_forms):
             term, created = Term.objects.get_or_create(quarter=profile_form.cleaned_data['graduation_quarter'],
@@ -207,9 +217,10 @@ def edit(request):
                 return redirect(profile_view)
             else:
                 candidate = profile.candidate
-                candidate.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
-                tutoring_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
-                tutoring_form.save()
+                if peer_teaching_form.cleaned_data['peer_teaching'] == '0': #0 for Tutoring
+                    candidate.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
+                    tutoring_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
+                    tutoring_form.save()
                 shirt_form.save()
                 return redirect(add)
 
@@ -219,7 +230,7 @@ def edit(request):
     else:
         return render_profile_page(request, 'first_edit.html',
                                    {'user_personal_form': user_personal_form, 'profile_form': profile_form,
-                                    'tutoring_form': tutoring_form, 'shirt_form': shirt_form})
+                                    'tutoring_form': tutoring_form, 'shirt_form': shirt_form, 'peer_teaching_form' : peer_teaching_form})
 
 
 @login_required(login_url=login)
