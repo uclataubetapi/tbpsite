@@ -210,7 +210,7 @@ class Profile(models.Model):
         """
         if self.position == Profile.CANDIDATE:
             try:
-                self.candidate.tutoring
+                self.candidate.peer_teaching.tutoring
             except Candidate.DoesNotExist:
                 return False
         elif self.position == Profile.MEMBER:
@@ -233,10 +233,52 @@ class Profile(models.Model):
                                             self.graduation_term.__unicode__() if self.graduation_term else ''])
 
 
+class PeerTeaching(models.Model):
+    #complete = models.BooleanField(default=False)
+    ACAD_OUTREACH = '0'
+    TUTORING = '1'
+    REQUIREMENT_CHOICES = (
+        (TUTORING, 'Tutoring'),
+        (ACAD_OUTREACH, 'Academic Outreach Committee'),
+    )
+    requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
+    tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
+    academic_outreach_complete = models.BooleanField(default=False)
+
+    profile = models.ForeignKey('Profile', blank=True, null=True)
+
+    term = models.ForeignKey('Term', blank=True, null=True)
+    current = TermManager()
+    objects = models.Manager()
+
+    def isComplete(self):
+        if self.requirement_choice == self.ACAD_OUTREACH:
+            return self.academic_outreach_complete
+        elif self.requirement_choice == self.TUTORING:
+            return self.tutoring.complete() if self.tutoring else False
+        else:
+            return False
+
+    def __unicode__(self):
+        try:
+            return self.profile.user.get_full_name()
+        except AttributeError:
+            return "Unkown Profile"
+        
 class Member(models.Model):
     profile = None
     term = models.ForeignKey('Term')
 
+    peer_teaching = models.OneToOneField(PeerTeaching, blank=True, null=True)
+
+    #The tutoring field is no longer used. References to Tutoring via a Member object now go though
+    #the peer_teaching object. However as of yet there seems to a bug with removing this field
+    #as django seems to have behind the scenes created an extra 'fieldname'_id attribute for 
+    #some fields in the model including the tutoring field. Some sort of reference to this tutoring_id
+    #field in the model remains even when you remove the tutoring field itself and migrate, thus after the
+    #migrate django begins to throw errors where it cannot locate a tutoring_id field in the database
+    #This needs to be looked into but is not a fatal level issue as the existence of this legacy field is 
+    #not apparent to the user
     tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
     completed = models.BooleanField(default=False)
     other = models.IntegerField(default=0)
@@ -258,8 +300,9 @@ class Member(models.Model):
                 Event.current.filter(attendees=self.profile, term=self.term, event_type=Event.HOUSE).count())
 
     # REQUIREMENTS
-    def tutoring_complete(self):
-        return self.tutoring.complete() if self.tutoring else False
+    def peer_teaching_complete(self):
+        #return self.tutoring.complete() if self.tutoring else False
+        return self.peer_teaching.isComplete()
 
     def social_complete(self):
         return self.social_count() >= MIN_SOCIALS
@@ -283,18 +326,6 @@ class Member(models.Model):
     def points(self):
         return sum((self.tutoring_points(), self.social_points(), self.other))
 
-class PeerTeaching(models.Model):
-    complete = models.BooleanField(default=False)
-    ACAD_OUTREACH = '0'
-    TUTORING = '1'
-    REQUIREMENT_CHOICES = (
-        (TUTORING, 'Tutoring'),
-        (ACAD_OUTREACH, 'Academic Outreach Committee'),
-    )
-    requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
-    tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
-    academic_outreach_complete = models.BooleanField(default=False)
-
 class Candidate(Member):
     profile = models.OneToOneField('Profile')
 
@@ -306,7 +337,7 @@ class Candidate(Member):
     )
     #requirement_complete = models.BooleanField(default=False)
 
-    peer_teaching = models.OneToOneField(PeerTeaching, blank=True, null=True)
+    
     shirt_size = models.CharField(max_length=2, default='M', choices=SHIRT_SIZES, verbose_name="T-Shirt Size")
     bent_polish = models.BooleanField(default=False)
     candidate_quiz = models.IntegerField(default=0)
@@ -340,7 +371,7 @@ class Candidate(Member):
 
     def requirements(self):
         return (
-            ('Tutoring', self.tutoring_complete()),
+            ('Peer Teaching', self.peer_teaching_complete()),
             ('Bent Polish', self.bent_polish),
             ('Candidate Quiz', self.candidate_quiz),
             ('Candidate Meet and Greet', self.candidate_meet_and_greet),
@@ -432,7 +463,7 @@ class ActiveMember(Member):
 
     def requirement(self):
         #allow for override in requirement
-        return self.requirement_complete or (self.tutoring.complete() if self.tutoring else False)
+        return self.requirement_complete or self.peer_teaching_complete()
 
     def requirements(self):
         return (

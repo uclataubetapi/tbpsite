@@ -217,16 +217,16 @@ def edit(request):
                 return redirect(profile_view)
             else:
                 candidate = profile.candidate
-                candidate.peer_teaching = PeerTeaching.objects.create()
+                candidate.peer_teaching = PeerTeaching.objects.create(profile=profile, term=Settings.objects.term())
                 if peer_teaching_form.cleaned_data['requirement_choice'] == PeerTeaching.TUTORING:
-                    candidate.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
-                    tutoring_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
+                    candidate.peer_teaching.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
+                    tutoring_form = TutoringPreferencesForm(request.POST, instance=candidate.peer_teaching.tutoring)
                     tutoring_form.save()
-                    candidate.peer_teaching.tutoring=candidate.tutoring
-                peer_teaching_form = PeerTeachingForm(request.POST, instance=candidate.peer_teaching)
-                    
-                peer_teaching_form.save()
                     #candidate.peer_teaching.tutoring=candidate.tutoring
+
+                peer_teaching_form = PeerTeachingForm(request.POST, instance=candidate.peer_teaching)
+                peer_teaching_form.save()
+                
                     
                 shirt_form.save()
                 return redirect(add)
@@ -298,16 +298,19 @@ def requirements_view(request):
         term = Settings.objects.signup_term()
         if request.method == "POST":
             member = ActiveMember(profile=profile, term=term)
+            member.peer_teaching = PeerTeaching.objects.create(profile=profile, term=Settings.objects.term())
             member_form = MemberForm(request.POST, instance=member)
             tutoring_preferences_form = TutoringPreferencesForm(request.POST)
 
             valid_forms = [form.is_valid() for form in (member_form, tutoring_preferences_form)]
             if all(valid_forms):
                 if member_form.cleaned_data['requirement_choice'] == ActiveMember.TUTORING:
-                    member.tutoring = Tutoring.with_weeks(profile=profile, term=term)
-                    tutoring_preferences_form = TutoringPreferencesForm(request.POST, instance=member.tutoring)
+                    member.peer_teaching.requirement_choice = PeerTeaching.TUTORING
+                    member.peer_teaching.tutoring = Tutoring.with_weeks(profile=profile, term=term)
+                    tutoring_preferences_form = TutoringPreferencesForm(request.POST, instance=member.peer_teaching.tutoring)
                     tutoring_preferences_form.save()
 
+                member.peer_teaching.save()
                 member_form.save()
                 member_form = None
                 tutoring_preferences_form = None

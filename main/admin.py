@@ -129,6 +129,10 @@ class OfficerAdmin(admin.ModelAdmin):
     list_display = ('position', 'rank', 'mail_alias', 'list_profiles')
     filter_horizontal = ('profile',)
 
+class PeerAdmin(admin.ModelAdmin):
+    list_display = ('profile', 'requirement_choice', 'academic_outreach_complete', 'tutoring')
+    list_editable = ('requirement_choice', 'academic_outreach_complete')
+    
 admin.site.unregister(User)
 admin.site.register(User, MyUserAdmin)
 admin.site.register(Term)
@@ -139,3 +143,4 @@ admin.site.register(Candidate, CandidateAdmin)
 admin.site.register(ActiveMember, ActiveMemberAdmin)
 admin.site.register(Faculty, FacultyAdmin)
 admin.site.register(Officer, OfficerAdmin)
+admin.site.register(PeerTeaching, PeerAdmin)

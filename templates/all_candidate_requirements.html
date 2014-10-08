@@ -33,7 +33,7 @@
             <th>Signature Book</th>
             <th>Community Service</th>
             <th>Initation Fee</th>
-            <th>Tutoring</th>
+            <th>Peer Teaching</th>
             <th>Engineering Futures</th>
             <th>Resume Submission</th>
             <th>TBP Event/Interview</th>
@@ -53,7 +53,7 @@
         <td>{% if candidate.signature_book %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
         <td>{% if candidate.community_service_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
         <td>{% if candidate.initiation_fee %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-        <td>{% if candidate.tutoring_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+        <td>{% if candidate.peer_teaching_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
         <td>{% if candidate.engineering_futures %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
         <td>{% if candidate.resume %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
         <td>{% if candidate.tbp_event_complete %}<a href="{% url 'main.views.interview' candidate.id %}"><span
