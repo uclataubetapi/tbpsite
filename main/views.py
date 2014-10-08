@@ -18,10 +18,8 @@ from django.views.generic.base import View
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 
-from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES
-from main.forms import LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, \
-    MemberForm, ShirtForm, \
-    FirstProfileForm
+from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES, PeerTeaching
+from main.forms import LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm, FirstProfileForm, PeerTeachingForm
 from tutoring.models import Tutoring, Class, TutoringPreferencesForm
 from common import render
 
@@ -169,7 +167,7 @@ def profile_view(request):
 def edit(request):
     user = request.user
     profile = user.profile
-    first_time = hasattr(profile, 'candidate') and profile.candidate.tutoring is None
+    first_time = hasattr(profile, 'candidate') and profile.candidate.peer_teaching is None
 
     if request.method != "POST":
         personal_dict = model_to_dict(user)
@@ -189,7 +187,8 @@ def edit(request):
             profile_form = FirstProfileForm(initial=profile_dict)
             tutoring_form = TutoringPreferencesForm()
             shirt_form = ShirtForm()
-
+            peer_teaching_form = PeerTeachingForm()
+            
     else:
         user_personal_form = UserPersonalForm(request.POST, instance=user)
 
@@ -200,7 +199,8 @@ def edit(request):
             profile_form = FirstProfileForm(request.POST, instance=profile)
             tutoring_form = TutoringPreferencesForm(request.POST)
             shirt_form = ShirtForm(request.POST, instance=profile.candidate)
-            valid_forms = [form.is_valid() for form in (user_personal_form, profile_form, tutoring_form, shirt_form)]
+            peer_teaching_form = PeerTeachingForm(request.POST)
+            valid_forms = [form.is_valid() for form in (user_personal_form, profile_form, tutoring_form, shirt_form, peer_teaching_form)]
 
         if all(valid_forms):
             term, created = Term.objects.get_or_create(quarter=profile_form.cleaned_data['graduation_quarter'],
@@ -217,9 +217,17 @@ def edit(request):
                 return redirect(profile_view)
             else:
                 candidate = profile.candidate
-                candidate.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
-                tutoring_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
-                tutoring_form.save()
+                candidate.peer_teaching = PeerTeaching.objects.create()
+                if peer_teaching_form.cleaned_data['requirement_choice'] == PeerTeaching.TUTORING:
+                    candidate.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
+                    tutoring_form = TutoringPreferencesForm(request.POST, instance=candidate.tutoring)
+                    tutoring_form.save()
+                    candidate.peer_teaching.tutoring=candidate.tutoring
+                peer_teaching_form = PeerTeachingForm(request.POST, instance=candidate.peer_teaching)
+                    
+                peer_teaching_form.save()
+                    #candidate.peer_teaching.tutoring=candidate.tutoring
+                    
                 shirt_form.save()
                 return redirect(add)
 
@@ -229,7 +237,7 @@ def edit(request):
     else:
         return render_profile_page(request, 'first_edit.html',
                                    {'user_personal_form': user_personal_form, 'profile_form': profile_form,
-                                    'tutoring_form': tutoring_form, 'shirt_form': shirt_form})
+                                    'tutoring_form': tutoring_form, 'shirt_form': shirt_form, 'peer_teaching_form' : peer_teaching_form})
 
 
 @login_required(login_url=login)

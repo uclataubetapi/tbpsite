@@ -283,6 +283,17 @@ class Member(models.Model):
     def points(self):
         return sum((self.tutoring_points(), self.social_points(), self.other))
 
+class PeerTeaching(models.Model):
+    complete = models.BooleanField(default=False)
+    ACAD_OUTREACH = '0'
+    TUTORING = '1'
+    REQUIREMENT_CHOICES = (
+        (TUTORING, 'Tutoring'),
+        (ACAD_OUTREACH, 'Academic Outreach Committee'),
+    )
+    requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
+    tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
+    academic_outreach_complete = models.BooleanField(default=False)
 
 class Candidate(Member):
     profile = models.OneToOneField('Profile')
@@ -293,6 +304,9 @@ class Candidate(Member):
         ('L', 'L'),
         ('XL', 'XL'),
     )
+    #requirement_complete = models.BooleanField(default=False)
+
+    peer_teaching = models.OneToOneField(PeerTeaching, blank=True, null=True)
     shirt_size = models.CharField(max_length=2, default='M', choices=SHIRT_SIZES, verbose_name="T-Shirt Size")
     bent_polish = models.BooleanField(default=False)
     candidate_quiz = models.IntegerField(default=0)
@@ -310,6 +324,9 @@ class Candidate(Member):
     professor_interview = models.FileField(upload_to=upload_to_path, storage=professor_interview_fs,
                                            blank=True, null=True, default=None, verbose_name="Professor Interview")
     tbp_event = models.BooleanField(default=False)
+
+    def get_peer_req_choice(self):
+        return self.requirement_choice
 
     def resume(self):
         return self.profile.resume_pdf or self.profile.resume_word
