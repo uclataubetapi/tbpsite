@@ -20,6 +20,7 @@ requirements = MyTemplateView.as_view(template_name='requirements.html')
 tutoring = MyTemplateView.as_view(template_name='tutoring.html')
 sponsor = MyTemplateView.as_view(template_name='sponsor.html')
 donate = MyTemplateView.as_view(template_name='donate.html')
+room_calendar = MyTemplateView.as_view(template_name='calendar.html')
 
 def get_faculty_by_dept():
     faculty = Faculty.objects.all()

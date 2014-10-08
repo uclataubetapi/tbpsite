@@ -446,9 +446,9 @@ class ActiveMember(Member):
         (HOUSE_LEADER, 'House Leader'),
         # (POKER, 'Poker Tournament Committee'),
         # TODO: comment as necessary
-        # (COMMITTEE, 'Rube Goldberg Committee'),
-        (CBR, 'Cardboard Boat Race Committee'),
-        (ACAD_OUTREACH, 'Academic Outreach Committee'),
+        (COMMITTEE, 'Rube Goldberg Committee'),
+        # (CBR, 'Cardboard Boat Race Committee'),
+        (ACAD_OUTREACH, 'Academic Outreach'),
     )
     requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
     requirement_complete = models.BooleanField(default=False)
