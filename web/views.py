@@ -29,10 +29,13 @@ def get_faculty_by_dept():
         faculty_by_dept.setdefault(str(f.get_dept_display()), []).append((f.name, f.chapter, f.graduation, f.link))
     faculty_by_dept['Advisors'] = [
         ('William R. Goodin', 'CA E', "'75 (Chief Advisor)", ''),
+        ('Ann Karagozian', 'CA E', "'78 (Faculty Advisor)", ''),
+        ('Deborah Duan', 'CA E', "'11 (Alumni Advisor)", ''),
+        ('Stephanie Yang', 'CA E', "'07 (Alumni Advisor)", ''),
         ('Stacey Ross', 'CA K', "'06 (District 16 Director)", ''),
         ('Neal Bussett', 'CA X', "'09 (District 16 Director)", ''),
-        ('Jason Corl', 'CA Q', "'06 (District 16 Director)", ''),
-        ('Scott Eckersall', 'CA I', "'96 (District 16 Director)", '')
+        ('Scott Eckersall', 'CA I', "'96 (District 16 Director)", ''),
+        ('Sam Rokni', 'CA C', "'05 (District 16 Director)", '')
     ]
     return [(dept, faculty_by_dept[dept]) for dept in sorted(faculty_by_dept)]
 

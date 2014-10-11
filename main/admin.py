@@ -108,8 +108,11 @@ class CandidateAdmin(admin.ModelAdmin):
     actions = ('create_candidate', 'create_active_member', 'promote_candidate')
 
     def promote_candidate(self, request, queryset):
-        queryset.update(position__member=Profile.MEMBER)
-
+        #queryset.update(position__member=Profile.MEMBER)
+        for cand in queryset:
+            cand.profile.position = Profile.MEMBER
+            cand.profile.save()
+            cand.save()
 
 class ActiveMemberAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'term', 'requirement_choice', 'requirement_complete')

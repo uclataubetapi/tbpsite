@@ -302,7 +302,7 @@ class Member(models.Model):
     # REQUIREMENTS
     def peer_teaching_complete(self):
         #return self.tutoring.complete() if self.tutoring else False
-        return self.peer_teaching.isComplete()
+        return self.peer_teaching.isComplete() if self.peer_teaching else False
 
     def social_complete(self):
         return self.social_count() >= MIN_SOCIALS
