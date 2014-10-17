@@ -16,7 +16,7 @@ from main.models import Profile
 GROUPS = {
     'Event': {'Social Chairs', 'Community Service', 'Academic Outreach', 'Mentorship Chairs',
                'Member Coordinators', 'Vice President', 'Senior Advisors', 'Alumna Advisor', 'Secretary'}, 
-    'Main': {'Secretary', 'Senior Advisors', 'Alumna Advisor', 'Vice President', 'Community Service',
+    'Main': {'Academic Outreach', 'Secretary', 'Senior Advisors', 'Alumna Advisor', 'Vice President', 'Community Service',
              'Member Coordinators'}, 
     'Tutoring': {'Tutoring Chairs', 'Vice President', 'Senior Advisors', 'Secretary'}
 } 

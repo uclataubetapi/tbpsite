@@ -50,7 +50,7 @@ def get_tutors():
         for day, day_name in TUTORING_DAY_CHOICES:
             tutors_for_hour.append(
                 sorted([t for t in tutoring_objs
-                        if (t.hour_1 == hour and t.day_1 == day) or (t.hour_2 == hour and t.day_2 == day)],
+                        if (not t.hidden) and ((t.hour_1 == hour and t.day_1 == day) or (t.hour_2 == hour and t.day_2 == day))],
                        key=lambda t: t.__unicode__()))
         tutors.append((hour_name, tutors_for_hour))
     return tutors
