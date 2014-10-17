@@ -92,8 +92,12 @@ class Tutoring(BaseTutoring):
 
     current = TermManager()
     objects = models.Manager()
-
+    
+    #Whether the tutoring assignment algorithm should consider this object
     frozen = models.BooleanField(default=False)
+
+    #Whether the tutoring object should be shown on the schedule
+    hidden = models.BooleanField(default=False)
 
     is_tutoring = models.BooleanField(default=False)
     last_start = models.DateTimeField(auto_now=False, auto_now_add=False,
