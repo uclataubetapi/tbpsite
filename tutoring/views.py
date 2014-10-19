@@ -145,68 +145,87 @@ def tutoring_logging(request):
     :return:
     """
     c_term = Settings.objects.term()
-    tutoring = get_object_or_404(Tutoring, profile=request.user.profile, term=c_term)
+    
+    tutoring = None
     error = None
+    isTutoring = False
+    hours = 0
     classes = None
     confirm = False
+    
+    # tutoring = get_object_or_404(Tutoring, profile=request.user.profile, term=c_term)
+    try:
+        tutoring = Tutoring.objects.get(profile=request.user.profile, term=c_term)
+    except Tutoring.DoesNotExist:
+        # Quick patch to make the error nice while we add allowance of weeks 1 and 2.
+        # TODO: Find out what the true problem is for this user. It can be any of:
+        #   1. Week < 3
+        #   2. Non-candidate (no peer teaching at all)
+        #   3. Candidate who chose Academic Outreach
+        # The error should be a diagnostic on one of these issues.
+        error = "We apologize, but you cannot log your tutoring hours at this time. Please try again tomorrow."
+    
+    if tutoring:
+        isTutoring = tutoring.is_tutoring
+    
+        td = (datetime.datetime.now() - tutoring.last_start).seconds
+        hours = td // 3600
+        if (td // 60) % 60 >= 45:
+            hours += 1
 
-    td = (datetime.datetime.now() - tutoring.last_start).seconds
-    hours = td // 3600
-    if (td // 60) % 60 >= 45:
-        hours += 1
-
-    if request.method == "POST":
-        if 'sign_in' in request.POST:
-            tutoring.is_tutoring = True
-            tutoring.last_start = datetime.datetime.now()
-            hours = 0
-            classes = Class.objects.filter(display=True)
-            confirm = True
-
-        elif 'sign_out' in request.POST:
-            h = hours
-            tutees = int(request.POST['tutees'])
-            makeup_t = int(request.POST['makeup_tutoring'])
-            makeup_e = int(request.POST['makeup_event'])
-            class_ids = request.POST.getlist('subjects')
-
-            if (makeup_t + makeup_e) > hours:
-                error = 'Hmm please check your math. According to our records, you have tutored approximately ' + str(
-                    hours) + 'hours this session (we round up after 45 minutes).'
-            else:
-                tutoring.is_tutoring = False
-                week = c_term.get_week()
-                if makeup_e > 0:
-                    h -= makeup_e # hours not logged!
-                    send_mail('Make up Tutoring Hours!', 
-                              'Hi! {} indicated they tutored {} hours to make up for an event. Please check this out!'.format(tutoring.profile, makeup_e),
-                              'webmaster@tbp.seas.ucla.edu', ['webmaster@tbp.seas.ucla.edu'], fail_silently=True)
-
-                if makeup_t > 0:
-                    for i in range(3, week):
-                        week_obj = getattr(tutoring, 'week_'+str(i))
-                        while (not week_obj.complete()) and makeup_t > 0:
-                            week_obj.hours += 1
-                            h -= 1
-                            makeup_t -= 1
-                            week_obj.no_makeup = False
-                        week_obj.save()
-                cur_week = getattr(tutoring, 'week_'+str(week))
-                cur_week.hours += h
-                cur_week.tutees += tutees
-                cur_week.save()
-                for s in class_ids:
-                    s = int(s)
-                    cur_week.classes.add(Class.objects.get(id=s))
+        if request.method == "POST":
+            if 'sign_in' in request.POST:
+                tutoring.is_tutoring = True
+                tutoring.last_start = datetime.datetime.now()
+                hours = 0
+                classes = Class.objects.filter(display=True)
                 confirm = True
 
-    else:
-        if tutoring.is_tutoring:
-            if tutoring.last_start.date() != datetime.datetime.now().date():  # midnight passed :P
-                error = 'You forgot to sign out of your last tutoring session. Please contact the tutoring chair to have those hours logged'
-                tutoring.is_tutoring = False
-            else:  # actually is tutoring
-                classes = Class.objects.filter(display=True)
+            elif 'sign_out' in request.POST:
+                h = hours
+                tutees = int(request.POST['tutees'])
+                makeup_t = int(request.POST['makeup_tutoring'])
+                makeup_e = int(request.POST['makeup_event'])
+                class_ids = request.POST.getlist('subjects')
 
-    tutoring.save()
-    return render(request, 'tutoring_logging.html', {'error': error, 'isTutoring': tutoring.is_tutoring, 'hours': hours, 'classes': classes, 'confirm': confirm})
+                if (makeup_t + makeup_e) > hours:
+                    error = 'Hmm please check your math. According to our records, you have tutored approximately ' + str(
+                        hours) + 'hours this session (we round up after 45 minutes).'
+                else:
+                    tutoring.is_tutoring = False
+                    week = c_term.get_week()
+                    if makeup_e > 0:
+                        h -= makeup_e # hours not logged!
+                        send_mail('Make up Tutoring Hours!', 
+                                  'Hi! {} indicated they tutored {} hours to make up for an event. Please check this out!'.format(tutoring.profile, makeup_e),
+                                  'webmaster@tbp.seas.ucla.edu', ['webmaster@tbp.seas.ucla.edu'], fail_silently=True)
+
+                    if makeup_t > 0:
+                        for i in range(3, week):
+                            week_obj = getattr(tutoring, 'week_'+str(i))
+                            while (not week_obj.complete()) and makeup_t > 0:
+                                week_obj.hours += 1
+                                h -= 1
+                                makeup_t -= 1
+                                week_obj.no_makeup = False
+                            week_obj.save()
+                    cur_week = getattr(tutoring, 'week_'+str(week))
+                    cur_week.hours += h
+                    cur_week.tutees += tutees
+                    cur_week.save()
+                    for s in class_ids:
+                        s = int(s)
+                        cur_week.classes.add(Class.objects.get(id=s))
+                    confirm = True
+
+        else:
+            if tutoring.is_tutoring:
+                if tutoring.last_start.date() != datetime.datetime.now().date():  # midnight passed :P
+                    error = 'You forgot to sign out of your last tutoring session. Please contact the tutoring chair to have those hours logged'
+                    tutoring.is_tutoring = False
+                else:  # actually is tutoring
+                    classes = Class.objects.filter(display=True)
+
+        tutoring.save()
+    
+    return render(request, 'tutoring_logging.html', {'error': error, 'isTutoring': isTutoring, 'hours': hours, 'classes': classes, 'confirm': confirm})
