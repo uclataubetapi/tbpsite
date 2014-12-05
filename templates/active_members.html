@@ -10,6 +10,8 @@
           <form role="form" method="post">
             {% csrf_token %}
                 <select name="term">
+		  <option value="{{dropdown_term.id}}">{{ dropdown_term }}</option>
+                  <option class="select-dash" disabled="disabled">----------</option>
                     {% for t in terms %}
                     <option value="{{ t.id }}">{{ t }}</option>
                     {% endfor %}

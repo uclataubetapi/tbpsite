@@ -62,4 +62,4 @@ def get_officers():
 faculty = MyTemplateView.as_view(template_name='faculty.html', 
                                  additional={'faculty': get_faculty_by_dept, 'facultyAdvisor': 'Ann R. Karagozian'})
 officers = MyTemplateView.as_view(template_name='officers.html', 
-                                  additional={'term': 'Summer - Fall 2013', 'positions': get_officers})
+                                  additional={'term': Settings.objects.term(), 'positions': get_officers})

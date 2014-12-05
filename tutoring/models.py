@@ -293,6 +293,8 @@ class ForeignTutoring(BaseTutoring):
     classes = models.ManyToManyField(Class)
     organization = models.CharField(max_length=1, choices=ORG_CHOICES)
 
+    hidden = models.BooleanField(default=False)
+
     current = TermManager()
     objects = models.Manager()
 

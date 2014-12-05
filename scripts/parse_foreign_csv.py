@@ -12,13 +12,13 @@ from main.models import Settings
 from main.models import User
 from tutoring.models import Tutoring
 from tutoring.models import ForeignTutoring
-from tutoring.models import DAY_CHOICES, HOUR_CHOICES, TWO_HOUR_CHOICES
+from constants import TUTORING_DAY_CHOICES, TUTORING_HOUR_CHOICES, TWO_HOUR_CHOICES
 from tutoring.models import Class
             
 def parseDayChoices(choice):
     c = choice.split(':')[0]
-    for i in range(len(DAY_CHOICES)):
-        if DAY_CHOICES[i][1] == c:
+    for i in range(len(TUTORING_DAY_CHOICES)):
+        if TUTORING_DAY_CHOICES[i][1] == c:
             return str(i)
 
 def parseTwoHourChoices(choice):
@@ -30,10 +30,10 @@ def parseTwoHourChoices(choice):
 def parseHourChoices(choices):
     c = choices.split('-')
     res = ['','']
-    for i in range(len(HOUR_CHOICES)):
-        if HOUR_CHOICES[i][1] == c[0]:
+    for i in range(len(TUTORING_HOUR_CHOICES)):
+        if TUTORING_HOUR_CHOICES[i][1] == c[0]:
             res[0] = str(i)
-        elif HOUR_CHOICES[i][1] == c[1]:
+        elif TUTORING_HOUR_CHOICES[i][1] == c[1]:
             res[1] = str(i-1)
     return res
 
