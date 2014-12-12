@@ -35,7 +35,12 @@ def get_faculty_by_dept():
         ('Stacey Ross', 'CA K', "'06 (District 16 Director)", ''),
         ('Neal Bussett', 'CA X', "'09 (District 16 Director)", ''),
         ('Scott Eckersall', 'CA I', "'96 (District 16 Director)", ''),
-        ('Sam Rokni', 'CA C', "'05 (District 16 Director)", '')
+        ('Sam Rokni', 'CA C', "'05 (District 16 Director)", ''),
+        ('Hani Freudenberger', 'CA E', "'07 (Alumni Advisor)", ''),
+        ('Caitlin Gomez', 'CA E', "'06 (Alumni Advisor)", ''),
+        ('Ronald Hickling', 'CA E', "'80 (Alumni Advisor)", ''),
+        ('Marshall Lew', 'CA E', "'71 (Alumni Advisor)", ''),
+        ('Christine Tran', 'CA E', "'11 (Alumni Advisor)", '')
     ]
     return [(dept, faculty_by_dept[dept]) for dept in sorted(faculty_by_dept)]
 
