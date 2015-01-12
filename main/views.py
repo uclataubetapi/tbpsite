@@ -384,12 +384,18 @@ def downloads(request):
 
 @staff_member_required
 def spreadsheet(request):
-    data = '\n'.join(['First Name,Middle Name,Last Name,Email,Nickname,Gender,Birthday,Phone Number,Major,'
-                      'Initiation Term,Graduation Term'] +
-                     [profile.dump() for profile in Profile.objects.all() if profile.user.id != 1])
-    response = HttpResponse(data, content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=spreadsheet.csv'
-    return response
+    # data = '\n'.join(['First Name,Middle Name,Last Name,Email,Nickname,Gender,Birthday,Phone Number,Major,'
+    #                   'Initiation Term,Graduation Term'] +
+    #                  [profile.dump() for profile in Profile.objects.all() if profile.user.id != 1])
+    # response = HttpResponse(data, content_type='text/csv')
+    # response['Content-Disposition'] = 'attachment; filename=spreadsheet.csv'
+    # return response
+    prof_list_initial = Profile.objects.order_by("user__last_name")
+    profile_list = []
+    for prof in prof_list_initial:
+        if prof.user.last_name:
+            profile_list.append(prof) 
+    return render(request, 'user_info_dump.html', {'profile_list': profile_list})
 
 
 def create_zipfile(filenames):
