@@ -2,7 +2,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<a href="{% url 'main.views.spreadsheet' %}">Spreadsheet</a>
 <a href="{% url 'main.views.resumes_pdf' %}">Resumes (PDF)</a>
 <a href="{% url 'main.views.resumes_word' %}">Resumes (word)</a>
 {% endblock %}
+
+<!-- <a href="{% url 'main.views.spreadsheet' %}">Spreadsheet</a> Currently replaced with All Profiles View -->

@@ -31,7 +31,7 @@ urlpatterns += patterns('main.views',
     url(r'^pending_community_service/$', 'pending_community_service'),
     url(r'^active_members/$', 'active_members'),
     url(r'^downloads/$', 'downloads'),
-    url(r'^spreadsheet/$', 'spreadsheet'),
+    url(r'^all_profiles/$', 'all_profiles'),
     url(r'^resumes_pdf/$', 'resumes_pdf'),
     url(r'^resumes_word/$', 'resumes_word'),
 

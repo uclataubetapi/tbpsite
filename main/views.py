@@ -383,7 +383,7 @@ def downloads(request):
 
 
 @staff_member_required
-def spreadsheet(request):
+def all_profiles(request):
     # data = '\n'.join(['First Name,Middle Name,Last Name,Email,Nickname,Gender,Birthday,Phone Number,Major,'
     #                   'Initiation Term,Graduation Term'] +
     #                  [profile.dump() for profile in Profile.objects.all() if profile.user.id != 1])
