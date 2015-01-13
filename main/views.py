@@ -353,9 +353,16 @@ def active_members(request):
         term_id = int(request.POST['term'])
         term = Term.objects.get(id=term_id)
         return render(request, 'active_members.html',
-                      {'member_list': ActiveMember.objects.filter(term=term), 'dropdown_term' : term, 'terms': terms_list})
+                      {'member_list': ActiveMember.objects.filter(term=term, profile__user__is_staff=False),
+                       'staff_member_list': ActiveMember.objects.filter(term=term, profile__user__is_staff=True),
+                       'dropdown_term' : term, 'terms': terms_list})
 
-    return render(request, 'active_members.html', {'member_list': ActiveMember.current.order_by('profile'), 'dropdown_term' : Settings.objects.term(), 'terms': terms_list})
+
+    aMembers = ActiveMember.current
+    return render(request, 'active_members.html', 
+                  {'member_list': aMembers.filter(profile__user__is_staff=False).order_by('profile'),
+                   'staff_member_list': aMembers.filter(profile__user__is_staff=True).order_by('profile'),
+                   'dropdown_term' : Settings.objects.term(), 'terms': terms_list})
 
 
 @staff_member_required
