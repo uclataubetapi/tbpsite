@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% load extras %}
+
+{% block title %}All Profiles{% endblock %}
+
+{% block content %}
+<h1>All Profiles</h1>
+<div class="row">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Nickname</th>
+            <th>Email</th>
+            <th>House</th>
+            <th>Gender</th>
+            <th>Birthday</th>
+            <th>Phone Number</th>
+            <th>Major</th>
+            <th>Initiation Term</th>
+            <th>Graduation Term</th>
+        </tr>
+        </thead>
+        <tbody>
+          {% for prof in profile_list %}
+	  <tr>
+	    <td>{{prof.user.first_name}} {{prof.user.last_name}}</td>
+	    <td>{{prof.nickname}}</td>
+	    <td>{{prof.user.email}}</td>
+	    <td>{{prof.house}}</td>
+	    <td>{{prof.gender}}</td>
+	    <td>{{prof.birthday}}</td>
+	    <td>{{prof.phone_number}}</td>
+	    <td>{{ prof|prof_major }}</td>
+	    <td>{{ prof|prof_init_term }}</td>
+	    <td>{{ prof|prof_grad_term }}</td>	    
+	  </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
