@@ -176,11 +176,12 @@ def tutoring_logging(request):
         if request.method == "POST":
             if 'sign_in' in request.POST:
                 tutoring.is_tutoring = True
+                isTutoring = True
                 tutoring.last_start = datetime.datetime.now()
                 hours = 0
                 classes = Class.objects.filter(display=True)
                 confirm = True
-
+                
             elif 'sign_out' in request.POST:
                 h = hours
                 tutees = int(request.POST['tutees'])
@@ -193,6 +194,7 @@ def tutoring_logging(request):
                         hours) + 'hours this session (we round up after 45 minutes).'
                 else:
                     tutoring.is_tutoring = False
+                    isTutoring = False
                     week = c_term.get_week()
                     if makeup_e > 0:
                         h -= makeup_e # hours not logged!

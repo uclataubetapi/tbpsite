@@ -15,8 +15,8 @@ from main.models import Profile
 
 GROUPS = {
     'Event': {'Social Chairs', 'Community Service', 'Academic Outreach', 'Mentorship Chairs',
-               'Member Coordinators', 'Vice President', 'Senior Advisors', 'Alumna Advisor', 'Secretary'}, 
-    'Main': {'Academic Outreach', 'Secretary', 'Senior Advisors', 'Alumna Advisor', 'Vice President', 'Community Service',
+               'Member Coordinators', 'Vice President', 'Senior Advisors', 'Alumna Advisor', 'Secretary', 'Treasurer', 'Tutoring Chairs', 'Education Outreach', 'Corporate Relations', 'Publicity Chairs', 'Project Chairs', 'Historian', 'Alumna Advisor'}, 
+    'Main': {'Education Outreach', 'Academic Outreach', 'Secretary', 'Senior Advisors', 'Alumna Advisor', 'Vice President', 'Community Service',
              'Member Coordinators'}, 
     'Tutoring': {'Tutoring Chairs', 'Vice President', 'Senior Advisors', 'Secretary'}
 } 
@@ -32,6 +32,7 @@ def assignPermissions():
     for u in User.objects.all():
         u.is_superuser = False
         u.is_staff = False
+        u.user_permissions.clear()
         u.save()
     for key in GROUPS:
         Group.objects.get(name=key).user_set.clear()

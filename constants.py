@@ -17,7 +17,7 @@ MAJOR_CHOICES = (
 )
 DEPT_CHOICES = (
     ('0', 'Bioengineering'),
-    ('1', 'Chemical Engineering'),
+    ('1', 'Chemical and Biomolecular Engineering'),
     ('2', 'Civil and Environmental Engineering'),
     ('3', 'Computer Science'),
     ('4', 'Electrical Engineering'),
