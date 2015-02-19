@@ -10,6 +10,8 @@
           <form role="form" method="post">
             {% csrf_token %}
                 <select name="term">
+		  <option value="{{dropdown_term.id}}">{{ dropdown_term }}</option>
+                  <option class="select-dash" disabled="disabled">----------</option>
                     {% for t in terms %}
                     <option value="{{ t.id }}">{{ t }}</option>
                     {% endfor %}
@@ -31,6 +33,7 @@
             </tr>
           </thead>
           <tbody>
+	    <tr><td><strong>Normal Distinguished Actives</strong></td></tr>
             {% for member in member_list %}
             <tr>
               <td>{{ member }}</td>
@@ -39,6 +42,16 @@
                 <td>{% if member.social_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
             </tr>
             {% endfor %}
+	    <tr><td><strong>Staff Distinguished Actives</strong></td></tr>
+	    {% for member in staff_member_list %}
+            <tr>
+              <td>{{ member }}</td>
+              <td>{{ member.get_requirement_choice_display }}</td>
+              <td>{% if member.requirement %}<span class="glyphicon glyphicon-ok"/>{% endif %}</td>
+                <td>{% if member.social_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+            </tr>
+            {% endfor %}
+
           </tbody>
         </table>
     </div>

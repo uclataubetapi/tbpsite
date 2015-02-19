@@ -283,6 +283,8 @@ class Member(models.Model):
     completed = models.BooleanField(default=False)
     other = models.IntegerField(default=0)
 
+    event_requirements = models.ManyToManyField('Requirement')
+
     current = TermManager()
     objects = models.Manager()
 
@@ -507,3 +509,22 @@ class Faculty(models.Model):
 
     class Meta:
         verbose_name_plural = "Faculty Members"
+
+class Requirement(models.Model):
+    
+    SOCIAL = '0'
+    PROFESSIONAL = '1'
+    SERVICE = '2'
+    CATEGORY_CHOICES = (
+        (SOCIAL, 'Social'),
+        (PROFESSIONAL, 'Professional'),
+        (SERVICE, 'Service') 
+    )
+
+    name = models.CharField(max_length=40)
+    requirement_choice = models.CharField(max_length=1, choices=CATEGORY_CHOICES, default='0')
+    point_value = models.IntegerField(default=0)
+    term = models.ForeignKey('Term')
+
+    def __unicode__(self):
+        return self.name

@@ -340,23 +340,29 @@ def candidates(request):
         term_id = int(request.POST['term'])
         term = Term.objects.get(id=term_id)
         return render(request, 'all_candidate_requirements.html',
-                      {'candidate_list': Candidate.objects.filter(term=term), 'terms': terms_list})
+                      {'candidate_list': Candidate.objects.filter(term=term), 'dropdown_term' : term, 'terms': terms_list})
     return render(request, 'all_candidate_requirements.html',
-                  {'candidate_list': Candidate.current.order_by('profile'), 'terms': terms_list})
+                  {'candidate_list': Candidate.current.order_by('profile'), 'dropdown_term' : Settings.objects.term(),'terms': terms_list})
 
 
 @staff_member_required
 def active_members(request):
-    terms_list = Term.objects.all()
+    terms_list = Term.objects.filter(Q(quarter='1') | Q(quarter='3'))
 
     if request.method == "POST":
         term_id = int(request.POST['term'])
         term = Term.objects.get(id=term_id)
         return render(request, 'active_members.html',
-                      {'member_list': ActiveMember.objects.filter(term=term), 'terms': terms_list})
+                      {'member_list': ActiveMember.objects.filter(term=term, profile__user__is_staff=False),
+                       'staff_member_list': ActiveMember.objects.filter(term=term, profile__user__is_staff=True),
+                       'dropdown_term' : term, 'terms': terms_list})
 
-    return render(request, 'active_members.html',
-                  {'member_list': ActiveMember.current.order_by('profile'), 'terms': terms_list})
+
+    aMembers = ActiveMember.current
+    return render(request, 'active_members.html', 
+                  {'member_list': aMembers.filter(profile__user__is_staff=False).order_by('profile'),
+                   'staff_member_list': aMembers.filter(profile__user__is_staff=True).order_by('profile'),
+                   'dropdown_term' : Settings.objects.term(), 'terms': terms_list})
 
 
 @staff_member_required
@@ -384,13 +390,19 @@ def downloads(request):
 
 
 @staff_member_required
-def spreadsheet(request):
-    data = '\n'.join(['First Name,Middle Name,Last Name,Email,Nickname,Gender,Birthday,Phone Number,Major,'
-                      'Initiation Term,Graduation Term'] +
-                     [profile.dump() for profile in Profile.objects.all() if profile.user.id != 1])
-    response = HttpResponse(data, content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=spreadsheet.csv'
-    return response
+def all_profiles(request):
+    # data = '\n'.join(['First Name,Middle Name,Last Name,Email,Nickname,Gender,Birthday,Phone Number,Major,'
+    #                   'Initiation Term,Graduation Term'] +
+    #                  [profile.dump() for profile in Profile.objects.all() if profile.user.id != 1])
+    # response = HttpResponse(data, content_type='text/csv')
+    # response['Content-Disposition'] = 'attachment; filename=spreadsheet.csv'
+    # return response
+    prof_list_initial = Profile.objects.order_by("user__last_name")
+    profile_list = []
+    for prof in prof_list_initial:
+        if prof.user.last_name:
+            profile_list.append(prof) 
+    return render(request, 'user_info_dump.html', {'profile_list': profile_list})
 
 
 def create_zipfile(filenames):
