@@ -23,7 +23,10 @@ GROUPS = {
 
 SUPERPOS = {"Webmaster", "President"}
 SUPERCOOLPEOPLE = {"Rachel Fang"}
+EXTRA_STAFF = {"Andy Luu", "Hunter Jones"}
+
 superLog = []
+staffLog = []
 
 users = User.objects.all()
 positions = Officer.objects.all()
@@ -38,24 +41,9 @@ def assignPermissions():
         Group.objects.get(name=key).user_set.clear()
     for pos in positions:
         curr = Officer.objects.get(position=pos)
-    #   print curr.list_profiles()
-        profiles = curr.profile.all()#curr.list_profiles().split(',');
+        profiles = curr.profile.all()
         print pos
         for prof in profiles:
-            #RAY WAS A DUMB
-            # stripped = prof.strip()
-        #     foo = stripped.split(" ")
-        #     if(foo[1]==''):
-        #         foo.remove('')
-        #     firstname = foo[0]
-        #     lastname = foo[1];
-        # #        print firstname + ' ' + lastname
-        #     users = User.objects.filter(last_name=lastname)
-        #     user = None
-        #     if(users.count()>1):
-        #         user = User.objects.get(username=users.get(first_name=firstname))
-        #     else:
-        #         user = list(users)[0]
             user = users.get(profile=prof);
             for key in GROUPS:
                 for position in GROUPS[key]:
@@ -87,7 +75,18 @@ def assignPermissions():
         user.is_superuser = True
         superLog.append("Superuser status granted to: " + user.get_full_name() + " as - A Really Cool Person")
         user.save()
+    for p in EXTRA_STAFF:
+        foo = p.split(" ")
+        fName = foo[0]
+        lName = foo[1]
+        user = User.objects.get(first_name=fName, last_name=lName)
+        user.is_staff = True
+        staffLog.append("Staff status granted to: " + user.get_full_name() + " as - An Extra Staff Member")
+        user.save()
+
     for sup in superLog:
         print sup
+    for shit in staffLog:
+        print shit
         
 assignPermissions()
