@@ -135,6 +135,10 @@ class OfficerAdmin(admin.ModelAdmin):
 class PeerAdmin(admin.ModelAdmin):
     list_display = ('profile', 'requirement_choice', 'academic_outreach_complete', 'tutoring')
     list_editable = ('requirement_choice', 'academic_outreach_complete')
+
+class RequirementAdmin(admin.ModelAdmin):
+    list_display = ('name', 'requirement_choice', 'point_value', 'term')
+    list_editable = ('requirement_choice', 'point_value')
     
 admin.site.unregister(User)
 admin.site.register(User, MyUserAdmin)
@@ -147,3 +151,4 @@ admin.site.register(ActiveMember, ActiveMemberAdmin)
 admin.site.register(Faculty, FacultyAdmin)
 admin.site.register(Officer, OfficerAdmin)
 admin.site.register(PeerTeaching, PeerAdmin)
+admin.site.register(Requirement, RequirementAdmin)

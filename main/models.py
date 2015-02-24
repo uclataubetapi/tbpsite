@@ -525,6 +525,9 @@ class Requirement(models.Model):
     requirement_choice = models.CharField(max_length=1, choices=CATEGORY_CHOICES, default='0')
     point_value = models.IntegerField(default=0)
     term = models.ForeignKey('Term')
+    
+    current = TermManager()
+    objects = models.Manager()
 
     def __unicode__(self):
         return self.name
