@@ -19,4 +19,6 @@ def prof_init_term(profile):
 def prof_grad_term(profile):
     return profile.graduation_term.__unicode__() if profile.graduation_term else ''
 
-
+@register.filter
+def cand_get_reqpoints_in_cat(candidate, category):
+    return candidate.get_reqpoints_in_cat(category)

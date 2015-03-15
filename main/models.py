@@ -259,6 +259,12 @@ class PeerTeaching(models.Model):
         else:
             return False
 
+    def get_req_choice(self):
+        return {
+            self.TUTORING: 'Tutoring',
+            self.ACAD_OUTREACH: 'Academic Outreach Committee',
+        }[self.requirement_choice]
+
     def __unicode__(self):
         try:
             return self.profile.user.get_full_name()
@@ -294,6 +300,14 @@ class Member(models.Model):
     class Meta:
         abstract = True
         ordering = ('term', 'profile__user__last_name', 'profile__user__first_name')
+
+    
+    def get_reqpoints_in_cat(self, category):
+        sum = 0
+        for r in self.event_requirements.all().values():
+            if r['requirement_choice'] == category:
+                sum += r['point_value']
+        return sum
 
     def social_count(self):
         from event.models import Event
@@ -359,7 +373,7 @@ class Candidate(Member):
     tbp_event = models.BooleanField(default=False)
 
     def get_peer_req_choice(self):
-        return self.requirement_choice
+        return self.peer_teaching.get_req_choice()
 
     def resume(self):
         return self.profile.resume_pdf or self.profile.resume_word
@@ -531,3 +545,10 @@ class Requirement(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def req_plain_text():
+        return {
+            SOCIAL: '0',
+            PROFESSIONAL:'1',
+            SERVICE: '2',
+        }[requirement_choice]

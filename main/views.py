@@ -18,7 +18,7 @@ from django.views.generic.base import View
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 
-from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES, PeerTeaching
+from main.models import Profile, Term, Candidate, ActiveMember, House, HousePoints, Settings, MAJOR_CHOICES, PeerTeaching, Requirement
 from main.forms import LoginForm, RegisterForm, UserAccountForm, UserPersonalForm, ProfileForm, CandidateForm, MemberForm, ShirtForm, FirstProfileForm, PeerTeachingForm
 from tutoring.models import Tutoring, Class, TutoringPreferencesForm
 from common import render
@@ -340,9 +340,10 @@ def candidates(request):
         term_id = int(request.POST['term'])
         term = Term.objects.get(id=term_id)
         return render(request, 'all_candidate_requirements.html',
-                      {'candidate_list': Candidate.objects.filter(term=term), 'dropdown_term' : term, 'terms': terms_list})
+                      {'candidate_list': Candidate.objects.filter(term=term), 'dropdown_term' : term, 'terms': terms_list,
+                        'req_options': Requirement.CATEGORY_CHOICES})
     return render(request, 'all_candidate_requirements.html',
-                  {'candidate_list': Candidate.current.order_by('profile'), 'dropdown_term' : Settings.objects.term(),'terms': terms_list})
+                  {'candidate_list': Candidate.current.order_by('profile'), 'dropdown_term' : Settings.objects.term(),'terms': terms_list, 'req_options': Requirement.CATEGORY_CHOICES})
 
 
 @staff_member_required

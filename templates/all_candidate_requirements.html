@@ -3,67 +3,136 @@
 {% block title %}Candidates{% endblock %}
 
 {% block content %}
+
+{% load extras %}
+
+<style>
+  th{
+      width: 25%;
+  }
+
+  .trackingArea{
+  background-color: lavender;
+  border: 2px solid;
+  border-color: #dddddd;
+  border-radius: 7px;
+  /*margin: 0.5%;*/
+  }
+</style>
+
+
+
 <h1>Candidates</h1>
 <div class="row">
-    <div class="col-md-12">
-        <div class="pull-right">
-          <form role="form" method="post">
-            {% csrf_token %}
-                <select name="term">
-                  <option value="{{dropdown_term.id}}">{{ dropdown_term }}</option>
-		  <option class="select-dash" disabled="disabled">----------</option>
-		  {% for t in terms %}
-                    <option value="{{ t.id }}">{{ t }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit" class="btn btn-primary" name="submit">Change Term</button>
-            </form>
-        </div>
+  <div class="col-md-12">
+    <div class="pull-right">
+      <form role="form" method="post">
+        {% csrf_token %}
+        <select name="term">
+          <option value="{{dropdown_term.id}}">{{ dropdown_term }}</option>
+	  <option class="select-dash" disabled="disabled">----------</option>
+	  {% for t in terms %}
+          <option value="{{ t.id }}">{{ t }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary" name="submit">Change Term</button>
+      </form>
     </div>
+  </div>
 </div>
-<div class="row">
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Count</th>
-            <th>Bent Polish</th>
-            <th>Sorting</th>
-            <th>Candidate Quiz</th>
-            <th>Candidate Meet and Greet</th>
-            <th>Social Event</th>
-            <th>Signature Book</th>
-            <th>Community Service</th>
-            <th>Initation Fee</th>
-            <th>Peer Teaching</th>
-            <th>Engineering Futures</th>
-            <th>Resume Submission</th>
-            <th>TBP Event/Interview</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for candidate in candidate_list %}
-        <tr class={% if candidate.complete %}"success"{% elif candidate.requirement_count > 5.5 %}"warning"{% else %}"danger"{% endif %}>
-        <td>{{ candidate }}</td>
-        <td>{{ candidate.requirement_count }}</td>
-        <td>{% if candidate.bent_polish %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-        <td>{% if candidate.candidate_sorting %}<span class="glyphicon glyphicon-ok"><span>{% endif %}</td>
-        <td>{% if candidate.candidate_quiz %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-        <td>{% if candidate.candidate_meet_and_greet %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-        <td>{% if candidate.social_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}({{ candidate.social_count }})
-        </td>
-        <td>{% if candidate.signature_book %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-        <td>{% if candidate.community_service_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-        <td>{% if candidate.initiation_fee %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-        <td>{% if candidate.peer_teaching_complete %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-        <td>{% if candidate.engineering_futures %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-        <td>{% if candidate.resume %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-        <td>{% if candidate.tbp_event_complete %}<a href="{% url 'main.views.interview' candidate.id %}"><span
-            class="glyphicon glyphicon-ok"></span></a>{% endif %}
-        </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+
+<div class="panel-group" id="accordion">
+  {% for candidate in candidate_list %}
+
+  <p> Under construction </p>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <a class="accordion-toggle {% if candidate.complete %} success{% elif candidate.requirement_count > 5.5 %} warning{% else %} danger {% endif %}" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ candidate.profile|slugify }}"><strong>{{ candidate.profile }}</strong></a>
+    </div>
+    <div id="collapse{{ candidate.profile|slugify }}" class="panel-collapse collapse{% if forloop.first %} in{% endif %}">
+      <div class="panel-body">
+        <div class="container">
+          <div class="row">
+             <!-- style="margin-left: 4%; margin-right: 4%;" -->
+            <div class="col-md-3 trackingArea" style="margin-left: 6.25%;">
+              <em style="text-align: center"> <h4> <u> Core Requirements </u> </h4> </em>
+          	  <table>
+                <tr>
+                  <th> <em> Requirement </em> </th>
+                  <th> <em> Status </em> </th> 
+                </tr>
+                <tr> 
+                  <td> <strong> Bent Polish: </strong> </td>
+                  <td>{% if candidate.bent_polish %} <span class="glyphicon glyphicon-ok text-success"></span> {% else %} <span class="glyphicon glyphicon-remove text-danger"> {% endif %}</td>
+                </tr>
+                <tr> 
+                  <td> <strong> Candidate Quiz: </strong> </td>
+                  <td>{% if candidate.candidate_quiz %}<span class="glyphicon glyphicon-ok text-success"></span> {% else %} <span class="glyphicon glyphicon-remove text-danger"> {% endif %}</td>
+                </tr>
+                <tr> 
+                  <td> <strong> Initiation Fee </strong> </td>
+                  <td>{% if candidate.initiation_fee %}<span class="glyphicon glyphicon-ok text-success"></span> {% else %} <span class="glyphicon glyphicon-remove text-danger"> {% endif %}</td>
+                </tr>
+                <tr> 
+                  <td> <strong> Engineering Futures: </strong> </td>
+                  <td>{% if candidate.engineering_futures %}<span class="glyphicon glyphicon-ok text-success"></span> {% else %} <span class="glyphicon glyphicon-remove text-danger"> {% endif %}</td>
+                </tr>
+                <tr> 
+                  <td> <strong> Resume Submission: </strong> </td>
+                  <td>{% if candidate.resume %}<span class="glyphicon glyphicon-ok text-success"></span> {% else %} <span class="glyphicon glyphicon-remove text-danger"> {% endif %}</td>
+                </tr>
+          	   </table>
+            </div>
+
+            <div class="col-md-3 trackingArea" style="text-align: center; margin-left: 6.25%; margin-right: 6.25%;">
+              <em> <h4> <u> Candidate Track </u> </h4> </em>
+              {% if candidate.peer_teaching %} 
+
+                <p> Choice: </p> <p style="border: 7px solid #91d08c; border-radius: 12px; text-align: center;">{{ candidate.get_peer_req_choice }}</p>
+              
+              {% endif %}
+            </div>
+
+            <div class="col-md-3 trackingArea" style="background-color: #c3e5c8;">
+              <em style="text-align: center"> <h4> <u> Point Total Progress </u> </h4> </em>
+              <div class="row" style="margin-top: 1%;">
+                <div class="panel-group" id="catAccordion">
+                  {% for req in req_options %}
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#catAccordion" href="#catCollapse{{ req.1|slugify }}"><strong>{{ req.1 }} ( {{candidate|cand_get_reqpoints_in_cat:req.0}} / 20 points)</strong></a>
+                      </div>
+                      <div id="catCollapse{{ req.1|slugify }}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                          <table>
+                            <tr>
+                              <th>Name</th>
+                              <th>Point Value</th>
+                            </tr>
+                            {% for r in candidate.event_requirements.all %}
+                              {% if r.requirement_choice == req.0 %}
+                                <tr>
+                                  <td>{{ r }}</td>
+                                  <td>{{ r.point_value }}</td>
+                                </tr>
+                              {% endif %}
+                            {% endfor %}
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>  
+            </div>
+          </div>
+          <div class="row" style="margin-top: 1%;">
+                
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}
