@@ -4,6 +4,8 @@
 
 {% block tabcontent %}
 
+{% load extras %}
+
 <div class="row">
   <div class="col-lg-6">
     <form class="form-horizontal">
@@ -52,27 +54,82 @@
   </div>
   <div class="col-lg-6">
     <h4>{{ profile.get_position_display }}</h4>
-    {% if requirements %}
-    <p>Requirements:</p>
-    <table class="table">
-      {% for requirement in requirements %}
-      <tr>
-        <td>{{ requirement.0 }}</td>
-        <td>{{ requirement.1 }}</td>
-      </tr>
-      {% endfor %}
-    </table>
+
+    {% if core_requirements %}
+      <p>Core Requirements:</p>
+      <table class="table">
+        {% for requirement in core_requirements %}
+        <tr>
+          <td>{{ requirement.0 }}</td>
+          <td>{{ requirement.1 }}</td>
+        </tr>
+        {% endfor %}
+      </table>
     {% endif %}
+
+    {% if track %}
+      <p>Peer Teaching Track:</p>
+      <table class="table">
+        <tr>
+          <td>{{ track.0 }}</td>
+          <td>{{ track.1 }}</td>
+        </tr>
+      </table>
+    {% endif %}
+
+    {% if ev_requirement_totals %}
+      <p>Event Requirements:</p>
+      <div class="container">
+          <div class="col-md-12 trackingArea">
+            <div class="row">
+              <div class="panel-group" id="catAccordion">
+              {% for req in ev_requirement_totals %}
+
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#catAccordion" href="#catCollapse{{ req.0|slugify }}"><strong>{{ req.0 }} ( {{req.1}} / {{cat_point_maxes|getDictValueForKey:req.0}} points)</strong></a>
+                  </div>
+                  <div id="catCollapse{{ req.0|slugify }}" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <table>
+                        {% if req.1 > 0 %}
+                        <tr>
+                          <th>Name</th>
+                          <th>Point Value</th>
+                        </tr>
+                        {% endif %}
+
+                        {% for r in ev_reqs_attended %}
+                          {% if r.get_requirement_choice_display == req.0 %}
+                            <tr>
+                              <td style="padding: 0px 10px 0px 0px">{{ r }}</td>
+                              <td>{{ r.point_value }}</td>
+                            </tr>
+                          {% endif %}
+                        {% endfor %}
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+              {% endfor %}
+            </div>
+          </div>  
+        </div>
+      </div>
+      
+    {% endif %}
+
     {% if profile.position == "1"%}
-    <p>Distinguished Active Terms:</p>
-    <table class="table">
-      {% for detail in details %}
-      <tr>
-        <td>{{ detail.0 }}</td>
-        <td>{{ detail.1 }}</td>
-      </tr>
-      {% endfor %}
-    </table>
+      <p>Distinguished Active Terms:</p>
+      <table class="table">
+        {% for detail in details %}
+        <tr>
+          <td>{{ detail.0 }}</td>
+          <td>{{ detail.1 }}</td>
+        </tr>
+        {% endfor %}
+      </table>
     {% endif %}
   </div>
 </div>

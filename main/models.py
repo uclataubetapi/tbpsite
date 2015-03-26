@@ -309,6 +309,11 @@ class Member(models.Model):
                 sum += r['point_value']
         return sum
 
+    def get_req_points(self):
+        return (('Social', self.get_reqpoints_in_cat('0')),
+                ('Professional', self.get_reqpoints_in_cat('1')),
+                ('Service', self.get_reqpoints_in_cat('2')))
+
     def social_count(self):
         from event.models import Event
 
@@ -316,6 +321,9 @@ class Member(models.Model):
                 Event.current.filter(attendees=self.profile, term=self.term, event_type=Event.HOUSE).count())
 
     # REQUIREMENTS
+    def peer_teaching_track(self):
+        #return self.tutoring.complete() if self.tutoring else False
+        return self.peer_teaching.get_req_choice()
     def peer_teaching_complete(self):
         #return self.tutoring.complete() if self.tutoring else False
         return self.peer_teaching.isComplete() if self.peer_teaching else False
@@ -386,19 +394,20 @@ class Candidate(Member):
         return self.professor_interview or self.tbp_event
 
     def requirements(self):
+        #Commented lines to be phased out for the Point Sytem Initiation Process
         return (
-            ('Peer Teaching', self.peer_teaching_complete()),
+            # ('Peer Teaching', self.peer_teaching_complete()),
             ('Bent Polish', self.bent_polish),
             ('Candidate Quiz', self.candidate_quiz),
-            ('Candidate Meet and Greet', self.candidate_meet_and_greet),
-            ('Signature Book', self.signature_book),
-            ('Community Service', self.community_service_complete()),
+            # ('Candidate Meet and Greet', self.candidate_meet_and_greet),
+            # ('Signature Book', self.signature_book),
+            # ('Community Service', self.community_service_complete()),
             ('Initiation Fee', self.initiation_fee),
             ('Engineering Futures', self.engineering_futures),
-            ('Social', self.social_complete()),
+            # ('Social', self.social_complete()),
             ('Resume', self.resume()),
-            ('TBP event', self.tbp_event_complete()),
-            ('Candidate Sorting', self.candidate_sorting),
+            # ('TBP event', self.tbp_event_complete()),
+            # ('Candidate Sorting', self.candidate_sorting),
         )
 
     def requirement_count(self):
@@ -534,7 +543,7 @@ class Requirement(models.Model):
         (PROFESSIONAL, 'Professional'),
         (SERVICE, 'Service') 
     )
-
+    POINTS_NEEDED = {'Social':20, 'Professional':30, 'Service':20}
     name = models.CharField(max_length=40)
     requirement_choice = models.CharField(max_length=1, choices=CATEGORY_CHOICES, default='0')
     point_value = models.IntegerField(default=0)
@@ -546,7 +555,7 @@ class Requirement(models.Model):
     def __unicode__(self):
         return self.name
 
-    def req_plain_text():
+    def req_plain_text(self):
         return {
             SOCIAL: '0',
             PROFESSIONAL:'1',

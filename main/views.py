@@ -128,15 +128,33 @@ def profile_view(request):
 
     if profile.position == Profile.CANDIDATE:  # if profile belongs to a candidate, grab information about the candidate
         candidate = profile.candidate
-        requirements = ((name, 'Completed' if requirement else 'Not Completed')  # a candidate's requirements
-                        for name, requirement in candidate.requirements())
+
+        #Core Requirements
+        core_requirements = ((name, 'Completed' if requirement else 'Not Completed') 
+                            for name, requirement in candidate.requirements())
+
+        #Peer Teaching Track
+        track = (candidate.peer_teaching_track(), 
+                'Completed' if candidate.peer_teaching_complete() else 'Not Completed')
+
+        #Event Requirements
+        ev_requirement_totals = ((name, total) for name, total in candidate.get_req_points())
+        ev_reqs_attended = candidate.event_requirements.all()
+
         details = None  # extra profile information
     else:  # otherwise the profile belongs to an active member
         try:
-            requirements = ((name, 'Completed' if requirement else 'Not Completed') for name, requirement in
+            am = ActiveMember.objects.get(profile=profile, term=Settings.objects.term)
+            core_requirements = ((name, 'Completed' if requirement else 'Not Completed') for name, requirement in
                             ActiveMember.objects.get(profile=profile, term=Settings.objects.term).requirements())
+            track = (am.peer_teaching_track(), 'Completed' if am.peer_teaching_complete() else 'Not Completed')
+            ev_reqs_attended = am.event_requirements.all()
+            ev_requirement_totals = None # for now until we know how we want to deal with AM's
         except ActiveMember.DoesNotExist:
-            requirements = None
+            core_requirements = None
+            track = None
+            
+
         details = ((active.term, 'Completed' if active.completed else 'In Progress')
                    for active in ActiveMember.objects.filter(profile=profile))
 
@@ -159,7 +177,12 @@ def profile_view(request):
             'user': user, 'profile': profile, 'fields': fields,
             'resume_pdf': time.ctime(os.path.getmtime(profile.resume_pdf.path)) if profile.resume_pdf else None,
             'resume_word': time.ctime(os.path.getmtime(profile.resume_word.path)) if profile.resume_word else None,
-            'requirements': requirements, 'details': details
+            'core_requirements': core_requirements,
+            'track': track,
+            'ev_requirement_totals': ev_requirement_totals,
+            'ev_reqs_attended': ev_reqs_attended,
+            'cat_point_maxes': Requirement.POINTS_NEEDED,
+            'details': details
         })
 
 
@@ -341,9 +364,11 @@ def candidates(request):
         term = Term.objects.get(id=term_id)
         return render(request, 'all_candidate_requirements.html',
                       {'candidate_list': Candidate.objects.filter(term=term), 'dropdown_term' : term, 'terms': terms_list,
-                        'req_options': Requirement.CATEGORY_CHOICES})
+                        'req_options': Requirement.CATEGORY_CHOICES, 'req_points_needed': Requirement.POINTS_NEEDED})
     return render(request, 'all_candidate_requirements.html',
-                  {'candidate_list': Candidate.current.order_by('profile'), 'dropdown_term' : Settings.objects.term(),'terms': terms_list, 'req_options': Requirement.CATEGORY_CHOICES})
+                  {'candidate_list': Candidate.current.order_by('profile'), 'dropdown_term' : Settings.objects.term(),
+                  'terms': terms_list, 'req_options': Requirement.CATEGORY_CHOICES, 
+                  'req_points_needed': Requirement.POINTS_NEEDED})
 
 
 @staff_member_required

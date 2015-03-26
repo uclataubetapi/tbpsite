@@ -22,3 +22,7 @@ def prof_grad_term(profile):
 @register.filter
 def cand_get_reqpoints_in_cat(candidate, category):
     return candidate.get_reqpoints_in_cat(category)
+
+@register.filter
+def getDictValueForKey(dict, key):
+    return dict[key]

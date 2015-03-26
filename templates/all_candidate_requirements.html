@@ -23,7 +23,7 @@
 
 
 <h1>Candidates</h1>
-<div class="row">
+<div class="row" style="margin-bottom: 10px">
   <div class="col-md-12">
     <div class="pull-right">
       <form role="form" method="post">
@@ -43,17 +43,14 @@
 
 <div class="panel-group" id="accordion">
   {% for candidate in candidate_list %}
-
-  <p> Under construction </p>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <a class="accordion-toggle {% if candidate.complete %} success{% elif candidate.requirement_count > 5.5 %} warning{% else %} danger {% endif %}" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ candidate.profile|slugify }}"><strong>{{ candidate.profile }}</strong></a>
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ candidate.profile|slugify }}"><strong>{{ candidate.profile }}</strong></a>
     </div>
-    <div id="collapse{{ candidate.profile|slugify }}" class="panel-collapse collapse{% if forloop.first %} in{% endif %}">
+    <div id="collapse{{ candidate.profile|slugify }}" class="panel-collapse collapse">
       <div class="panel-body">
         <div class="container">
           <div class="row">
-             <!-- style="margin-left: 4%; margin-right: 4%;" -->
             <div class="col-md-3 trackingArea" style="margin-left: 6.25%;">
               <em style="text-align: center"> <h4> <u> Core Requirements </u> </h4> </em>
           	  <table>
@@ -94,15 +91,15 @@
             </div>
 
             <div class="col-md-3 trackingArea" style="background-color: #c3e5c8;">
-              <em style="text-align: center"> <h4> <u> Point Total Progress </u> </h4> </em>
+              <em style="text-align: center;"> <h4> <u> Point Total Progress </u> </h4> </em>
               <div class="row" style="margin-top: 1%;">
-                <div class="panel-group" id="catAccordion">
+                <div class="panel-group" id="catAccordion" style="margin: 2%">
                   {% for req in req_options %}
                     <div class="panel panel-default">
                       <div class="panel-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#catAccordion" href="#catCollapse{{ req.1|slugify }}"><strong>{{ req.1 }} ( {{candidate|cand_get_reqpoints_in_cat:req.0}} / 20 points)</strong></a>
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#catAccordion" href="#catCollapse{{candidate.profile|slugify}}-{{ req.1|slugify }}"><strong>{{ req.1 }} ( {{candidate|cand_get_reqpoints_in_cat:req.0}} / {{req_points_needed|getDictValueForKey:req.1}} points )</strong></a>
                       </div>
-                      <div id="catCollapse{{ req.1|slugify }}" class="panel-collapse collapse">
+                      <div id="catCollapse{{candidate.profile|slugify}}-{{ req.1|slugify }}" class="panel-collapse collapse">
                         <div class="panel-body">
                           <table>
                             <tr>
