@@ -56,7 +56,7 @@
     <h4>{{ profile.get_position_display }}</h4>
 
     {% if core_requirements %}
-      <p>Core Requirements:</p>
+      <p><b>Core Requirements:</b></p>
       <table class="table">
         {% for requirement in core_requirements %}
         <tr>
@@ -68,7 +68,7 @@
     {% endif %}
 
     {% if track %}
-      <p>Peer Teaching Track:</p>
+      <p><b>Peer Teaching Track:</b></p>
       <table class="table">
         <tr>
           <td>{{ track.0 }}</td>
@@ -78,7 +78,7 @@
     {% endif %}
 
     {% if ev_requirement_totals %}
-      <p>Event Requirements:</p>
+      <p><b>Event Requirements:</b></p>
       <div class="container">
           <div class="col-md-12 trackingArea">
             <div class="row">

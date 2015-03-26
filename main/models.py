@@ -237,13 +237,16 @@ class PeerTeaching(models.Model):
     #complete = models.BooleanField(default=False)
     ACAD_OUTREACH = '0'
     TUTORING = '1'
+    EMCC = '2'
     REQUIREMENT_CHOICES = (
         (TUTORING, 'Tutoring'),
         (ACAD_OUTREACH, 'Academic Outreach Committee'),
+        (EMCC, 'EMCC (Engineering Minds Cultivating Creativity)'),
     )
     requirement_choice = models.CharField(max_length=1, choices=REQUIREMENT_CHOICES, default='0')
     tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
     academic_outreach_complete = models.BooleanField(default=False)
+    emcc_complete = models.BooleanField(default=False)
 
     profile = models.ForeignKey('Profile', blank=True, null=True)
 
@@ -257,12 +260,13 @@ class PeerTeaching(models.Model):
         elif self.requirement_choice == self.TUTORING:
             return self.tutoring.complete() if self.tutoring else False
         else:
-            return False
+            return self.emcc_complete
 
     def get_req_choice(self):
         return {
             self.TUTORING: 'Tutoring',
             self.ACAD_OUTREACH: 'Academic Outreach Committee',
+            self.EMCC: 'EMCC (Engineering Minds Cultivating Creativity)',
         }[self.requirement_choice]
 
     def __unicode__(self):
