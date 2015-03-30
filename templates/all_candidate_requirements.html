@@ -30,8 +30,8 @@
         {% csrf_token %}
         <select name="term">
           <option value="{{dropdown_term.id}}">{{ dropdown_term }}</option>
-	  <option class="select-dash" disabled="disabled">----------</option>
-	  {% for t in terms %}
+      	  <option class="select-dash" disabled="disabled">----------</option>
+      	  {% for t in terms %}
           <option value="{{ t.id }}">{{ t }}</option>
           {% endfor %}
         </select>
@@ -43,93 +43,126 @@
 
 <div class="panel-group" id="accordion">
   {% for candidate in candidate_list %}
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ candidate.profile|slugify }}"><strong>{{ candidate.profile }}</strong></a>
-    </div>
-    <div id="collapse{{ candidate.profile|slugify }}" class="panel-collapse collapse">
-      <div class="panel-body">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-3 trackingArea" style="margin-left: 6.25%;">
-              <em style="text-align: center"> <h4> <u> Core Requirements </u> </h4> </em>
-          	  <table>
-                <tr>
-                  <th> <em> Requirement </em> </th>
-                  <th> <em> Status </em> </th> 
-                </tr>
-                <tr> 
-                  <td> <strong> Bent Polish: </strong> </td>
-                  <td>{% if candidate.bent_polish %} <span class="glyphicon glyphicon-ok text-success"></span> {% else %} <span class="glyphicon glyphicon-remove text-danger"> {% endif %}</td>
-                </tr>
-                <tr> 
-                  <td> <strong> Candidate Quiz: </strong> </td>
-                  <td>{% if candidate.candidate_quiz %}<span class="glyphicon glyphicon-ok text-success"></span> {% else %} <span class="glyphicon glyphicon-remove text-danger"> {% endif %}</td>
-                </tr>
-                <tr> 
-                  <td> <strong> Initiation Fee </strong> </td>
-                  <td>{% if candidate.initiation_fee %}<span class="glyphicon glyphicon-ok text-success"></span> {% else %} <span class="glyphicon glyphicon-remove text-danger"> {% endif %}</td>
-                </tr>
-                <tr> 
-                  <td> <strong> Engineering Futures: </strong> </td>
-                  <td>{% if candidate.engineering_futures %}<span class="glyphicon glyphicon-ok text-success"></span> {% else %} <span class="glyphicon glyphicon-remove text-danger"> {% endif %}</td>
-                </tr>
-                <tr> 
-                  <td> <strong> Resume Submission: </strong> </td>
-                  <td>{% if candidate.resume %}<span class="glyphicon glyphicon-ok text-success"></span> {% else %} <span class="glyphicon glyphicon-remove text-danger"> {% endif %}</td>
-                </tr>
-          	   </table>
-            </div>
-
-            <div class="col-md-3 trackingArea" style="text-align: center; margin-left: 6.25%; margin-right: 6.25%;">
-              <em> <h4> <u> Candidate Track </u> </h4> </em>
-              {% if candidate.peer_teaching %} 
-
-                <p> Choice: </p> <p style="border: 7px solid #91d08c; border-radius: 12px; text-align: center;">{{ candidate.get_peer_req_choice }}</p>
-              
-              {% endif %}
-            </div>
-
-            <div class="col-md-3 trackingArea" style="background-color: #c3e5c8;">
-              <em style="text-align: center;"> <h4> <u> Point Total Progress </u> </h4> </em>
-              <div class="row" style="margin-top: 1%;">
-                <div class="panel-group" id="catAccordion" style="margin: 2%">
-                  {% for req in req_options %}
-                    <div class="panel panel-default">
-                      <div class="panel-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#catAccordion" href="#catCollapse{{candidate.profile|slugify}}-{{ req.1|slugify }}"><strong>{{ req.1 }} ( {{candidate|cand_get_reqpoints_in_cat:req.0}} / {{req_points_needed|getDictValueForKey:req.1}} points )</strong></a>
-                      </div>
-                      <div id="catCollapse{{candidate.profile|slugify}}-{{ req.1|slugify }}" class="panel-collapse collapse">
-                        <div class="panel-body">
-                          <table>
-                            <tr>
-                              <th>Name</th>
-                              <th>Point Value</th>
-                            </tr>
-                            {% for r in candidate.event_requirements.all %}
-                              {% if r.requirement_choice == req.0 %}
-                                <tr>
-                                  <td>{{ r }}</td>
-                                  <td>{{ r.point_value }}</td>
-                                </tr>
-                              {% endif %}
-                            {% endfor %}
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  {% endfor %}
+    {% with report=candidate.generate_req_report %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ candidate.profile|slugify }}">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="col-md-5">
+                  <strong>{{ candidate.profile }}</strong>
                 </div>
-              </div>  
+                <div class="col-md-7">
+                  {% if candidate.requirement_count < candidate.requirements|listLength %}
+                  <div class="panel panel-primary">
+                  {% else %}
+                  <div class="panel panel-success">
+                  {% endif %}
+                    <div class="panel-heading">
+                      <em> Core: ( {{candidate.requirement_count}} / {{candidate.requirements|listLength}} )</em>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+
+              {% for ev_req in report.2 %}
+                {% if ev_req.0 == "Professional" %}
+                <div class="col-md-3">
+                {% else %}
+                <div class="col-md-2">
+                {% endif %}
+                  {% if ev_req.1.1 < ev_req.1.2 %}
+                  <div class="panel panel-danger">
+                  {% else %}
+                  <div class="panel panel-success">
+                  {% endif %}
+                    <div class="panel-heading" style="color: black">
+                      <em>{{ev_req.0}}  :  ( {{ev_req.1.1}} / {{ev_req.1.2}} )</em>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
             </div>
-          </div>
-          <div class="row" style="margin-top: 1%;">
-                
+           </a>
+        </div>
+        <div id="collapse{{ candidate.profile|slugify }}" class="panel-collapse collapse">
+          <div class="panel-body">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-3 trackingArea" style="margin-left: 6.25%;">
+                  <em style="text-align: center"> <h4> <u> Core Requirements </u> </h4> </em>
+              	  <table>
+                    <tr>
+                      <th> <em> Requirement </em> </th>
+                      <th> <em> Status </em> </th> 
+                    </tr>
+                    {% for core_req in report.0 %}
+                      <tr> 
+                        <td> <strong> {{core_req.0}}: </strong> </td>
+                        <td>{% if core_req.1 == 'Completed' %} <span class="glyphicon glyphicon-ok text-success"></span> {% else %} <span class="glyphicon glyphicon-remove text-danger"> {% endif %}</td>
+                      </tr>
+                    {% endfor %}
+              	   </table>
+                </div>
+
+                <div class="col-md-3 trackingArea" style="text-align: center; margin-left: 6.25%; margin-right: 6.25%;">
+                  <em> <h4> <u> Candidate Track </u> </h4> </em>
+                  {% if report.1 %} 
+
+                    <p> Choice: </p> 
+                    <p style="border: 7px solid #91d08c; border-radius: 12px; text-align: center;">{{ report.1.0 }}</p>
+                    <p> Status: </p> 
+                    <p style="border: 7px solid #91d08c; border-radius: 12px; text-align: center;">{{ report.1.1 }}</p>
+                  
+                  {% endif %}
+                </div>
+
+                <div class="col-md-3 trackingArea" style="background-color: #c3e5c8;">
+                  <em style="text-align: center;"> <h4> <u> Point Total Progress </u> </h4> </em>
+                  <div class="row" style="margin-top: 1%;">
+                    <div class="panel-group" style="margin: 2%">
+                      {% for ev_req in report.2 %}
+                        {% if ev_req.0 != "Elective" %}
+                          <div class="panel panel-default">
+                          <div class="panel-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" href="#catCollapse{{candidate.profile|slugify}}{{ ev_req.0|slugify }}"><strong>{{ ev_req.0 }} ( {{ev_req.1.1}} / {{ev_req.1.2}} points )</strong></a>
+                          </div>
+                          <div id="catCollapse{{candidate.profile|slugify}}{{ ev_req.0|slugify }}" class="panel-collapse collapse">
+                            <div class="panel-body">
+                              <table>
+                                <tr>
+                                  <th>Name</th>
+                                  <th>Point Value</th>
+                                </tr>
+                                {% for req in ev_req.1.0 %}
+                                  <tr>
+                                    <td>{{ req }}</td>
+                                    <td>{{ req.point_value }}</td>
+                                  </tr>
+                                {% endfor %}
+                              </table>
+                            </div>
+                          </div>
+                          </div>
+                        {% else %}
+                          <div class="panel panel-default">
+                            <div class="panel-heading">
+                              <strong>{{ ev_req.0 }} ( {{ev_req.1.1}} / {{ev_req.1.2}} points)</strong>
+                            </div>
+                          </div>
+                        {% endif %}
+                        
+                      {% endfor %}
+                    </div>
+                  </div>  
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    {% endwith %}
   {% endfor %}
 </div>
 {% endblock %}

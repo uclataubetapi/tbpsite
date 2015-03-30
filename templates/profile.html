@@ -77,40 +77,50 @@
       </table>
     {% endif %}
 
-    {% if ev_requirement_totals %}
+    {% if ev_reqs %}
       <p><b>Event Requirements:</b></p>
       <div class="container">
           <div class="col-md-12 trackingArea">
             <div class="row">
               <div class="panel-group" id="catAccordion">
-              {% for req in ev_requirement_totals %}
-
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#catAccordion" href="#catCollapse{{ req.0|slugify }}"><strong>{{ req.0 }} ( {{req.1}} / {{cat_point_maxes|getDictValueForKey:req.0}} points)</strong></a>
-                  </div>
-                  <div id="catCollapse{{ req.0|slugify }}" class="panel-collapse collapse">
-                    <div class="panel-body">
-                      <table>
-                        {% if req.1 > 0 %}
-                        <tr>
-                          <th>Name</th>
-                          <th>Point Value</th>
-                        </tr>
-                        {% endif %}
-
-                        {% for r in ev_reqs_attended %}
-                          {% if r.get_requirement_choice_display == req.0 %}
+              {% for ev_req in ev_reqs %}
+                {% with category=ev_req.0 req_data=ev_req.1 %}
+                  {% if category != 'Elective' %}
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#catAccordion" href="#catCollapse{{ category|slugify }}"><strong>{{ category }} ( {{req_data.1}} / {{req_data.2}} points)</strong></a>
+                      </div>
+                      <div id="catCollapse{{ category|slugify }}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                          <table>
+                            {% if req_data.1 > 0 %}
                             <tr>
-                              <td style="padding: 0px 10px 0px 0px">{{ r }}</td>
-                              <td>{{ r.point_value }}</td>
+                              <th>Name</th>
+                              <th>Point Value</th>
                             </tr>
-                          {% endif %}
-                        {% endfor %}
-                      </table>
+                            {% endif %}
+
+                            {% for r in req_data.0 %}
+                                <tr>
+                                  <td style="padding: 0px 10px 0px 0px">{{ r }}</td>
+                                  <td>{{ r.point_value }}</td>
+                                </tr>
+                            {% endfor %}
+                          </table>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+
+                  {% else %}
+                    <br>
+                    <div class="panel panel-success">
+                      <div class="panel-heading">
+                        <strong>{{ category }} ( {{req_data.1}} / {{req_data.2}} points)</strong>
+                      </div>
+                    </div>
+
+                  {% endif %}
+              {% endwith %}
 
               {% endfor %}
             </div>

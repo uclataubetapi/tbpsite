@@ -26,3 +26,7 @@ def cand_get_reqpoints_in_cat(candidate, category):
 @register.filter
 def getDictValueForKey(dict, key):
     return dict[key]
+
+@register.filter
+def listLength(list):
+    return len(list)

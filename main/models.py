@@ -313,10 +313,30 @@ class Member(models.Model):
                 sum += r['point_value']
         return sum
 
-    def get_req_points(self):
-        return (('Social', self.get_reqpoints_in_cat('0')),
-                ('Professional', self.get_reqpoints_in_cat('1')),
-                ('Service', self.get_reqpoints_in_cat('2')))
+    #Upon final return, catRegs contains the reqs used to satisfy the category
+    #This method does not quite work, and though it would be cool to see which
+    #particular reqs are satisfying your categories, it also requires that there
+    #must be some way to add up to exactly the categories required points 
+    #(ie an event could span the boundary of the category and the "Elective" category)
+    #So I'm going to put this by the wayside for now
+    def get_reqs_in_cat(self, category, catSum, catReqs, possibleReqs):
+        if(len(possibleReqs) == 0):
+            return 1
+        for i in xrange(0,len(possibleReqs)):
+            currSum = catSum + possibleReqs[i].point_value
+            if(currSum < Requirement.POINTS_NEEDED[category]):
+                req = possibleReqs.pop(i)
+                catReqs.append(req)
+                result = self.get_reqs_in_cat(category, currSum, catReqs, possibleReqs)
+                if(result == -1):
+                    possibleReqs.insert(i, req)
+                    catReqs.pop()
+                else:
+                    return 1
+            elif (currSum == Requirement.POINTS_NEEDED[category]):
+                catReqs.append(possibleReqs.pop(i))
+                return 1
+        return -1
 
     def social_count(self):
         from event.models import Event
@@ -391,12 +411,64 @@ class Candidate(Member):
         return self.profile.resume_pdf or self.profile.resume_word
 
     # REQUIREMENTS
+    def generate_ev_reqs(self):
+        #Event Requirements
+        ev_reqs = [] #Format = ['Category', (listOfEvents, pointTotal, categoryPointsNeeded)]
+        electiveSum = 0
+        for cat in (Requirement.CATEGORY_CHOICES): #cat[0] = number representation, cat[1] = word rep
+            # possibleReqs = []
+            catReqs = []
+
+            #Generate all attended events in this category
+            for r in self.event_requirements.all():
+                if(r.requirement_choice == cat[0]):
+                    catReqs.append(r)
+
+            #Determine which events count for this category (catRegs),
+            #and which count for the 'Elective' category
+            #NOTE: Gonna find a cool way of making this work later
+            #For now a simpler approach of just adding the excess points
+            #over the cap to the elective total. This also allows the candidate
+            #to not meet the cap precisely (ie have 2 events worth 20 instead
+            #of requiring 3 events like 5, 15, 10)
+            # candidate.get_reqs_in_cat(cat[1], 0, catReqs, possibleReqs)
+            # electiveRecs = [req for req in possibleReqs if req not in catReqs]
+
+            #Sum point totals
+            sum = 0
+            for req in catReqs:
+                sum += req.point_value
+            if sum > 20:
+                electiveSum += sum-20
+                sum -= electiveSum
+            ev_reqs.append((cat[1], (catReqs, sum, Requirement.POINTS_NEEDED[cat[1]])))
+        ev_reqs.append(('Elective', (None, electiveSum, Requirement.POINTS_NEEDED['Elective'])))
+        return ev_reqs
+
+    def generate_req_report(self):
+        #Final report, Format: [core_reqs, pt_track, ev_reqs]
+        req_report = []
+
+        #Core Requirements
+        core_requirements = ((name, 'Completed' if requirement else 'Not Completed') 
+                            for name, requirement in self.requirements())
+
+        #Peer Teaching Track
+        track = (self.peer_teaching_track(), 
+                'Completed' if self.peer_teaching_complete() else 'Not Completed')
+
+        ev_reqs = self.generate_ev_reqs()
+
+        req_report = [core_requirements, track, ev_reqs]
+        return req_report
+
     def community_service_complete(self):
         return self.community_service >= MIN_COMMUNITY_SERVICE
 
     def tbp_event_complete(self):
         return self.professor_interview or self.tbp_event
 
+    #These are CORE requirements
     def requirements(self):
         #Commented lines to be phased out for the Point Sytem Initiation Process
         return (
@@ -547,7 +619,7 @@ class Requirement(models.Model):
         (PROFESSIONAL, 'Professional'),
         (SERVICE, 'Service') 
     )
-    POINTS_NEEDED = {'Social':20, 'Professional':30, 'Service':20}
+    POINTS_NEEDED = {'Social':20, 'Professional':30, 'Service':20, 'Elective': 30}
     name = models.CharField(max_length=40)
     requirement_choice = models.CharField(max_length=1, choices=CATEGORY_CHOICES, default='0')
     point_value = models.IntegerField(default=0)
