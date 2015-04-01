@@ -172,16 +172,18 @@ def profile_view(request):
 
         details = None  # extra profile information
     else:  # otherwise the profile belongs to an active member
+        ev_reqs = None
+        ev_requirement_totals = None # for now until we know how we want to deal with AM's
         try:
             am = ActiveMember.objects.get(profile=profile, term=Settings.objects.term)
             core_requirements = ((name, 'Completed' if requirement else 'Not Completed') for name, requirement in
                             ActiveMember.objects.get(profile=profile, term=Settings.objects.term).requirements())
             track = (am.peer_teaching_track(), 'Completed' if am.peer_teaching_complete() else 'Not Completed')
-            ev_reqs = None
-            ev_requirement_totals = None # for now until we know how we want to deal with AM's
+        
         except ActiveMember.DoesNotExist:
             core_requirements = None
             track = None
+            
             
 
         details = ((active.term, 'Completed' if active.completed else 'In Progress')
