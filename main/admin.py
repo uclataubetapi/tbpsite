@@ -102,11 +102,11 @@ class ProfileAdmin(admin.ModelAdmin):
 
 class CandidateAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'term', 'shirt_size', 'bent_polish', 'candidate_quiz', 'quiz_first_try', 'candidate_meet_and_greet',
-                    'signature_book', 'community_service', 'initiation_fee', 'engineering_futures', 'candidate_sorting')
+                    'community_service', 'initiation_fee', 'engineering_futures', 'candidate_sorting')
     list_editable = ('bent_polish', 'candidate_quiz', 'quiz_first_try', 'candidate_meet_and_greet',
-                     'signature_book', 'community_service', 'initiation_fee', 'engineering_futures', 'candidate_sorting')
+                     'community_service', 'initiation_fee', 'engineering_futures', 'candidate_sorting')
     actions = ('create_candidate', 'create_active_member', 'promote_candidate')
-
+    
     def promote_candidate(self, request, queryset):
         #queryset.update(position__member=Profile.MEMBER)
         for cand in queryset:

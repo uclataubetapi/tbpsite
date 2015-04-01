@@ -289,7 +289,7 @@ class Member(models.Model):
     #migrate django begins to throw errors where it cannot locate a tutoring_id field in the database
     #This needs to be looked into but is not a fatal level issue as the existence of this legacy field is 
     #not apparent to the user
-    tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True)
+    tutoring = models.OneToOneField('tutoring.Tutoring', blank=True, null=True, editable=False)
     completed = models.BooleanField(default=False)
     other = models.IntegerField(default=0)
 
@@ -390,7 +390,7 @@ class Candidate(Member):
     bent_polish = models.BooleanField(default=False)
     candidate_quiz = models.IntegerField(default=0)
     candidate_meet_and_greet = models.BooleanField(default=False)
-    signature_book = models.BooleanField(default=False)
+    signature_book = models.BooleanField(default=False,editable=False)
     community_service_proof = models.FileField(upload_to=upload_to_path, storage=community_service_fs, blank=True,
                                                null=True, default=None, verbose_name="Community Service Proof")
     community_service = models.IntegerField(default=0)
