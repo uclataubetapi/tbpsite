@@ -347,7 +347,7 @@ class Member(models.Model):
     # REQUIREMENTS
     def peer_teaching_track(self):
         #return self.tutoring.complete() if self.tutoring else False
-        return self.peer_teaching.get_req_choice()
+        return self.peer_teaching.get_req_choice() if self.peer_teaching else "No Track Selected"
     def peer_teaching_complete(self):
         #return self.tutoring.complete() if self.tutoring else False
         return self.peer_teaching.isComplete() if self.peer_teaching else False
@@ -558,9 +558,7 @@ class ActiveMember(Member):
         unique_together = ('profile', 'term')
 
     def social_count(self):
-        from event.models import Event
-
-        return Event.objects.filter(attendees=self.profile, term=self.term).count()
+        return self.event_requirements.count()
 
     def requirement(self):
         #allow for override in requirement
