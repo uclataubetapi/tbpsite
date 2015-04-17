@@ -3,36 +3,46 @@
 {% block title %} Add Requirement Attendance {% endblock %}
 
 {% block content %} 
-<h1 style>Add Requirement</h1>
+<h1>Add Requirement</h1>
 
-<form method="POST">
+{% if successC %}
+<p> {{successC}} </p>
+{% endif %}
+
+{% if successD %}
+<p> {{successD}} </p>
+{% endif %}
+
+<form method="POST" class="container">
   {% csrf_token %} 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3>">
-	{% if debug %}
-	{% for id in debug %}
-	{{id}} <br>
-	{% endfor %}
-	{% endif %}
+  <div class="row">
+    <div class="col-md-4">
+      {% if debug %}
+      {% for id in debug %}
+      {{id}} <br>
+      {% endfor %}
+      {% endif %}
+      
+      <h2>Candidates</h2>
+      {% for candidate in candidate_list %} 
+      <input type="checkbox" name="candidate" value={{ candidate.id }}> {{ candidate.profile }} <br>
+      {% endfor %}
 
-	{% if success %}
-	<p> {{success}} </p>
-	{% endif %}
-	<br>
-	{% for candidate in candidate_list %} 
-	<input type="checkbox" name="candidate" value={{ candidate.id }}> {{ candidate.profile }} <br>
+    </div>
+    <div class="col-md-5">
+      <h2>Distinguished Actives</h2>
+      {% for da in da_list %}
+      <input type="checkbox" name="da" value={{ da.id }}> {{ da.profile }} <br>
+      {% endfor %}
+    </div>
+    <div class="col-md-3">
+      <h2>Requirement</h2>
+      <select name="requirement"> 	
+	{% for requirement in requirement_list %}
+	<option value={{ requirement.id }}> {{ requirement.name }} </option>
 	{% endfor %}
-
-      </div>
-      <div class="col-md-6">
-	<select name="requirement"> 
-	  {% for requirement in requirement_list %}
-	  <option value={{ requirement.id }}> {{ requirement.name }} </option>
-	  {% endfor %}
-	</select>
-	<button type="submit">Submit </button>
-      </div>
+      </select>
+      <button type="submit">Submit </button>
     </div>
   </div>
 </form>

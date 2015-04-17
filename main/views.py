@@ -550,16 +550,29 @@ proof = CandidateFileView.as_view(field='community_service_proof')
 
 @staff_member_required
 def add_requirement(request):
-    success = None
+    successC = None
+    successD = None
     if request.method=="POST":
        term = Settings.objects.term()
        req = Requirement.current.get(id=request.POST['requirement'])
-       success = "Added Requirement " + str(req) +" to candidates: "
+       successC = "Added Requirement " + str(req) +" to Candidates: "
+       successD = "Added Requirement " + str(req) +" to Distinguished Actives: "
        for cand_id in request.POST.getlist('candidate'):
            cand = Candidate.objects.get(id=cand_id)
            try:
                cand.event_requirements.add(req)
            except IntegrityError:
                continue
-           success += str(cand) + " "
-    return render(request, 'add_requirement.html', {'candidate_list': Candidate.current.order_by('profile'), 'requirement_list': Requirement.current.all(), "success": success})
+           successC += str(cand) + " "
+       for da_id in request.POST.getlist('da'):
+           da = ActiveMember.objects.get(id=da_id)
+           try:
+               da.event_requirements.add(req)
+           except IntegrityError:
+               continue
+           successD += str(da) + " "
+    return render(request, 'add_requirement.html', {'candidate_list': Candidate.current.order_by('profile'),
+                                                    'da_list': ActiveMember.current.order_by('profile'),
+                                                    'requirement_list': Requirement.current.all(), 
+                                                    "successC": successC,
+                                                    "successD": successD})

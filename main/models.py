@@ -293,7 +293,7 @@ class Member(models.Model):
     completed = models.BooleanField(default=False)
     other = models.IntegerField(default=0)
 
-    event_requirements = models.ManyToManyField('Requirement')
+    event_requirements = models.ManyToManyField('Requirement', blank=True, null=True)
 
     current = TermManager()
     objects = models.Manager()
