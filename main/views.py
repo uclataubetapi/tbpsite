@@ -467,7 +467,6 @@ def all_profiles(request):
             profile_list.append(prof) 
     return render(request, 'user_info_dump.html', {'profile_list': profile_list})
 
-
 def create_zipfile(filenames):
     buffer = StringIO.StringIO()
     with zipfile.ZipFile(buffer, 'w') as z:
@@ -548,3 +547,19 @@ resume_pdf = ProfileFileView.as_view(field='resume_pdf')
 resume_word = ProfileFileView.as_view(field='resume_word')
 interview = CandidateFileView.as_view(field='professor_interview')
 proof = CandidateFileView.as_view(field='community_service_proof')
+
+@staff_member_required
+def add_requirement(request):
+    success = None
+    if request.method=="POST":
+       term = Settings.objects.term()
+       req = Requirement.current.get(id=request.POST['requirement'])
+       success = "Added Requirement " + str(req) +" to candidates: "
+       for cand_id in request.POST.getlist('candidate'):
+           cand = Candidate.objects.get(id=cand_id)
+           try:
+               cand.event_requirements.add(req)
+           except IntegrityError:
+               continue
+           success += str(cand) + " "
+    return render(request, 'add_requirement.html', {'candidate_list': Candidate.current.order_by('profile'), 'requirement_list': Requirement.current.all(), "success": success})

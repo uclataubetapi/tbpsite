@@ -53,6 +53,8 @@ urlpatterns += patterns('main.views',
     url(r'^interview/(?P<id>\d+)$', 'interview'),
     url(r'^proof/$', 'proof'),
     url(r'^proof/(?P<id>\d+)$', 'proof'),
+
+    url(r'^add_requirement/$', 'add_requirement'),
 )
 
 urlpatterns += patterns('event.views',

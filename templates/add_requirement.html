@@ -1,0 +1,39 @@
+{% extends "base.html" %} 
+
+{% block title %} Add Requirement Attendance {% endblock %}
+
+{% block content %} 
+<h1 style>Add Requirement</h1>
+
+<form method="POST">
+  {% csrf_token %} 
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3>">
+	{% if debug %}
+	{% for id in debug %}
+	{{id}} <br>
+	{% endfor %}
+	{% endif %}
+
+	{% if success %}
+	<p> {{success}} </p>
+	{% endif %}
+	<br>
+	{% for candidate in candidate_list %} 
+	<input type="checkbox" name="candidate" value={{ candidate.id }}> {{ candidate.profile }} <br>
+	{% endfor %}
+
+      </div>
+      <div class="col-md-6">
+	<select name="requirement"> 
+	  {% for requirement in requirement_list %}
+	  <option value={{ requirement.id }}> {{ requirement.name }} </option>
+	  {% endfor %}
+	</select>
+	<button type="submit">Submit </button>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
