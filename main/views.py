@@ -137,43 +137,43 @@ def profile_view(request):
         track = (candidate.peer_teaching_track(), 
                 'Completed' if candidate.peer_teaching_complete() else 'Not Completed')
 
-        #Event Requirements
-        ev_reqs = [] #Format = ['Category', (listOfEvents, pointTotal, categoryPointsNeeded)]
-        electiveSum = 0
-        for cat in (Requirement.CATEGORY_CHOICES): #cat[0] = number representation, cat[1] = word rep
-            # possibleReqs = []
-            catReqs = []
+        # #Event Requirements
+        # ev_reqs = [] #Format = ['Category', (listOfEvents, pointTotal, categoryPointsNeeded)]
+        # electiveSum = 0
+        # for cat in (Requirement.CATEGORY_CHOICES): #cat[0] = number representation, cat[1] = word rep
+        #     # possibleReqs = []
+        #     catReqs = []
 
-            #Generate all attended events in this category
-            for r in candidate.event_requirements.all():
-                if(r.requirement_choice == cat[0]):
-                    catReqs.append(r)
+        #     #Generate all attended events in this category
+        #     for r in candidate.event_requirements.all():
+        #         if(r.requirement_choice == cat[0]):
+        #             catReqs.append(r)
 
-            #Determine which events count for this category (catRegs),
-            #and which count for the 'Elective' category
-            #NOTE: Gonna find a cool way of making this work laterPROFESSIONAL
-            #For now a simpler approach of just adding the excess points
-            #over the cap to the elective total. This also allows the candidate
-            #to not meet the cap precisely (ie have 2 events worth 20 instead
-            #of requiring 3 events like 5, 15, 10)
-            # candidate.get_reqs_in_cat(cat[1], 0, catReqs, possibleReqs)
-            # electiveRecs = [req for req in possibleReqs if req not in catReqs]
+        #     #Determine which events count for this category (catRegs),
+        #     #and which count for the 'Elective' category
+        #     #NOTE: Gonna find a cool way of making this work laterPROFESSIONAL
+        #     #For now a simpler approach of just adding the excess points
+        #     #over the cap to the elective total. This also allows the candidate
+        #     #to not meet the cap precisely (ie have 2 events worth 20 instead
+        #     #of requiring 3 events like 5, 15, 10)
+        #     # candidate.get_reqs_in_cat(cat[1], 0, catReqs, possibleReqs)
+        #     # electiveRecs = [req for req in possibleReqs if req not in catReqs]
 
-            #Sum point totals
-            sum = 0
-            for req in catReqs:
-                sum += req.point_value
-            if sum > Requirement.POINTS_NEEDED[cat[1]]:
-                electiveSum += sum-Requirement.POINTS_NEEDED[cat[1]]
-                sum -= electiveSum
-            if candidate.professor_interview and cat[0] == Requirement.PROFESSIONAL:
-                prof_int = Requirement.objects.get(name="Professor Interview")
-                catReqs.append(prof_int)
-                sum += prof_int.point_value
-            ev_reqs.append((cat[1], (catReqs, sum, Requirement.POINTS_NEEDED[cat[1]])))
+        #     #Sum point totals
+        #     sum = 0
+        #     for req in catReqs:
+        #         sum += req.point_value
+        #     if sum > Requirement.POINTS_NEEDED[cat[1]]:
+        #         electiveSum += sum-Requirement.POINTS_NEEDED[cat[1]]
+        #         sum -= electiveSum
+        #     if candidate.professor_interview and cat[0] == Requirement.PROFESSIONAL:
+        #         prof_int = Requirement.objects.get(name="Professor Interview")
+        #         catReqs.append(prof_int)
+        #         sum += prof_int.point_value
+        #     ev_reqs.append((cat[1], (catReqs, sum, Requirement.POINTS_NEEDED[cat[1]])))
             
-        ev_reqs.append(('Elective', (None, electiveSum, Requirement.POINTS_NEEDED['Elective'])))
-
+        # ev_reqs.append(('Elective', (None, electiveSum, Requirement.POINTS_NEEDED['Elective']))) 
+        ev_reqs = candidate.generate_ev_reqs()
         details = None  # extra profile information
     else:  # otherwise the profile belongs to an active member
         ev_reqs = None
@@ -397,7 +397,7 @@ def candidates(request):
     #     #Generated report will contain 
     #     all_req_reports = []
     #     for candidate in candidates:
-    #         req_report = candidate.generate_req_report()
+    #         req_report = candidate.generate__report()
     #         req_report.insert(0, candidate.profile)
     #         all_req_reports.append(req_report)
     #     return all_req_reports

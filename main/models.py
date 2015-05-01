@@ -438,12 +438,14 @@ class Candidate(Member):
             sum = 0
             for req in catReqs:
                 sum += req.point_value
-            if sum > 20:
-                electiveSum += sum-20
+            if sum > Requirement.POINTS_NEEDED[cat[1]]:
+                electiveSum += sum-Requirement.POINTS_NEEDED[cat[1]]
                 sum -= electiveSum
-            #if self.professor_interview != null and Requirement.CATEGORY_CHOICES == Requirement.PROFFESIONAL:
-            #    catReqs.append(
-                
+            if self.professor_interview and cat[0] == Requirement.PROFESSIONAL:
+                prof_int = Requirement.objects.get(name="Professor Interview")
+                catReqs.append(prof_int)
+                sum += prof_int.point_value
+
             ev_reqs.append((cat[1], (catReqs, sum, Requirement.POINTS_NEEDED[cat[1]])))
         ev_reqs.append(('Elective', (None, electiveSum, Requirement.POINTS_NEEDED['Elective'])))
         return ev_reqs
