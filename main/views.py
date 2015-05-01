@@ -166,6 +166,10 @@ def profile_view(request):
             if sum > 20:
                 electiveSum += sum-20
                 sum -= electiveSum
+            if candidate.professor_interview:
+                prof_int = Requirement.objects.get(name="Professor Interview")
+                catReqs.append(prof_int)
+                sum += prof_int.point_value
             ev_reqs.append((cat[1], (catReqs, sum, Requirement.POINTS_NEEDED[cat[1]])))
             
         ev_reqs.append(('Elective', (None, electiveSum, Requirement.POINTS_NEEDED['Elective'])))
