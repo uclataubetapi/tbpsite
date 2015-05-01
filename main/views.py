@@ -151,7 +151,7 @@ def profile_view(request):
 
             #Determine which events count for this category (catRegs),
             #and which count for the 'Elective' category
-            #NOTE: Gonna find a cool way of making this work later
+            #NOTE: Gonna find a cool way of making this work laterPROFESSIONAL
             #For now a simpler approach of just adding the excess points
             #over the cap to the elective total. This also allows the candidate
             #to not meet the cap precisely (ie have 2 events worth 20 instead
@@ -163,10 +163,10 @@ def profile_view(request):
             sum = 0
             for req in catReqs:
                 sum += req.point_value
-            if sum > 20:
-                electiveSum += sum-20
+            if sum > Requirement.POINTS_NEEDED[cat[1]]:
+                electiveSum += sum-Requirement.POINTS_NEEDED[cat[1]]
                 sum -= electiveSum
-            if candidate.professor_interview:
+            if candidate.professor_interview and cat[0] == Requirement.PROFESSIONAL:
                 prof_int = Requirement.objects.get(name="Professor Interview")
                 catReqs.append(prof_int)
                 sum += prof_int.point_value
