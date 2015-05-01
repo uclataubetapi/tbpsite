@@ -441,6 +441,9 @@ class Candidate(Member):
             if sum > 20:
                 electiveSum += sum-20
                 sum -= electiveSum
+            #if self.professor_interview != null and Requirement.CATEGORY_CHOICES == Requirement.PROFFESIONAL:
+            #    catReqs.append(
+                
             ev_reqs.append((cat[1], (catReqs, sum, Requirement.POINTS_NEEDED[cat[1]])))
         ev_reqs.append(('Elective', (None, electiveSum, Requirement.POINTS_NEEDED['Elective'])))
         return ev_reqs

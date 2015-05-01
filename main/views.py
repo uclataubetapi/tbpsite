@@ -410,7 +410,7 @@ def candidates(request):
 
 @staff_member_required
 def active_members(request):
-    terms_list = Term.objects.filter(Q(quarter='1') | Q(quarter='3'))
+    terms_list = Term.objects.filter(Q(quarter='0') | Q(quarter='1') | Q(quarter='3'))
 
     if request.method == "POST":
         term_id = int(request.POST['term'])

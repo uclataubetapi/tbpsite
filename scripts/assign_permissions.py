@@ -12,10 +12,10 @@ from django.contrib.auth.models import Group
 from main.models import Officer
 from main.models import Profile
 
-
+#Currently every staff member is part of the Event group (has permission to do Events and Requirements)
 GROUPS = {
-    'Event': {'Social Chairs', 'Community Service', 'Academic Outreach', 'Mentorship Chairs',
-               'Member Coordinators', 'Vice President', 'Senior Advisors', 'Alumna Advisor', 'Secretary', 'Treasurer', 'Tutoring Chairs', 'Education Outreach', 'Corporate Relations', 'Publicity Chairs', 'Project Chairs', 'Historian', 'Alumna Advisor'}, 
+    #'Event': {'Social Chairs', 'Community Service', 'Academic Outreach', 'Mentorship Chairs',
+    #           'Member Coordinators', 'Vice President', 'Senior Advisors', 'Alumna Advisor', 'Secretary', 'Treasurer', 'Tutoring Chairs', 'Education Outreach', 'Corporate Relations', 'Publicity Chairs', 'Project Chairs', 'Historian', 'Alumna Advisor'}, 
     'Main': {'Education Outreach', 'Academic Outreach', 'Secretary', 'Senior Advisors', 'Alumna Advisor', 'Vice President', 'Community Service',
              'Member Coordinators'}, 
     'Tutoring': {'Tutoring Chairs', 'Vice President', 'Senior Advisors', 'Secretary'}
@@ -52,6 +52,8 @@ def assignPermissions():
                         group = Group.objects.get(name=key)
                         group.user_set.add(user)
                         break
+            Group.objects.get(name="Event").user_set.add(user)
+            print "       Event added to:    " + user.get_full_name()
             user.is_staff = True
             user.is_superuser = False
             for p in SUPERPOS:

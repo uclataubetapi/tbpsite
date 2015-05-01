@@ -19,4 +19,4 @@ print first_name + " " + last_name
 user = User.objects.get(first_name=first_name, last_name=last_name)
 foo = Tutoring.with_weeks(user.profile, term=Settings.objects.term()) #with_weeks uses create, so we don't need to worry about saving
 
-print "Tutoring object: " + foo + " created for " + first_name + " " + last_name
+print "Tutoring object: " + str(foo) + " created for " + first_name + " " + last_name
