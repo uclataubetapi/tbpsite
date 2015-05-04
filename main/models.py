@@ -363,7 +363,7 @@ class Member(models.Model):
 
     # POINTS
     def tutoring_points(self):
-        return self.tutoring.points() if self.tutoring else False
+        return self.peer_teaching.tutoring.points() if self.peer_teaching.tutoring else False
 
     def social_points(self):
         count = self.social_count()
@@ -438,13 +438,29 @@ class Candidate(Member):
             sum = 0
             for req in catReqs:
                 sum += req.point_value
-            if sum > Requirement.POINTS_NEEDED[cat[1]]:
-                electiveSum += sum-Requirement.POINTS_NEEDED[cat[1]]
-                sum -= electiveSum
-            if self.professor_interview and cat[0] == Requirement.PROFESSIONAL:
+
+            #Professor Interview detection    
+            if cat[0] == Requirement.PROFESSIONAL and self.professor_interview:
                 prof_int = Requirement.objects.get(name="Professor Interview")
                 catReqs.append(prof_int)
                 sum += prof_int.point_value
+
+            #TODO: Tutoring detection
+            if cat[0] == Requirement.SERVICE and self.peer_teaching and self.peer_teaching.get_req_choice() != "Tutoring":
+                h = sum(week.hours for week in peer_teaching.tutoring.get_weeks())
+                points_per_hour = 2
+                tutoring_req_inst = Requirement()
+                tutoring_req_inst.requirement_choice = Requirement.SERVICE
+                tutoring_req_inst.name = "Tutoring Points"
+                tutoring_req_inst.point_value = points_per_hour*h
+                catReqs.append(tutoring_req_inst)
+                sum += tutoring_req_inst.point_value
+
+            if sum > Requirement.POINTS_NEEDED[cat[1]]:
+                electiveSum += sum-Requirement.POINTS_NEEDED[cat[1]]
+                sum -= electiveSum
+
+            
 
             ev_reqs.append((cat[1], (catReqs, sum, Requirement.POINTS_NEEDED[cat[1]])))
         ev_reqs.append(('Elective', (None, electiveSum, Requirement.POINTS_NEEDED['Elective'])))

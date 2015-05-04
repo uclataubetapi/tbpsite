@@ -393,15 +393,9 @@ def requirements_view(request):
 def candidates(request):
     terms_list = Term.objects.filter(Q(quarter='1') | Q(quarter='3'))
 
-    # def generate_all_req_reports(candidates):
-    #     #Generated report will contain 
-    #     all_req_reports = []
-    #     for candidate in candidates:
-    #         req_report = candidate.generate__report()
-    #         req_report.insert(0, candidate.profile)
-    #         all_req_reports.append(req_report)
-    #     return all_req_reports
-
+    #NOTE: candidate.generate_req_report is being called on the template side, not here
+    #This is because the entire list of candidate objects need to be passed anyway,
+    #so we might as well not pass the generated report as well
     if request.method == "POST":
         term_id = int(request.POST['term'])
         term = Term.objects.get(id=term_id)
