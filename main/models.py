@@ -446,8 +446,8 @@ class Candidate(Member):
                 sum += prof_int.point_value
 
             #TODO: Tutoring detection
-            if cat[0] == Requirement.SERVICE and self.peer_teaching and self.peer_teaching.get_req_choice() != "Tutoring":
-                h = sum(week.hours for week in peer_teaching.tutoring.get_weeks())
+            if cat[0] == Requirement.SERVICE and self.peer_teaching and self.peer_teaching.tutoring and self.peer_teaching.get_req_choice() != "Tutoring":
+                h = sum(week.hours for week in self.peer_teaching.tutoring.get_weeks())
                 points_per_hour = 2
                 tutoring_req_inst = Requirement()
                 tutoring_req_inst.requirement_choice = Requirement.SERVICE
