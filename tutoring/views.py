@@ -153,6 +153,9 @@ def tutoring_logging(request):
     classes = None
     confirm = False
     
+    last_logged_in = None
+    sign_out_time = None
+
     # tutoring = get_object_or_404(Tutoring, profile=request.user.profile, term=c_term)
     try:
         tutoring = Tutoring.objects.get(profile=request.user.profile, term=c_term)
@@ -183,6 +186,8 @@ def tutoring_logging(request):
                 confirm = True
                 
             elif 'sign_out' in request.POST:
+                last_logged_in = tutoring.last_start
+                sign_out_time = datetime.datetime.now()
                 h = hours
                 tutees = int(request.POST['tutees'])
                 makeup_t = int(request.POST['makeup_tutoring'])
@@ -230,4 +235,6 @@ def tutoring_logging(request):
 
         tutoring.save()
     
-    return render(request, 'tutoring_logging.html', {'error': error, 'isTutoring': isTutoring, 'hours': hours, 'classes': classes, 'confirm': confirm})
+    return render(request, 'tutoring_logging.html', {'error': error, 'isTutoring': isTutoring, 'hours': hours, 'classes': classes, 'confirm': confirm, 
+                                                     'last_logged_in': last_logged_in,
+                                                     'sign_out_time': sign_out_time})
