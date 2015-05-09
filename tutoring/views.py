@@ -205,7 +205,7 @@ def tutoring_logging(request):
                         h -= makeup_e # hours not logged!
                         send_mail('Make up Tutoring Hours!', 
                                   'Hi! {} indicated they tutored {} hours to make up for an event. Please check this out!'.format(tutoring.profile, makeup_e),
-                                  'webmaster@tbp.seas.ucla.edu', ['webmaster@tbp.seas.ucla.edu'], fail_silently=True)
+                                  'tutoring@tbp.seas.ucla.edu', ['tutoring@tbp.seas.ucla.edu'], fail_silently=True)
 
                     if makeup_t > 0:
                         for i in range(3, week):
@@ -228,7 +228,7 @@ def tutoring_logging(request):
         else:
             if tutoring.is_tutoring:
                 if tutoring.last_start.date() != datetime.datetime.now().date():  # midnight passed :P
-                    error = 'You forgot to sign out of your last tutoring session. Please contact the tutoring chair to have those hours logged'
+                    error = 'You forgot to sign out of your last tutoring session. Please contact the tutoring chair at tutoring@tbp.seas.ucla.edu to have those hours logged'
                     tutoring.is_tutoring = False
                 else:  # actually is tutoring
                     classes = Class.objects.filter(display=True)
