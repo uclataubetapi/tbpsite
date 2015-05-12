@@ -175,9 +175,12 @@ def tutoring_logging(request):
         hours = td // 3600
         if (td // 60) % 60 >= 45:
             hours += 1
+        
+        display_signout_screen = True
 
         if request.method == "POST":
-            if 'sign_in' in request.POST:
+            if 'sign_in' in request.POST and not isTutoring:
+                display_signout_screen = False
                 tutoring.is_tutoring = True
                 isTutoring = True
                 tutoring.last_start = datetime.datetime.now()
@@ -186,6 +189,7 @@ def tutoring_logging(request):
                 confirm = True
                 
             elif 'sign_out' in request.POST:
+                display_signout_screen = False
                 last_logged_in = tutoring.last_start
                 sign_out_time = datetime.datetime.now()
                 h = hours
@@ -195,8 +199,9 @@ def tutoring_logging(request):
                 class_ids = request.POST.getlist('subjects')
 
                 if (makeup_t + makeup_e) > hours:
-                    error = 'Hmm please check your math. According to our records, you have tutored approximately ' + str(
-                        hours) + 'hours this session (we round up after 45 minutes).'
+                    error = ('Hmm please check your math. According to our records, you have tutored approximately {} '
+                             'hours this session (we round up after 45 minutes), but you have indicated {} makeup hours.'.format(str(hours), str(makeup_t + makeup_e)))
+                    display_signout_screen = True
                 else:
                     tutoring.is_tutoring = False
                     isTutoring = False
@@ -226,12 +231,13 @@ def tutoring_logging(request):
                     confirm = True
 
         else:
-            if tutoring.is_tutoring:
-                if tutoring.last_start.date() != datetime.datetime.now().date():  # midnight passed :P
-                    error = 'You forgot to sign out of your last tutoring session. Please contact the tutoring chair at tutoring@tbp.seas.ucla.edu to have those hours logged'
-                    tutoring.is_tutoring = False
-                else:  # actually is tutoring
-                    classes = Class.objects.filter(display=True)
+            if tutoring.is_tutoring and tutoring.last_start.date() != datetime.datetime.now().date():  # midnight passed :P
+                display_signout_screen = False    
+                error = 'You forgot to sign out of your last tutoring session. Please contact the tutoring chair at tutoring@tbp.seas.ucla.edu to have those hours logged'
+                tutoring.is_tutoring = False
+        
+        if display_signout_screen:
+            classes = Class.objects.filter(display=True)
 
         tutoring.save()
     
