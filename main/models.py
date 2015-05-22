@@ -458,7 +458,7 @@ class Candidate(Member):
 
             if pointSum > Requirement.POINTS_NEEDED[cat[1]]:
                 electiveSum += pointSum-Requirement.POINTS_NEEDED[cat[1]]
-                pointSum -= electiveSum
+                pointSum = Requirement.POINTS_NEEDED[cat[1]]
 
             
 
