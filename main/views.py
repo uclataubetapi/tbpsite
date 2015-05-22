@@ -275,16 +275,21 @@ def edit(request):
             else:
                 candidate = profile.candidate
                 candidate.peer_teaching = PeerTeaching.objects.create(profile=profile, term=Settings.objects.term())
-                if peer_teaching_form.cleaned_data['requirement_choice'] == PeerTeaching.TUTORING:
-                    candidate.peer_teaching.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
-                    tutoring_form = TutoringPreferencesForm(request.POST, instance=candidate.peer_teaching.tutoring)
-                    tutoring_form.save()
-                    #candidate.peer_teaching.tutoring=candidate.tutoring
+                candidate.peer_teaching.tutoring = Tutoring.with_weeks(profile=profile, term=Settings.objects.term())
+                tutoring_form = TutoringPreferencesForm(request.POST, instance=candidate.peer_teaching.tutoring)
+                tutoring_form.save()
+                
+                # If the candidate did NOT select tutoring, then we will set the attributes
+                # of their tutoring object to hidden/frozen so that their object does not
+                # interfere with anything else.
+                if peer_teaching_form.cleaned_data['requirement_choice'] != PeerTeaching.TUTORING:
+                    candidate.peer_teaching.tutoring.frozen = True
+                    candidate.peer_teaching.tutoring.hidden = True
+                    candidate.peer_teaching.tutoring.save()
 
                 peer_teaching_form = PeerTeachingForm(request.POST, instance=candidate.peer_teaching)
                 peer_teaching_form.save()
                 
-                    
                 shirt_form.save()
                 return redirect(add)
 

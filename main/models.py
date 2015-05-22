@@ -435,15 +435,15 @@ class Candidate(Member):
             # electiveRecs = [req for req in possibleReqs if req not in catReqs]
 
             #Sum point totals
-            sum = 0
+            pointSum = 0
             for req in catReqs:
-                sum += req.point_value
+                pointSum += req.point_value
 
             #Professor Interview detection    
             if cat[0] == Requirement.PROFESSIONAL and self.professor_interview:
                 prof_int = Requirement.objects.get(name="Professor Interview")
                 catReqs.append(prof_int)
-                sum += prof_int.point_value
+                pointSum += prof_int.point_value
 
             #TODO: Tutoring detection
             if cat[0] == Requirement.SERVICE and self.peer_teaching and self.peer_teaching.tutoring and self.peer_teaching.get_req_choice() != "Tutoring":
@@ -454,15 +454,15 @@ class Candidate(Member):
                 tutoring_req_inst.name = "Tutoring Points"
                 tutoring_req_inst.point_value = points_per_hour*h
                 catReqs.append(tutoring_req_inst)
-                sum += tutoring_req_inst.point_value
+                pointSum += tutoring_req_inst.point_value
 
-            if sum > Requirement.POINTS_NEEDED[cat[1]]:
-                electiveSum += sum-Requirement.POINTS_NEEDED[cat[1]]
-                sum -= electiveSum
+            if pointSum > Requirement.POINTS_NEEDED[cat[1]]:
+                electiveSum += pointSum-Requirement.POINTS_NEEDED[cat[1]]
+                pointSum -= electiveSum
 
             
 
-            ev_reqs.append((cat[1], (catReqs, sum, Requirement.POINTS_NEEDED[cat[1]])))
+            ev_reqs.append((cat[1], (catReqs, pointSum, Requirement.POINTS_NEEDED[cat[1]])))
         ev_reqs.append(('Elective', (None, electiveSum, Requirement.POINTS_NEEDED['Elective'])))
         return ev_reqs
 
