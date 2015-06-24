@@ -22,8 +22,8 @@ GROUPS = {
 } 
 
 SUPERPOS = {"Webmaster", "President"}
-SUPERCOOLPEOPLE = {"Rachel Fang"}
-EXTRA_STAFF = {"Andy Luu", "Hunter Jones",  "Raymond Cothern"}
+SUPERCOOLPEOPLE = {"Rachel Fang", "Raymond Cothern"}
+EXTRA_STAFF = {"Andy Luu", "Hunter Jones", "Angela Lam"}
 
 superLog = []
 staffLog = []
@@ -67,7 +67,7 @@ def assignPermissions():
     g1.save()
     g2.save()
     g3.save()
-
+    print "---- Additional Permissions ----"
     for p in SUPERCOOLPEOPLE:
         foo = p.split(" ")
         fName = foo[0]
@@ -82,8 +82,10 @@ def assignPermissions():
         fName = foo[0]
         lName = foo[1]
         user = User.objects.get(first_name=fName, last_name=lName)
+        Group.objects.get(name="Event").user_set.add(user)
         user.is_staff = True
         staffLog.append("Staff status granted to: " + user.get_full_name() + " as - An Extra Staff Member")
+        staffLog.append("       Event added to:    " + user.get_full_name())
         user.save()
 
     for sup in superLog:
