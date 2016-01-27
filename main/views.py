@@ -191,7 +191,7 @@ def profile_view(request):
             
             
 
-        details = ((active.term, 'Completed' if active.completed else 'In Progress')
+        details = ((active.term, 'Completed' if active.requirement() else 'In Progress')
                    for active in ActiveMember.objects.filter(profile=profile))
 
     fields = (  # grab the user/profile information to render

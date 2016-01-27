@@ -8,7 +8,7 @@
     <link href="/static/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css" rel="stylesheet">
     <link href="/static/css/style.css" rel="stylesheet">
-    <link href="/favicon.ico" rel="shortcut icon">
+    <link href="/favicon.ico?v=2" rel="shortcut icon">
     {% block headContent %} {% endblock %}
   </head>
   <body>
@@ -22,7 +22,7 @@
           </button>
           <a class="navbar-brand" href="{% url 'web.views.home' %}"><strong>UCLA Tau Beta Pi</strong></a>
         </div>
-        <div class="navbar-collapse collapse navbar-responsive-collapse">
+        <div class="navbar-collapse collapse navbar-responsive-collapse" style="min-width:230px">
           <ul class="nav navbar-nav">
             <li class="dropdown">
             <a href="{% url 'event.views.events' %}">Events</a>

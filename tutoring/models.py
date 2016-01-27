@@ -133,7 +133,7 @@ class Tutoring(BaseTutoring):
 
         :return:
         """
-        return all(week.complete() for week in self.get_weeks())
+        return sum(week.complete() for week in self.get_weeks()) > 5
 
     def points(self):
         """

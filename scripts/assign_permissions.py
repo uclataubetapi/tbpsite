@@ -22,7 +22,7 @@ GROUPS = {
 } 
 
 SUPERPOS = {"Webmaster", "President"}
-SUPERCOOLPEOPLE = {"Rachel Fang"}
+SUPERCOOLPEOPLE = {"Rachel Fang", "Raymond Cothern"}
 EXTRA_STAFF = {"Andy Luu", "Hunter Jones", "Angela Lam"}
 
 superLog = []

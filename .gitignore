@@ -47,3 +47,5 @@ interviews/
 static/
 tbpsite/settings.py
 tbpsite/wsgi.py
+cached_templates
+docs/_*

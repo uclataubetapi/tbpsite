@@ -215,7 +215,7 @@ class Profile(models.Model):
                 return False
         elif self.position == Profile.MEMBER:
             try:
-                ActiveMember.objects.get(profile=self, term=Settings.objects.term())
+                ActiveMember.objects.filter(profile=self, term=Settings.objects.term())
             except ActiveMember.DoesNotExist:
                 return False
         return True
@@ -441,9 +441,9 @@ class Candidate(Member):
 
             #Professor Interview detection    
             if cat[0] == Requirement.PROFESSIONAL and self.professor_interview:
-                prof_int = Requirement.objects.get(name="Professor Interview")
-                catReqs.append(prof_int)
-                pointSum += prof_int.point_value
+		prof_ints = Requirement.objects.filter(name="Professor Interview")
+                catReqs.append(prof_ints[0])
+                pointSum += prof_ints[0].point_value
 
             #TODO: Tutoring detection
             if cat[0] == Requirement.SERVICE and self.peer_teaching and self.peer_teaching.tutoring and self.peer_teaching.get_req_choice() != "Tutoring":
@@ -455,6 +455,7 @@ class Candidate(Member):
                 tutoring_req_inst.point_value = points_per_hour*h
                 catReqs.append(tutoring_req_inst)
                 pointSum += tutoring_req_inst.point_value
+                pointSum += 4
 
             if pointSum > Requirement.POINTS_NEEDED[cat[1]]:
                 electiveSum += pointSum-Requirement.POINTS_NEEDED[cat[1]]
