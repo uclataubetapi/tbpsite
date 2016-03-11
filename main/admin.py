@@ -137,8 +137,8 @@ class PeerAdmin(admin.ModelAdmin):
     list_editable = ('requirement_choice', 'academic_outreach_complete')
 
 class RequirementAdmin(admin.ModelAdmin):
-    list_display = ('name', 'requirement_choice', 'point_value', 'term')
-    list_editable = ('requirement_choice', 'point_value')
+    list_display = ('name', 'requirement_choice', 'event_hours', 'term')
+    list_editable = ('requirement_choice', 'event_hours')
     
 admin.site.unregister(User)
 admin.site.register(User, MyUserAdmin)

@@ -48,11 +48,12 @@
         <div class="panel-heading">
           <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ candidate.profile|slugify }}">
             <div class="row">
-              <div class="col-md-3">
-                <div class="col-md-5">
+              <div class="col-md-2">
                   <strong>{{ candidate.profile }}</strong>
-                </div>
-                <div class="col-md-7">
+              </div>
+              
+              <div class="col-md-10">
+                <div class="col-md-4">
                   {% if candidate.requirement_count < candidate.requirements|listLength %}
                   <div class="panel panel-primary">
                   {% else %}
@@ -63,26 +64,20 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              
-
-              {% for ev_req in report.2 %}
-                {% if ev_req.0 == "Professional" %}
-                <div class="col-md-3">
-                {% else %}
-                <div class="col-md-2">
-                {% endif %}
-                  {% if ev_req.1.1 < ev_req.1.2 %}
-                  <div class="panel panel-danger">
-                  {% else %}
-                  <div class="panel panel-success">
-                  {% endif %}
-                    <div class="panel-heading" style="color: black">
-                      <em>{{ev_req.0}}  :  ( {{ev_req.1.1}} / {{ev_req.1.2}} )</em>
+                {% for ev_req in report.2 %}
+                  <div class="col-md-4">
+                    {% if ev_req.1.1 < ev_req.1.2 %}
+                    <div class="panel panel-danger">
+                    {% else %}
+                    <div class="panel panel-success">
+                    {% endif %}
+                      <div class="panel-heading" style="color: black">
+                        <em>{{ev_req.0}}  :  ( {{ev_req.1.1}} / {{ev_req.1.2}} )</em>
+                      </div>
                     </div>
                   </div>
-                </div>
-              {% endfor %}
+                {% endfor %}
+              </div>
             </div>
            </a>
         </div>
@@ -119,26 +114,30 @@
                 </div>
 
                 <div class="col-md-3 trackingArea" style="background-color: #c3e5c8;">
-                  <em style="text-align: center;"> <h4> <u> Point Total Progress </u> </h4> </em>
+                  <em style="text-align: center;"> <h4> <u> Requirements Progress </u> </h4> </em>
                   <div class="row" style="margin-top: 1%;">
                     <div class="panel-group" style="margin: 2%">
                       {% for ev_req in report.2 %}
                         {% if ev_req.0 != "Elective" %}
                           <div class="panel panel-default">
                           <div class="panel-heading">
-                            <a class="accordion-toggle" data-toggle="collapse" href="#catCollapse{{candidate.profile|slugify}}{{ ev_req.0|slugify }}"><strong>{{ ev_req.0 }} ( {{ev_req.1.1}} / {{ev_req.1.2}} points )</strong></a>
+                            <a class="accordion-toggle" data-toggle="collapse" href="#catCollapse{{candidate.profile|slugify}}{{ ev_req.0|slugify }}"><strong>{{ ev_req.0 }} ( {{ev_req.1.1}} / {{ev_req.1.2}} )</strong></a>
                           </div>
                           <div id="catCollapse{{candidate.profile|slugify}}{{ ev_req.0|slugify }}" class="panel-collapse collapse">
                             <div class="panel-body">
                               <table>
                                 <tr>
                                   <th>Name</th>
-                                  <th>Point Value</th>
+                                  {% if ev_req.0 == "Service" %}
+                                    <th>Event Hours</th>
+                                  {% endif %}
                                 </tr>
                                 {% for req in ev_req.1.0 %}
                                   <tr>
                                     <td>{{ req }}</td>
-                                    <td>{{ req.point_value }}</td>
+                                    {% if ev_req.0 == "Service" %}
+                                      <td>{{ req.event_hours }}</td>
+                                    {% endif %}
                                   </tr>
                                 {% endfor %}
                               </table>
@@ -148,7 +147,7 @@
                         {% else %}
                           <div class="panel panel-default">
                             <div class="panel-heading">
-                              <strong>{{ ev_req.0 }} ( {{ev_req.1.1}} / {{ev_req.1.2}} points)</strong>
+                              <strong>{{ ev_req.0 }} ( {{ev_req.1.1}} / {{ev_req.1.2}} )</strong>
                             </div>
                           </div>
                         {% endif %}

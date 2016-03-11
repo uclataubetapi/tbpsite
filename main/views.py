@@ -162,14 +162,14 @@ def profile_view(request):
         #     #Sum point totals
         #     sum = 0
         #     for req in catReqs:
-        #         sum += req.point_value
+        #         sum += req.event_hours
         #     if sum > Requirement.POINTS_NEEDED[cat[1]]:
         #         electiveSum += sum-Requirement.POINTS_NEEDED[cat[1]]
         #         sum -= electiveSum
         #     if candidate.professor_interview and cat[0] == Requirement.PROFESSIONAL:
         #         prof_int = Requirement.objects.get(name="Professor Interview")
         #         catReqs.append(prof_int)
-        #         sum += prof_int.point_value
+        #         sum += prof_int.event_hours
         #     ev_reqs.append((cat[1], (catReqs, sum, Requirement.POINTS_NEEDED[cat[1]])))
             
         # ev_reqs.append(('Elective', (None, electiveSum, Requirement.POINTS_NEEDED['Elective']))) 

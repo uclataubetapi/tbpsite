@@ -79,19 +79,11 @@
 
     {% if ev_reqs %}
       <p><b>Event Requirements:</b></p>
-      <div class="container">
-          <div class="col-md-12 trackingArea">
-            <div class="row">
               <div class="panel-group" id="catAccordion">
               {% for ev_req in ev_reqs %}
                 {% with category=ev_req.0 req_data=ev_req.1 %}
                   {% if category != 'Elective' %}
-
-					  {% if req_data.1 >= req_data.2 %}
-						<div class="panel panel-success">
-					  {% else %}
-						<div class="panel panel-default">
-					  {% endif %}
+                    <div class="panel panel-default">
                       <div class="panel-heading">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#catAccordion" href="#catCollapse{{ category|slugify }}"><strong>{{ category }} ( {{req_data.1}} / {{req_data.2}} )</strong></a>
                       </div>
@@ -101,7 +93,7 @@
                             {% if req_data.1 > 0 %}
                             <tr>
                               <th>Name</th>
-							  {% if category == 'Service' %}
+                              {% if category == 'Service' %}
                                 <th>Hours</th>
                               {% endif %}
                             </tr>
@@ -122,12 +114,7 @@
 
                   {% else %}
                     <br>
-
-				  {% if req_data.1 >= req_data.2 %}
                     <div class="panel panel-success">
-				  {% else %}
-				    <div class="panel panel-default">
-				  {% endif %}
                       <div class="panel-heading">
                         <strong>{{ category }} ( {{req_data.1}} / {{req_data.2}} )</strong>
                       </div>
@@ -135,12 +122,9 @@
 
                   {% endif %}
               {% endwith %}
-
               {% endfor %}
-            </div>
+              <br>
           </div>  
-        </div>
-      </div>
       
     {% endif %}
 
@@ -163,5 +147,4 @@
 	<iframe src="https://calendar.google.com/calendar/embed?src=mggb0dfbbh9au31u099hu093tk%40group.calendar.google.com&ctz=America/Los_Angeles" width="100%" height="500px"></iframe>
   </div>
 </div>
-
 {% endblock %}

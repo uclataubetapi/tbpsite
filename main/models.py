@@ -310,7 +310,7 @@ class Member(models.Model):
         sum = 0
         for r in self.event_requirements.all().values():
             if r['requirement_choice'] == category:
-                sum += r['point_value']
+		sum += r['event_hours']
         return sum
 
     #Upon final return, catRegs contains the reqs used to satisfy the category
@@ -323,7 +323,7 @@ class Member(models.Model):
         if(len(possibleReqs) == 0):
             return 1
         for i in xrange(0,len(possibleReqs)):
-            currSum = catSum + possibleReqs[i].point_value
+            currSum = catSum + possibleReqs[i].event_hours
             if(currSum < Requirement.POINTS_NEEDED[category]):
                 req = possibleReqs.pop(i)
                 catReqs.append(req)
@@ -437,30 +437,32 @@ class Candidate(Member):
             #Sum point totals
             pointSum = 0
             for req in catReqs:
-                pointSum += req.point_value
+                if cat[0] == Requirement.SERVICE:
+                    pointSum += req.event_hours
+                else:
+                    pointSum += 1
 
             #Professor Interview detection    
-            if cat[0] == Requirement.PROFESSIONAL and self.professor_interview:
-		prof_ints = Requirement.objects.filter(name="Professor Interview")
+            if cat[0] == Requirement.CHAPTER and self.professor_interview:
+                prof_ints = Requirement.objects.filter(name="Professor Interview")
                 catReqs.append(prof_ints[0])
-                pointSum += prof_ints[0].point_value
+                pointSum += prof_ints[0].event_hours
 
             #TODO: Tutoring detection
-            if cat[0] == Requirement.SERVICE and self.peer_teaching and self.peer_teaching.tutoring and self.peer_teaching.get_req_choice() != "Tutoring":
-                h = sum(week.hours for week in self.peer_teaching.tutoring.get_weeks())
-                points_per_hour = 2
-                tutoring_req_inst = Requirement()
-                tutoring_req_inst.requirement_choice = Requirement.SERVICE
-                tutoring_req_inst.name = "Tutoring Points"
-                tutoring_req_inst.point_value = points_per_hour*h
-                catReqs.append(tutoring_req_inst)
-                pointSum += tutoring_req_inst.point_value
-                pointSum += 4
-
+            
+            # if cat[0] == Requirement.SERVICE and self.peer_teaching and self.peer_teaching.tutoring and self.peer_teaching.get_req_choice() != "Tutoring":
+            #     h = sum(week.hours for week in self.peer_teaching.tutoring.get_weeks())
+            #     points_per_hour = 2
+            #     tutoring_req_inst = Requirement()
+            #     tutoring_req_inst.requirement_choice = Requirement.SERVICE
+            #     tutoring_req_inst.name = "Tutoring Points"
+            #     tutoring_req_inst.event_hours = points_per_hour*h
+            #     catReqs.append(tutoring_req_inst)
+            #     pointSum += tutoring_req_inst.event_hours
             if pointSum > Requirement.POINTS_NEEDED[cat[1]]:
                 electiveSum += pointSum-Requirement.POINTS_NEEDED[cat[1]]
                 pointSum = Requirement.POINTS_NEEDED[cat[1]]
-
+            
             
 
             ev_reqs.append((cat[1], (catReqs, pointSum, Requirement.POINTS_NEEDED[cat[1]])))
@@ -505,7 +507,7 @@ class Candidate(Member):
             # ('Social', self.social_complete()),
             ('Resume', self.resume()),
             # ('TBP event', self.tbp_event_complete()),
-            # ('Candidate Sorting', self.candidate_sorting),
+            ('Candidate Sorting', self.candidate_sorting),
         )
 
     def requirement_count(self):
@@ -556,6 +558,9 @@ class Candidate(Member):
 class ActiveMember(Member):
     profile = models.ForeignKey('Profile')
 
+
+    SOCIAL_COUNT = 1
+
     EMCC = '0'
     TUTORING = '1'
     HOUSE_LEADER = '2'
@@ -581,6 +586,10 @@ class ActiveMember(Member):
 
     def social_count(self):
         return self.event_requirements.count()
+
+
+    def social_complete(self):
+        return self.social_count() >= ACTIVE_MEMBER_MIN_SOCIALS 
 
     def requirement(self):
         #allow for override in requirement
@@ -632,17 +641,17 @@ class Faculty(models.Model):
 class Requirement(models.Model):
     
     SOCIAL = '0'
-    PROFESSIONAL = '1'
-    SERVICE = '2'
+    SERVICE = '1'
+    CHAPTER = '2'
     CATEGORY_CHOICES = (
         (SOCIAL, 'Social'),
-        (PROFESSIONAL, 'Professional'),
-        (SERVICE, 'Service') 
+        (SERVICE, 'Service'), 
+        (CHAPTER, 'Chapter'),
     )
-    POINTS_NEEDED = {'Social':20, 'Professional':30, 'Service':20, 'Elective': 30}
+    POINTS_NEEDED = {'Social':2, 'Service': 4, 'Chapter':2, 'Elective': 3}
     name = models.CharField(max_length=40)
     requirement_choice = models.CharField(max_length=1, choices=CATEGORY_CHOICES, default='0')
-    point_value = models.IntegerField(default=0)
+    event_hours = models.IntegerField(default=0)
     term = models.ForeignKey('Term')
     
     current = TermManager()
@@ -654,6 +663,6 @@ class Requirement(models.Model):
     def req_plain_text(self):
         return {
             SOCIAL: '0',
-            PROFESSIONAL:'1',
-            SERVICE: '2',
+            SERVICE: '1',
+            CHAPTER: '2',
         }[requirement_choice]
