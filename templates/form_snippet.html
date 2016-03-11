@@ -9,7 +9,7 @@
         {% if field.field.widget.input_type == 'file' %}
           <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" {% if field.value %}value="{{ field.value }}" {% endif %}name="{{ field.html_name }}"{% if not field.value and field.field.required %} required{% endif %}>
         {% elif field.field.widget|classname:"DateInput" %}
-          <input type="date" class="form-control" id="{{ field.id_for_label }}" {% if field.value %}value="{{ field.value|date:"SHORT_DATE_FORMAT" }}" {% endif %}name="{{ field.html_name }}"{% if not field.value and field.field.required %} required{% endif %}>
+          <input type="date" class="form-control" id="{{ field.id_for_label }}" {% if field.value %}value="{{ field.value|date:'Y-m-d' }}" {% endif %}name="{{ field.html_name }}"{% if not field.value and field.field.required %} required{% endif %}>
         {% else %}
           <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}" {% if field.value %}value="{{ field.value }}" {% endif %}name="{{ field.html_name }}"{% if not field.value and field.field.required %} required{% endif %}>
         {% endif %}
