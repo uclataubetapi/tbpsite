@@ -1,5 +1,4 @@
 from django.db import models
-from django import forms
 from django.forms import ModelForm
 from constants import TUTORING_DAY_CHOICES, TUTORING_HOUR_CHOICES, TWO_HOUR_CHOICES
 
@@ -316,9 +315,7 @@ class TutoringPreferencesForm(ModelForm):
         model = Tutoring
         fields = ['best_day', 'best_hour', 'second_best_day', 'second_best_hour', 'third_best_day', 'third_best_hour']
 
- 
-    
-
+  
     # forces unique times
     def clean(self):
         cleaned_data = super(TutoringPreferencesForm, self).clean()
@@ -327,19 +324,13 @@ class TutoringPreferencesForm(ModelForm):
             time2 = (cleaned_data.get('second_best_day'), cleaned_data.get('second_best_hour'))
             time3 = (cleaned_data.get('third_best_day'), cleaned_data.get('third_best_hour'))
             timeCombos = ( (time1, time2), (time1, time3), (time2, time3))
-            times = [time1, time2, time3]
-            LIST_TRANSLATOR = ("", "second_", "third_")
-            for i in range(3):
-                for j in range(2):
-                    if not times[i][j] and times[i][j] != 0:
-                        self._errors[LIST_TRANSLATOR[i] + 'best_day'] = self.error_class(["A field is null"])
-                        raise forms.ValidationError("A field is null")
-            for i in range(3):
-                for j in range(i+1, 3):
-                    timeCombo = (times[i], times[j])
+            for timeCombo in timeCombos:
+                for i in range(3):
+                    for j in range(2):
+                        if not timeCombos[i][j] and timeCombos[i][j] != 0:
+                            print(repr(timeCombos))
+                            raise forms.ValidationError("Something is null")
 
-                    if timeCombo[0][0] == timeCombo[1][0] and timeCombo[0][1] == timeCombo[1][1]:
-                        self._errors[LIST_TRANSLATOR[i] + 'best_day'] = self._errors[LIST_TRANSLATOR[j] + 'best_day'] = self.error_class(["Two tutoring preferences are the same"])
-                        raise forms.ValidationError("Two tutoring preferences are the same")
+                if timeCombo[0][0] == timeCombo[1][0] and timeCombo[0][1] == timeCombo[1][1]:
+                    raise forms.ValidationError("Two tutoring preferences are the same")
 
-        return cleaned_data
